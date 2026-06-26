@@ -333,6 +333,8 @@ const MASTER = {
     company:"アイニコグループ株式会社 一級建築士事務所",
     tel:"0742-71-9990",
     fax:"0742-71-9980",
+    /* 屋根セクション用の赤文字メモ（特記事項。空なら印刷に出ない） */
+    roof_note:"",
     /* 景観・風致のマンセル色彩規制（外壁・屋根などの外部色を自動判定）
        新方式：奈良市景観計画の区域・地区を選択 → 基準テーブルで判定
        旧方式：簡易プリセット（reg.on/valMin/chromaR 等）は段階的に廃止予定 */
@@ -430,10 +432,10 @@ const MASTER = {
         {k:"対象", v:"見せ梁・化粧柱・畳寄せ、カウンター・造作家具・ニッチ・笠木、階段（踏板・蹴込板・側板）"},
         {k:"軒天", v:"ウエスタンレッドシダー　クリア"}
       ],
-      attrs:["選択仕様","型番"],
+      attrs:["選択仕様"],
       variants:[
-        {nm:"クリア塗装", sw:"#e8dcc2", values:{"選択仕様":"クリア塗装","型番":"M17"}},
-        {nm:"バトンオーク塗装", sw:"#9c7a4d", values:{"選択仕様":"バトンオーク塗装","型番":"M17"}}
+        {nm:"クリア塗装", sw:"塗装/クリア塗装.jpg", values:{"選択仕様":"クリア塗装"}},
+        {nm:"バトンオーク塗装", sw:"塗装/バトンオーク塗装.jpg", values:{"選択仕様":"バトンオーク塗装"}}
       ], decided:0},
 
     {id:"paint_out", area:"内部", title:"外部塗装色", optional:true, present:true,
@@ -581,6 +583,13 @@ function renderSpecEditor(){
         </div>`;
       });
       h += `</div>`;
+    }
+    // 屋根セクション専用：赤文字メモ欄（特注色などの特記事項用）
+    if(s.id==='roof'){
+      h += `<div class="field" style="margin-top:12px;">
+        <label style="color:#c0392b;">赤文字メモ <span class="hint" style="margin:0;color:#888;font-weight:normal;">（印刷時に赤文字で表示。空なら出ません）</span></label>
+        <textarea oninput="setProj('roof_note',this.value)" placeholder="例：※ブラックパールは特注色のため納期に注意" style="width:100%;min-height:50px;padding:6px 8px;font-size:13px;border:1px solid #ccc;border-radius:4px;color:#c0392b;font-family:inherit;resize:vertical;">${esc(DATA.project.roof_note||'')}</textarea>
+      </div>`;
     }
     h += `</div>`; // /optoff wrapper
     h += `</div></details>`;
@@ -733,6 +742,10 @@ function renderSpecSheet(){
         } else {
           h += `<div class="undecided">― 未決定（候補：${s.variants.map(x=>esc(x.nm)).join('・')}）―</div>`;
         }
+      }
+      // 屋根セクション：赤文字メモが入っていれば赤文字で表示
+      if(s.id==='roof' && (p.roof_note||'').trim()){
+        h += `<div style="color:#c0392b;font-weight:bold;font-size:12px;margin-top:6px;padding:6px 10px;border-left:3px solid #c0392b;background:#fff5f3;white-space:pre-wrap;line-height:1.5;">${esc(p.roof_note)}</div>`;
       }
       h += `</div></div>`;
     });
