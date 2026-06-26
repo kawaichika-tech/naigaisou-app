@@ -272,6 +272,33 @@
     #previewWrap{padding:0;background:#fff;overflow:visible;}
     #sheet{width:auto;box-shadow:none;margin:0;padding:6mm 8mm;}
     @page{size:A3 landscape;margin:8mm;}
+    /* === 仕様一覧表（spec モード）：A3横1枚に収めるための2列レイアウト＋詰め設定 === */
+    #sheet:not(.tg-mode){display:grid;grid-template-columns:1fr 1fr;gap:4mm 6mm;}
+    #sheet:not(.tg-mode) .sheet-head,
+    #sheet:not(.tg-mode) .areaTitle,
+    #sheet:not(.tg-mode) .warnbar,
+    #sheet:not(.tg-mode) .regline,
+    #sheet:not(.tg-mode) .sign,
+    #sheet:not(.tg-mode) .foot,
+    #sheet:not(.tg-mode) .note{grid-column:1 / -1;}
+    #sheet:not(.tg-mode) .sheet-head{margin-bottom:2mm;}
+    #sheet:not(.tg-mode) .sheet-head .title{font-size:16px;letter-spacing:1px;}
+    #sheet:not(.tg-mode) .sheet-head .proj{font-size:11px;}
+    #sheet:not(.tg-mode) .sheet-head .meta{font-size:9px;line-height:1.4;}
+    #sheet:not(.tg-mode) .areaTitle{margin:3mm 0 1mm;padding:2px 8px;font-size:11px;}
+    #sheet:not(.tg-mode) .sec{margin-bottom:2mm;}
+    #sheet:not(.tg-mode) .sec-h{padding:2px 8px;font-size:10.5px;}
+    #sheet:not(.tg-mode) .sec-b{padding:3mm 3mm;}
+    #sheet:not(.tg-mode) .kv{font-size:9.5px;padding:1.5px 0;}
+    #sheet:not(.tg-mode) .kv .k{width:90px;}
+    #sheet:not(.tg-mode) .decided-box{padding:3px 6px;gap:6px;margin-top:3px;border-radius:3px;}
+    #sheet:not(.tg-mode) .decided-box .dsw{width:54px;height:42px;}
+    #sheet:not(.tg-mode) .decided-box .label{font-size:8px;}
+    #sheet:not(.tg-mode) .decided-box .nm{font-size:11px;}
+    #sheet:not(.tg-mode) .decided-box .det{font-size:9px;margin-top:1px;}
+    #sheet:not(.tg-mode) .undecided{font-size:9.5px;margin-top:3px;}
+    #sheet:not(.tg-mode) .sign{margin-top:4mm;padding-top:3mm;}
+    #sheet:not(.tg-mode) .sign .box{min-height:14mm;padding:3px 6px;font-size:9px;}
     /* 照明カードは A3 横で 8列×4行 = 32個 入るように小さく整える */
     #sheet .lt-cards{grid-template-columns:repeat(8, 1fr)!important;gap:2mm!important;}
     #sheet .lt-card{height:54mm;overflow:hidden;border-radius:2px;}
