@@ -752,7 +752,23 @@ function renderSpecSheet(){
    ユーティリティ
    ============================================================ */
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
-function swStyle(sw,size,bg){ size=size||'cover'; bg=bg||'#f3f3f3'; if(!sw) return bg==='#f3f3f3'?'#ddd':bg; if(/^https?:|^data:/.test(sw)||/\.(png|jpe?g|webp|gif)$/i.test(sw)) return `${bg} center/${size} no-repeat url('${encodeURI(sw)}')`; return sw; }
+/* 画像のベースURL：ローカルでは空文字（相対パス）、Streamlit Cloudでは
+   window.__IMG_BASE__（streamlit_app.py が <script> で注入する GitHub Raw URL） */
+const IMG_BASE = (typeof window !== 'undefined' && window.__IMG_BASE__) || '';
+/* 画像パスを実URLに整える：相対パスなら IMG_BASE を前置＋encodeURI、絶対URL/data:はそのまま */
+function imgUrl(p){
+  if(!p) return p;
+  if(/^data:/.test(p) || /^https?:\/\//.test(p)) return p;
+  return IMG_BASE + encodeURI(p);
+}
+function swStyle(sw,size,bg){
+  size=size||'cover'; bg=bg||'#f3f3f3';
+  if(!sw) return bg==='#f3f3f3'?'#ddd':bg;
+  if(/^https?:|^data:/.test(sw)||/\.(png|jpe?g|webp|gif)$/i.test(sw)){
+    return `${bg} center/${size} no-repeat url('${imgUrl(sw)}')`;
+  }
+  return sw;
+}
 /* 建具画像：📷取り込み(data:URI)や明示ファイル名があれば優先、無ければ 建具/{色}/{種類}.jpg を自動参照（色×種類カタログ） */
 function doorImgSrc(d){ if(d.img) return d.img; if(d.color && d.type) return `建具/${d.color}/${d.type}.jpg`; return ''; }
 /* 敷居色：保存/手入力値を優先。無ければ「敷居有無＝有」のとき現在テイストの既定色を自動表示（A=WH/B=PL/C=GE） */
@@ -1991,7 +2007,7 @@ function tgPlanImgClear(floor){
 }
 function tgAddSpec(){ TG.meta.spec_images.push({label:"",file:""}); renderEditor(); sync(); }
 function tgDelSpec(i){ TG.meta.spec_images.splice(i,1); renderEditor(); sync(); }
-function imgSrc(v){ return /^data:/.test(v) ? v : encodeURI(v); }
+function imgSrc(v){ return imgUrl(v); }  // imgUrl に統一（IMG_BASE 対応・絶対URLは素通し）
 /* 画像ファイルを縮小して data:URI に変換（容量を抑える） */
 function fileToDataURL(file,maxW,cb){
   const r=new FileReader();
