@@ -1,0 +1,16 @@
+# Streamlit 設定ファイル
+# 詳細: https://docs.streamlit.io/library/advanced-features/configuration
+
+[server]
+# ローカル開発時のポート（デフォルト 8501）
+port = 8501
+# ブラウザ自動起動をオン
+headless = false
+
+[browser]
+# 使用統計の送信を無効化
+gatherUsageStats = false
+
+[theme]
+# ライトテーマ
+base = "light"

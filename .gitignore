@@ -1,0 +1,36 @@
+# 認証情報（絶対push禁止）
+.env
+.env.local
+*.key
+*.pem
+.streamlit/secrets.toml
+
+# Python キャッシュ
+__pycache__/
+*.pyc
+*.pyo
+
+# 廃番DBの中間ダウンロード（再生成可能）
+.haiban_cache/
+
+# OS・エディタ
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.vscode/
+.idea/
+
+# 一時ファイル
+*.tmp
+*.bak
+*.log
+
+# Claudeのプレビュー設定（任意。同期したい場合はこの行を消す）
+# .claude/
+
+# 旧フォルダー（半角カッコの空フォルダーが残っている場合のため）
+建具/WH(オフホワイト）/
+
+# 別件のスクリプト（内外装プロジェクト無関係）
+make_quiz_pdf.py

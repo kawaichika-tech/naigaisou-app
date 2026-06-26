@@ -1,0 +1,5542 @@
+{
+  "updated": "2026-06-21 15:03:33",
+  "version": 1,
+  "sources": {
+    "toli_cf": "https://www.toli.co.jp/oldandnew/pdf/sheet_cf_2024-2027.pdf",
+    "lily_V-Wall BASE": "https://www.lilycolor.co.jp/interior/download/data/kei_24BAS.pdf",
+    "lily_XRクロス": "https://www.lilycolor.co.jp/interior/download/data/kei_23XR.pdf",
+    "lily_LH": "https://www.lilycolor.co.jp/interior/download/data/kei_22CF.pdf",
+    "runon_mark2": "http://www.runon.co.jp/mark2/number/"
+  },
+  "products": {
+    "CF9501": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9611"
+    },
+    "CF9611": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9501"
+    },
+    "CF9521": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9636"
+    },
+    "CF9636": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9521"
+    },
+    "CF9541": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF9561": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9664"
+    },
+    "CF9664": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9561"
+    },
+    "CF9581": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9687"
+    },
+    "CF9687": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9581"
+    },
+    "CF9502": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF9522": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9624"
+    },
+    "CF9624": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9522"
+    },
+    "CF9542": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF9562": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9665"
+    },
+    "CF9665": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9562"
+    },
+    "CF9582": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9688"
+    },
+    "CF9688": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9582"
+    },
+    "CF9503": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF9523": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9625"
+    },
+    "CF9625": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9523"
+    },
+    "CF9543": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF9563": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9666"
+    },
+    "CF9666": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9563"
+    },
+    "CF9583": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9689"
+    },
+    "CF9689": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9583"
+    },
+    "CF9504": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9613"
+    },
+    "CF9613": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9504"
+    },
+    "CF9524": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9631"
+    },
+    "CF9631": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9524"
+    },
+    "CF9544": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9643"
+    },
+    "CF9643": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9544"
+    },
+    "CF9564": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9667"
+    },
+    "CF9667": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9564"
+    },
+    "CF9584": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF9505": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9614"
+    },
+    "CF9614": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9505"
+    },
+    "CF9525": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9632"
+    },
+    "CF9632": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9525"
+    },
+    "CF9545": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9644"
+    },
+    "CF9644": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9545"
+    },
+    "CF9565": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9668"
+    },
+    "CF9668": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9565"
+    },
+    "CF9585": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9690"
+    },
+    "CF9690": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9585"
+    },
+    "CF9506": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF9526": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9628"
+    },
+    "CF9628": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9526"
+    },
+    "CF9546": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9645"
+    },
+    "CF9645": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9546"
+    },
+    "CF9566": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9669"
+    },
+    "CF9669": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9566"
+    },
+    "CF9586": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9691"
+    },
+    "CF9691": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9586"
+    },
+    "CF9507": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9607"
+    },
+    "CF9607": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9507"
+    },
+    "CF9527": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9629"
+    },
+    "CF9629": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9527"
+    },
+    "CF9547": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9646"
+    },
+    "CF9646": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9547"
+    },
+    "CF9567": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9649"
+    },
+    "CF9649": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9567"
+    },
+    "CF9587": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9692"
+    },
+    "CF9692": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9587"
+    },
+    "CF9508": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9608"
+    },
+    "CF9608": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9508"
+    },
+    "CF9528": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9630"
+    },
+    "CF9630": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9528"
+    },
+    "CF9548": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9673"
+    },
+    "CF9673": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9548"
+    },
+    "CF9568": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9650"
+    },
+    "CF9650": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9568"
+    },
+    "CF9588": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF9509": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9609"
+    },
+    "CF9609": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9509"
+    },
+    "CF9529": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9633"
+    },
+    "CF9633": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9529"
+    },
+    "CF9549": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9674"
+    },
+    "CF9674": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9549"
+    },
+    "CF9569": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9676"
+    },
+    "CF9676": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9569"
+    },
+    "CF9589": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF9510": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9615"
+    },
+    "CF9615": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9510"
+    },
+    "CF9530": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9634"
+    },
+    "CF9634": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9530"
+    },
+    "CF9550": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF9570": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9677"
+    },
+    "CF9677": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9570"
+    },
+    "CF9590": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF9511": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9612"
+    },
+    "CF9612": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9511"
+    },
+    "CF9531": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9635"
+    },
+    "CF9635": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9531"
+    },
+    "CF9551": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9675"
+    },
+    "CF9675": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9551"
+    },
+    "CF9571": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9678"
+    },
+    "CF9678": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9571"
+    },
+    "CF9591": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF9512": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9610"
+    },
+    "CF9610": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9512"
+    },
+    "CF9532": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9639"
+    },
+    "CF9639": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9532"
+    },
+    "CF9552": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9655"
+    },
+    "CF9655": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9552"
+    },
+    "CF9572": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF9592": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF9513": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF9533": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9637"
+    },
+    "CF9637": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9533"
+    },
+    "CF9553": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9656"
+    },
+    "CF9656": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9553"
+    },
+    "CF9573": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF9593": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF9514": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9618"
+    },
+    "CF9618": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9514"
+    },
+    "CF9534": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9638"
+    },
+    "CF9638": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9534"
+    },
+    "CF9554": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9657"
+    },
+    "CF9657": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9554"
+    },
+    "CF9574": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF9594": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF9515": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9619"
+    },
+    "CF9619": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9515"
+    },
+    "CF9535": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9640"
+    },
+    "CF9640": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9535"
+    },
+    "CF9555": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9658"
+    },
+    "CF9658": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9555"
+    },
+    "CF9575": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9680"
+    },
+    "CF9680": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9575"
+    },
+    "CF9595": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF9516": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF9536": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9641"
+    },
+    "CF9641": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9536"
+    },
+    "CF9556": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9659"
+    },
+    "CF9659": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9556"
+    },
+    "CF9576": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9681"
+    },
+    "CF9681": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9576"
+    },
+    "CF9596": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF9517": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9620"
+    },
+    "CF9620": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9517"
+    },
+    "CF9537": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF9557": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9660"
+    },
+    "CF9660": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9557"
+    },
+    "CF9577": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9693"
+    },
+    "CF9693": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9577"
+    },
+    "CF9597": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF9518": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9621"
+    },
+    "CF9621": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9518"
+    },
+    "CF9538": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF9558": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9661"
+    },
+    "CF9661": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9558"
+    },
+    "CF9578": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9694"
+    },
+    "CF9694": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9578"
+    },
+    "CF9598": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF9519": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9622"
+    },
+    "CF9622": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9519"
+    },
+    "CF9539": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9642"
+    },
+    "CF9642": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9539"
+    },
+    "CF9559": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9662"
+    },
+    "CF9662": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9559"
+    },
+    "CF9579": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9695"
+    },
+    "CF9695": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9579"
+    },
+    "CF9599": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF9520": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9623"
+    },
+    "CF9623": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9520"
+    },
+    "CF9540": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF9560": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9663"
+    },
+    "CF9663": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9560"
+    },
+    "CF9580": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF9696"
+    },
+    "CF9696": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF9580"
+    },
+    "CF9600": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF2M9553": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF2M9656"
+    },
+    "CF2M9656": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF2M9553"
+    },
+    "CF2M9555": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF2M9658"
+    },
+    "CF2M9658": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF2M9555"
+    },
+    "CF3501": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3707"
+    },
+    "CF3707": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3501"
+    },
+    "CF3516": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3732"
+    },
+    "CF3732": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3516"
+    },
+    "CF3531": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3733"
+    },
+    "CF3733": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3531"
+    },
+    "CF3546": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3749"
+    },
+    "CF3749": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3546"
+    },
+    "CF3561": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF3502": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3708"
+    },
+    "CF3708": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3502"
+    },
+    "CF3517": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3720"
+    },
+    "CF3720": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3517"
+    },
+    "CF3532": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF3547": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3750"
+    },
+    "CF3750": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3547"
+    },
+    "CF3562": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3757"
+    },
+    "CF3757": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3562"
+    },
+    "CF3503": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3705"
+    },
+    "CF3705": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3503"
+    },
+    "CF3518": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3722"
+    },
+    "CF3722": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3518"
+    },
+    "CF3533": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3721"
+    },
+    "CF3721": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3533"
+    },
+    "CF3548": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF3563": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF3504": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3709"
+    },
+    "CF3709": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3504"
+    },
+    "CF3519": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3723"
+    },
+    "CF3723": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3519"
+    },
+    "CF3534": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3734"
+    },
+    "CF3734": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3534"
+    },
+    "CF3549": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3753"
+    },
+    "CF3753": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3549"
+    },
+    "CF3564": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3758"
+    },
+    "CF3758": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3564"
+    },
+    "CF3505": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3706"
+    },
+    "CF3706": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3505"
+    },
+    "CF3520": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3724"
+    },
+    "CF3724": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3520"
+    },
+    "CF3535": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF3550": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3754"
+    },
+    "CF3754": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3550"
+    },
+    "CF3565": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3759"
+    },
+    "CF3759": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3565"
+    },
+    "CF3506": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3714"
+    },
+    "CF3714": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3506"
+    },
+    "CF3521": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3725"
+    },
+    "CF3725": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3521"
+    },
+    "CF3536": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3736"
+    },
+    "CF3736": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3536"
+    },
+    "CF3551": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3760"
+    },
+    "CF3760": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3551"
+    },
+    "CF3566": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3762"
+    },
+    "CF3762": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3566"
+    },
+    "CF3507": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3715"
+    },
+    "CF3715": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3507"
+    },
+    "CF3522": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3728"
+    },
+    "CF3728": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3522"
+    },
+    "CF3537": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3737"
+    },
+    "CF3737": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3537"
+    },
+    "CF3552": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3761"
+    },
+    "CF3761": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3552"
+    },
+    "CF3567": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3763"
+    },
+    "CF3763": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3567"
+    },
+    "CF3508": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF3523": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3729"
+    },
+    "CF3729": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3523"
+    },
+    "CF3538": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF3553": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF3568": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3764"
+    },
+    "CF3764": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3568"
+    },
+    "CF3509": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF3524": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3730"
+    },
+    "CF3730": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3524"
+    },
+    "CF3539": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3741"
+    },
+    "CF3741": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3539"
+    },
+    "CF3554": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF3569": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF3510": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF3525": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3731"
+    },
+    "CF3731": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3525"
+    },
+    "CF3540": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3742"
+    },
+    "CF3742": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3540"
+    },
+    "CF3555": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF3570": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3768"
+    },
+    "CF3768": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3570"
+    },
+    "CF3511": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3716"
+    },
+    "CF3716": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3511"
+    },
+    "CF3526": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF3541": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF3556": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF3571": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3769"
+    },
+    "CF3769": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3571"
+    },
+    "CF3512": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3717"
+    },
+    "CF3717": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3512"
+    },
+    "CF3527": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF3542": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF3557": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3755"
+    },
+    "CF3755": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3557"
+    },
+    "CF3572": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3765"
+    },
+    "CF3765": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3572"
+    },
+    "CF3513": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3718"
+    },
+    "CF3718": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3513"
+    },
+    "CF3528": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3711"
+    },
+    "CF3711": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3528"
+    },
+    "CF3543": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3739"
+    },
+    "CF3739": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3543"
+    },
+    "CF3558": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF3573": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3766"
+    },
+    "CF3766": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3573"
+    },
+    "CF3514": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3719"
+    },
+    "CF3719": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3514"
+    },
+    "CF3529": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF3544": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3740"
+    },
+    "CF3740": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3544"
+    },
+    "CF3559": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3756"
+    },
+    "CF3756": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3559"
+    },
+    "CF3574": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3767"
+    },
+    "CF3767": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3574"
+    },
+    "CF3515": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF3530": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3735"
+    },
+    "CF3735": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3530"
+    },
+    "CF3545": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": "CF3748"
+    },
+    "CF3748": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "active",
+      "predecessor": "CF3545"
+    },
+    "CF3560": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "CF3575": {
+      "maker": "東リ",
+      "series": "CFシート",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LB-9501": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XB-247": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9807"
+    },
+    "XR-626": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9807"
+    },
+    "LB-9551": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "partial",
+      "successor": "XR-620"
+    },
+    "XR-620": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9551"
+    },
+    "LB-9502": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XB-248": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9808"
+    },
+    "XR-627": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9808"
+    },
+    "LB-9552": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "partial",
+      "successor": "XR-621"
+    },
+    "XR-621": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9552"
+    },
+    "LB-9503": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "partial",
+      "successor": "XB-249"
+    },
+    "XB-249": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9503"
+    },
+    "XR-628": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9503"
+    },
+    "LB-9553": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9504": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XR-632": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9866"
+    },
+    "LB-9554": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "partial",
+      "successor": "XR-608"
+    },
+    "XR-608": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9554"
+    },
+    "LB-9505": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XR-638": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9855"
+    },
+    "LB-9555": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XR-607": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9875"
+    },
+    "LB-9506": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9556": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "partial",
+      "successor": "XB-225"
+    },
+    "XB-225": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9556"
+    },
+    "LB-9507": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XR-639": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9857"
+    },
+    "LB-9557": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "partial",
+      "successor": "XB-226"
+    },
+    "XB-226": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9557"
+    },
+    "LB-9508": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XR-629": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9858"
+    },
+    "LB-9558": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "partial",
+      "successor": "XB-233"
+    },
+    "XB-233": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9558"
+    },
+    "LB-9509": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XR-630": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9859"
+    },
+    "LB-9559": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "partial",
+      "successor": "XB-234"
+    },
+    "XB-234": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9559"
+    },
+    "LB-9510": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XR-634": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9860"
+    },
+    "LB-9560": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "partial",
+      "successor": "XB-235"
+    },
+    "XB-235": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9560"
+    },
+    "LB-9511": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LB-9561": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "partial",
+      "successor": "XR-601"
+    },
+    "XR-601": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9561"
+    },
+    "LB-9512": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XR-631": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9852"
+    },
+    "LB-9562": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "partial",
+      "successor": "XR-602"
+    },
+    "XR-602": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9562"
+    },
+    "LB-9513": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9563": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LB-9514": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XR-635": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9864"
+    },
+    "LB-9564": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "partial",
+      "successor": "XB-204"
+    },
+    "XB-204": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9564"
+    },
+    "XR-622": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9564"
+    },
+    "LB-9515": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LB-9565": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LB-9516": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XR-616": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9876"
+    },
+    "LB-9566": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LB-9517": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9567": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LB-9518": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XR-613": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9868"
+    },
+    "LB-9568": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LB-9519": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9569": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LB-9520": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9570": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LB-9521": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9571": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "partial",
+      "successor": "XR-646"
+    },
+    "XR-646": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9571"
+    },
+    "LB-9522": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9572": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "partial",
+      "successor": "XR-647"
+    },
+    "XR-647": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9572"
+    },
+    "LB-9523": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XR-612": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9873"
+    },
+    "LB-9573": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "partial",
+      "successor": "XR-648"
+    },
+    "XR-648": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9573"
+    },
+    "LB-9524": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XR-611": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9874"
+    },
+    "LB-9574": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "partial",
+      "successor": "XR-649"
+    },
+    "XR-649": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9574"
+    },
+    "LB-9525": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9575": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "partial",
+      "successor": "XR-650"
+    },
+    "XR-650": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9575"
+    },
+    "LB-9526": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XR-609": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9884"
+    },
+    "LB-9576": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LB-9527": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XR-617": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9883"
+    },
+    "LB-9577": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LB-9528": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9578": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LB-9529": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XR-606": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9879"
+    },
+    "LB-9579": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LB-9530": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "partial",
+      "successor": "XR-605"
+    },
+    "XR-605": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9530"
+    },
+    "LB-9580": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LB-9531": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "partial",
+      "successor": "XR-643"
+    },
+    "XR-643": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9531"
+    },
+    "LB-9581": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LB-9532": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "partial",
+      "successor": "XR-644"
+    },
+    "XR-644": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9532"
+    },
+    "LB-9582": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XR-653": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9842"
+    },
+    "LB-9533": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9583": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XR-658": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9894"
+    },
+    "LB-9534": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9584": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9535": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9585": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XR-657": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9893"
+    },
+    "LB-9536": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XB-250": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9817"
+    },
+    "XR-640": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9817"
+    },
+    "LB-9586": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XR-654": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9892"
+    },
+    "LB-9537": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XB-251": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9818"
+    },
+    "XR-641": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9818"
+    },
+    "LB-9587": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XR-655": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9896"
+    },
+    "LB-9538": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XB-252": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9819"
+    },
+    "XR-642": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9819"
+    },
+    "LB-9588": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XR-656": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9897"
+    },
+    "LB-9539": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XB-242": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9812"
+    },
+    "LB-9589": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LB-9540": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XB-245": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9814"
+    },
+    "LB-9590": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LB-9541": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XB-246": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9816"
+    },
+    "LB-9591": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XR-659": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9889"
+    },
+    "LB-9542": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XR-636": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9862"
+    },
+    "LB-9592": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LB-9543": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XR-637": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9863"
+    },
+    "LB-9593": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LB-9544": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LB-9594": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XR-660": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9885"
+    },
+    "LB-9545": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LB-9595": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XR-661": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9886"
+    },
+    "LB-9546": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LB-9596": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XR-662": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9887"
+    },
+    "LB-9547": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LB-9597": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XR-663": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9898"
+    },
+    "LB-9548": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LB-9598": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "partial",
+      "successor": "XR-664"
+    },
+    "XR-664": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9598"
+    },
+    "LB-9549": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LB-9599": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "XR-665": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9900"
+    },
+    "LB-9550": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LB-9600": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9825": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "successor": "XR-645"
+    },
+    "XR-645": {
+      "maker": "リリカラ",
+      "series": "V-Wall BASE",
+      "status": "active",
+      "predecessor": "LB-9825"
+    },
+    "XR-401": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "discontinued",
+      "successor": null
+    },
+    "XR-451": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "discontinued",
+      "successor": null
+    },
+    "XR-402": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "discontinued",
+      "successor": null
+    },
+    "XR-452": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "discontinued",
+      "successor": null
+    },
+    "XR-403": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "discontinued",
+      "successor": null
+    },
+    "XR-453": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "successor": null
+    },
+    "XR-404": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9858": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "predecessor": "XR-629"
+    },
+    "XR-454": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "discontinued",
+      "successor": null
+    },
+    "XR-405": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "discontinued",
+      "successor": null
+    },
+    "XR-455": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "partial",
+      "successor": "XB-213"
+    },
+    "XB-213": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "predecessor": "XR-455"
+    },
+    "XR-406": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9859": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "predecessor": "XR-630"
+    },
+    "XR-456": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "partial",
+      "successor": "XB-214"
+    },
+    "XB-214": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "predecessor": "XR-456"
+    },
+    "XR-407": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9862": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "predecessor": "XR-636"
+    },
+    "XR-457": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "discontinued",
+      "successor": null
+    },
+    "XR-408": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9863": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "predecessor": "XR-637"
+    },
+    "XR-458": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "partial",
+      "successor": "XB-227"
+    },
+    "XB-227": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "predecessor": "XR-458"
+    },
+    "XR-409": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "discontinued",
+      "successor": null
+    },
+    "XR-459": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "partial",
+      "successor": "XB-228"
+    },
+    "XB-228": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "predecessor": "XR-459"
+    },
+    "XR-410": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9852": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "predecessor": "XR-631"
+    },
+    "XR-460": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "successor": null
+    },
+    "XR-411": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "discontinued",
+      "successor": null
+    },
+    "XR-461": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "successor": null
+    },
+    "XR-412": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "discontinued",
+      "successor": null
+    },
+    "XR-462": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9893": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "predecessor": "XR-657"
+    },
+    "XR-413": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "discontinued",
+      "successor": null
+    },
+    "XR-463": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9894": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "predecessor": "XR-658"
+    },
+    "XR-414": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9860": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "predecessor": "XR-634"
+    },
+    "XR-464": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9892": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "predecessor": "XR-654"
+    },
+    "XR-415": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9855": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "predecessor": "XR-638"
+    },
+    "XR-465": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9898": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "predecessor": "XR-663"
+    },
+    "XR-416": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9864": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "predecessor": "XR-635"
+    },
+    "XR-417": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "discontinued",
+      "successor": null
+    },
+    "XR-418": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9873": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "predecessor": "XR-612"
+    },
+    "XR-419": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9884": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "predecessor": "XR-609"
+    },
+    "XR-420": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "successor": null
+    },
+    "XR-421": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9874": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "predecessor": "XR-611"
+    },
+    "XR-422": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "discontinued",
+      "successor": null
+    },
+    "XR-423": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "successor": null
+    },
+    "XR-424": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9875": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "predecessor": "XR-607"
+    },
+    "XR-425": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "discontinued",
+      "successor": null
+    },
+    "XR-426": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9817": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "predecessor": "XR-640"
+    },
+    "XR-427": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "discontinued",
+      "successor": null
+    },
+    "XR-428": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "discontinued",
+      "successor": null
+    },
+    "XR-429": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "partial",
+      "successor": "LB-9856"
+    },
+    "LB-9856": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "predecessor": "XR-429"
+    },
+    "XR-430": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9857": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "predecessor": "XR-639"
+    },
+    "XR-431": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9889": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "predecessor": "XR-659"
+    },
+    "XR-432": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "discontinued",
+      "successor": null
+    },
+    "XR-433": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "discontinued",
+      "successor": null
+    },
+    "XR-434": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "discontinued",
+      "successor": null
+    },
+    "XR-435": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "discontinued",
+      "successor": null
+    },
+    "XR-436": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "partial",
+      "successor": "LB-9881"
+    },
+    "LB-9881": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "predecessor": "XR-436"
+    },
+    "XR-437": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9883": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "predecessor": "XR-617"
+    },
+    "XR-438": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9876": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "predecessor": "XR-616"
+    },
+    "XR-439": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "successor": null
+    },
+    "LB-9868": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "predecessor": "XR-613"
+    },
+    "XR-440": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "partial",
+      "successor": "LB-9871"
+    },
+    "LB-9871": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "predecessor": "XR-440"
+    },
+    "XR-441": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "partial",
+      "successor": "LB-9869"
+    },
+    "LB-9869": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "predecessor": "XR-441"
+    },
+    "XR-442": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "partial",
+      "successor": "LB-9872"
+    },
+    "LB-9872": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "predecessor": "XR-442"
+    },
+    "XR-443": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "successor": null
+    },
+    "XR-444": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "discontinued",
+      "successor": null
+    },
+    "XR-445": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "successor": null
+    },
+    "XR-446": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "partial",
+      "successor": "LB-9870"
+    },
+    "LB-9870": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "predecessor": "XR-446"
+    },
+    "XR-447": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "discontinued",
+      "successor": null
+    },
+    "XR-448": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "partial",
+      "successor": "LB-9882"
+    },
+    "LB-9882": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "active",
+      "predecessor": "XR-448"
+    },
+    "XR-449": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "discontinued",
+      "successor": null
+    },
+    "XR-450": {
+      "maker": "リリカラ",
+      "series": "XRクロス",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81301": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81576"
+    },
+    "LH-81576": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81301"
+    },
+    "LH-81356": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81302": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81577"
+    },
+    "LH-81577": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81302"
+    },
+    "LH-81357": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81411": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81303": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81578"
+    },
+    "LH-81578": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81303"
+    },
+    "LH-81358": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81509"
+    },
+    "LH-81509": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81358"
+    },
+    "LH-81412": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81304": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81359": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81413": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81305": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81579"
+    },
+    "LH-81579": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81305"
+    },
+    "LH-81360": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81511"
+    },
+    "LH-81511": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81360"
+    },
+    "LH-81306": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81590"
+    },
+    "LH-81590": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81306"
+    },
+    "LH-81361": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81521"
+    },
+    "LH-81521": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81361"
+    },
+    "LH-81307": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81591"
+    },
+    "LH-81591": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81307"
+    },
+    "LH-81362": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81523"
+    },
+    "LH-81523": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81362"
+    },
+    "LH-81308": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81582"
+    },
+    "LH-81582": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81308"
+    },
+    "LH-81363": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81421": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81309": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81583"
+    },
+    "LH-81583": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81309"
+    },
+    "LH-81364": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81528"
+    },
+    "LH-81528": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81364"
+    },
+    "LH-81422": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81310": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81584"
+    },
+    "LH-81584": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81310"
+    },
+    "LH-81365": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81529"
+    },
+    "LH-81529": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81365"
+    },
+    "LH-81423": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81311": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81571"
+    },
+    "LH-81571": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81311"
+    },
+    "LH-81366": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81524"
+    },
+    "LH-81524": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81366"
+    },
+    "LH-81424": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81312": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81572"
+    },
+    "LH-81572": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81312"
+    },
+    "LH-81367": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81525"
+    },
+    "LH-81525": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81367"
+    },
+    "LH-81313": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81368": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81526"
+    },
+    "LH-81526": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81368"
+    },
+    "LH-81314": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81574"
+    },
+    "LH-81574": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81314"
+    },
+    "LH-81369": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81315": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81575"
+    },
+    "LH-81575": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81315"
+    },
+    "LH-81370": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81539"
+    },
+    "LH-81539": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81370"
+    },
+    "LH-81431": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81616"
+    },
+    "LH-81616": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81431"
+    },
+    "LH-81316": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81371": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81540"
+    },
+    "LH-81540": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81371"
+    },
+    "LH-81432": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81611"
+    },
+    "LH-81611": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81432"
+    },
+    "LH-81317": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81372": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81534"
+    },
+    "LH-81534": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81372"
+    },
+    "LH-81433": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81318": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81373": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81535"
+    },
+    "LH-81535": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81373"
+    },
+    "LH-81434": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81319": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81597"
+    },
+    "LH-81597": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81319"
+    },
+    "LH-81374": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81536"
+    },
+    "LH-81536": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81374"
+    },
+    "LH-81435": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81320": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81598"
+    },
+    "LH-81598": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81320"
+    },
+    "LH-81375": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81537"
+    },
+    "LH-81537": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81375"
+    },
+    "LH-81436": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81620"
+    },
+    "LH-81620": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81436"
+    },
+    "LH-81321": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81580"
+    },
+    "LH-81580": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81321"
+    },
+    "LH-81376": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81538"
+    },
+    "LH-81538": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81376"
+    },
+    "LH-81437": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81617"
+    },
+    "LH-81617": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81437"
+    },
+    "LH-81322": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81581"
+    },
+    "LH-81581": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81322"
+    },
+    "LH-81377": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81549"
+    },
+    "LH-81549": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81377"
+    },
+    "LH-81438": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81323": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81585"
+    },
+    "LH-81585": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81323"
+    },
+    "LH-81378": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81541"
+    },
+    "LH-81541": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81378"
+    },
+    "LH-81324": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81586"
+    },
+    "LH-81586": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81324"
+    },
+    "LH-81379": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81543"
+    },
+    "LH-81543": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81379"
+    },
+    "LH-81325": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81566"
+    },
+    "LH-81566": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81325"
+    },
+    "LH-81380": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81542"
+    },
+    "LH-81542": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81380"
+    },
+    "LH-81326": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81567"
+    },
+    "LH-81567": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81326"
+    },
+    "LH-81381": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81544"
+    },
+    "LH-81544": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81381"
+    },
+    "LH-81327": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81592"
+    },
+    "LH-81592": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81327"
+    },
+    "LH-81382": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81328": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81593"
+    },
+    "LH-81593": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81328"
+    },
+    "LH-81383": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81561"
+    },
+    "LH-81561": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81383"
+    },
+    "LH-81329": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81384": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81330": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81587"
+    },
+    "LH-81587": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81330"
+    },
+    "LH-81385": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81562"
+    },
+    "LH-81562": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81385"
+    },
+    "LH-81331": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81386": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81332": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81589"
+    },
+    "LH-81589": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81332"
+    },
+    "LH-81387": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81333": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81388": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81334": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81389": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81550"
+    },
+    "LH-81550": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81389"
+    },
+    "LH-81335": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81390": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81551"
+    },
+    "LH-81551": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81390"
+    },
+    "LH-81336": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81594"
+    },
+    "LH-81594": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81336"
+    },
+    "LH-81391": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81337": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81595"
+    },
+    "LH-81595": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81337"
+    },
+    "LH-81392": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81338": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81393": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81339": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81596"
+    },
+    "LH-81596": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81339"
+    },
+    "LH-81394": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81340": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81599"
+    },
+    "LH-81599": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81340"
+    },
+    "LH-81395": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81341": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81600"
+    },
+    "LH-81600": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81341"
+    },
+    "LH-81396": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81342": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81604"
+    },
+    "LH-81604": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81342"
+    },
+    "LH-81397": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81559"
+    },
+    "LH-81559": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81397"
+    },
+    "LH-81343": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81605"
+    },
+    "LH-81605": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81343"
+    },
+    "LH-81398": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81560"
+    },
+    "LH-81560": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81398"
+    },
+    "LH-81344": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81602"
+    },
+    "LH-81602": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81344"
+    },
+    "LH-81399": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81553"
+    },
+    "LH-81553": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81399"
+    },
+    "LH-81345": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81603"
+    },
+    "LH-81603": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81345"
+    },
+    "LH-81400": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81554"
+    },
+    "LH-81554": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81400"
+    },
+    "LH-81346": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81601"
+    },
+    "LH-81601": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81346"
+    },
+    "LH-81401": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81555"
+    },
+    "LH-81555": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81401"
+    },
+    "LH-81347": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81402": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81552"
+    },
+    "LH-81552": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81402"
+    },
+    "LH-81348": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81606"
+    },
+    "LH-81606": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81348"
+    },
+    "LH-81403": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81349": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81504"
+    },
+    "LH-81504": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81349"
+    },
+    "LH-81404": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81350": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81405": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81351": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": null
+    },
+    "LH-81352": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81519"
+    },
+    "LH-81519": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81352"
+    },
+    "LH-81353": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81520"
+    },
+    "LH-81520": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81353"
+    },
+    "LH-81354": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81515"
+    },
+    "LH-81515": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81354"
+    },
+    "LH-81355": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "discontinued",
+      "successor": "LH-81516"
+    },
+    "LH-81516": {
+      "maker": "リリカラ",
+      "series": "LH（CF）",
+      "status": "active",
+      "predecessor": "LH-81355"
+    },
+    "RM-718": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-707": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-755": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-748": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-789": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-709": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-770": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-735": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-762": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-730": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-737": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-712": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-717": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-726": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-777": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-728": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-768": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-720": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-785": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-769": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-703": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-713": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-772": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-723": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-725": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-786": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-734": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-752": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-753": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-721": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-719": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-759": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-771": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-758": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-732": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-761": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-722": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-773": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-736": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-764": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-787": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-788": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-776": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-740": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-729": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-756": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-706": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-741": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-757": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-702": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-742": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-746": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-780": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-716": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-763": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-738": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-705": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-714": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-747": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-743": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-715": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-727": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-749": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-744": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-784": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-731": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-766": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-767": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-751": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-760": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-750": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-708": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-701": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-710": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-739": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-765": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-790": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-745": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-754": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-711": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-733": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "RM-724": {
+      "maker": "ルノン",
+      "series": "マークII Vol.26",
+      "status": "active"
+    },
+    "R-917": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-565": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-424": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-421": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-627": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-633": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-414": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RD-15": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-765": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-725": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-932": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-525": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-619": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-406": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-401": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-402": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RD-12": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-920": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-427": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-428": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RD-20": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-561": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RD-33": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RD-6": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-726": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-410": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RD-21": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-622": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-763": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-965": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-519": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-404": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-415": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RD-32": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RD-36": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-628": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-739": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-412": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-921": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-550": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-434": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-431": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-420": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-413": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-418": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-430": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RD-24": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-929": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-411": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RD-30": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-417": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-928": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-523": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-408": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-432": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RD-37": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-405": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-437": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-521": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-542": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-442": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-425": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RD-18": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RD-22": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-438": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-436": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RD-31": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-720": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-439": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-403": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-416": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-422": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-641": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RD-19": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-943": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-645": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RD-8": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-426": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-518": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-922": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-440": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RD-40": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-429": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-536": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-423": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-407": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RD-34": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-752": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-747": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-621": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RD-35": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RD-39": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-529": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-409": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RD-11": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-419": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-946": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-724": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-433": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-643": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-665": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-625": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RD-38": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-663": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "R-962": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-441": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    },
+    "RS-435": {
+      "maker": "ルノン",
+      "series": "マークII 旧Vol",
+      "status": "discontinued"
+    }
+  }
+}

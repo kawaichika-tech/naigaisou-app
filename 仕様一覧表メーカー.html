@@ -1,0 +1,3300 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>外部・内部仕様一覧表メーカー</title>
+<style>
+  :root{
+    --green:#d7e9c9; --green-line:#9cc27a; --ink:#222; --line:#bbb;
+    --decide:#e8f3dc; --decide-line:#5a9c2e; --bg:#f4f5f2;
+  }
+  *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  body{margin:0;font-family:"Meiryo","Hiragino Kaku Gothic ProN",sans-serif;color:var(--ink);background:var(--bg);font-size:13px;}
+
+  /* ===== ツールバー ===== */
+  #toolbar{position:sticky;top:0;z-index:50;background:#2f3e2f;color:#fff;
+    display:flex;gap:8px;align-items:center;padding:8px 14px;flex-wrap:wrap;}
+  #toolbar h1{font-size:15px;margin:0 14px 0 0;font-weight:bold;}
+  #toolbar button{font-size:13px;padding:6px 12px;border:0;border-radius:5px;cursor:pointer;background:#5a8a3c;color:#fff;}
+  #toolbar button:hover{background:#6fa64a;}
+  #toolbar button.ghost{background:#52614f;}
+  #toolbar .spacer{flex:1;}
+  #toolbar .tab{background:#52614f;}
+  #toolbar .tab.active{background:#9cc27a;color:#23331e;font-weight:bold;}
+  #toolbar .doc{background:#3b4a5c;border:1px solid #5b6c80;}
+  #toolbar .doc.active{background:#e8eef5;color:#22303f;font-weight:bold;border-color:#e8eef5;}
+
+  /* 建具表エディタ */
+  .dcard{border:1px solid #ddd;border-radius:6px;padding:8px 10px;margin-bottom:8px;background:#fafafa;}
+  .dhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+  .dhead .dno{font-weight:bold;color:#3b4a5c;}
+  .dgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px 8px;}
+  .dgrid .f{display:flex;flex-direction:column;gap:2px;}
+  .dgrid .f.full{grid-column:1 / -1;}
+  .dgrid .f label{font-size:10px;color:#777;}
+  .dgrid .f input{padding:4px 6px;border:1px solid #ccc;border-radius:4px;font-size:12px;font-family:inherit;}
+  .btn-sm{font-size:12px;padding:4px 12px;border:0;border-radius:4px;cursor:pointer;background:#5a8a3c;color:#fff;}
+  .btn-del{background:#c0563f;padding:2px 9px;}
+  .addrow{text-align:center;margin:6px 0 14px;}
+  .dthumb{width:34px;height:34px;border:1px solid #00000022;border-radius:4px;background-color:#f3f3f3;flex-shrink:0;}
+  /* クロス品番：画像サムネイルグリッド（カタログから選択） */
+  .cloth-thumb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:4px;max-height:230px;overflow-y:auto;padding:5px;border:1px solid #ccc;border-radius:5px;background:#fafafa;}
+  .cloth-thumb{cursor:pointer;border:2px solid transparent;border-radius:4px;padding:3px;background:#fff;text-align:center;transition:.08s;}
+  .cloth-thumb:hover{border-color:#9cc27a;background:#f6fbef;}
+  .cloth-thumb.selected{border-color:#3a7a17;background:#e3f2d6;}
+  .cloth-thumb-img{width:100%;aspect-ratio:1/1;background:#f3f3f3;background-size:cover;background-position:center;border-radius:2px;border:1px solid #00000010;}
+  .cloth-thumb-hb{font-size:10px;color:#222;margin-top:3px;line-height:1.15;font-weight:600;word-break:keep-all;}
+  /* 廃番DBステータスバッジ（サムネイル右上にオーバーレイ） */
+  .cloth-thumb{position:relative;}
+  .cloth-thumb-badge{position:absolute;top:3px;right:3px;font-size:9px;font-weight:700;padding:1px 5px;border-radius:9px;line-height:1.2;color:#fff;box-shadow:0 1px 2px rgba(0,0,0,.15);}
+  .cloth-thumb-badge.haiban{background:#c0392b;}
+  .cloth-thumb-badge.partial{background:#e67e22;}
+  .cloth-thumb-badge.active{background:#27ae60;}
+  .cloth-thumb-badge.unknown{background:#95a5a6;}
+  .cloth-thumb.haiban .cloth-thumb-img{filter:grayscale(0.5) opacity(0.6);}
+  .cloth-thumb.haiban .cloth-thumb-hb{text-decoration:line-through;color:#888;}
+
+  /* 建具表 印刷シート */
+  .tg-floor-title{background:#3b4a5c;color:#fff;padding:3px 10px;font-weight:bold;font-size:14px;border-radius:3px;margin:14px 0 5px;}
+  table.tg-table{width:100%;border-collapse:collapse;margin:4px 0 8px;}
+  table.tg-table th,table.tg-table td{border:1px solid #888;padding:3px 5px;font-size:11px;vertical-align:middle;text-align:center;}
+  table.tg-table th{background:#eef2f6;color:#2a3744;}
+  table.tg-table td.l{text-align:left;}
+  table.tg-table .di{width:42px;height:42px;background-color:#f3f3f3;border:1px solid #00000018;border-radius:3px;margin:0 auto;}
+  /* 建具カード（印刷シート） */
+  .tg-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:4px 0 10px;}
+  .tg-card{border:1px solid #888;border-radius:4px;overflow:hidden;break-inside:avoid;page-break-inside:avoid;background:#fff;}
+  .tg-card-head{display:flex;background:#3b4a5c;color:#fff;font-weight:bold;font-size:12px;}
+  .tg-card-head .no{padding:3px 8px;border-right:1px solid #ffffff55;min-width:62px;}
+  .tg-card-head .room{padding:3px 8px;flex:1;}
+  .tg-card-body{display:flex;border-bottom:1px solid #888;}
+  /* 建具画像はカード高さに左右されず一定サイズに固定（100×100）。枠線・縦伸びは外側wrapで担保 */
+  .tg-card-img-wrap{width:112px;flex-shrink:0;align-self:stretch;border-right:1px solid #888;background:#fff;display:flex;align-items:center;justify-content:center;padding:4px;}
+  .tg-card-img{width:100px;height:100px;background-color:#f3f3f3;border-radius:3px;}
+  /* 把手デザインなど長い日本語値が縦書き化しないように改行制御 */
+  .tg-card .row .k{word-break:keep-all;}
+  .tg-card .row .v{word-break:normal;overflow-wrap:anywhere;line-height:1.35;min-width:0;}
+  .tg-card-attrs{flex:1;display:flex;flex-direction:column;}
+  .tg-card-attrs .row{display:flex;border-bottom:1px dotted #bbb;font-size:11px;}
+  .tg-card-attrs .note{padding:3px 6px;font-size:10px;color:#b0734a;background:#fff7f0;margin-top:auto;}
+  .tg-card .row .k{width:92px;flex-shrink:0;background:#eef2f6;color:#2a3744;padding:3px 5px;border-right:1px solid #ddd;font-size:11px;}
+  .tg-card .row .v{padding:3px 6px;font-weight:bold;font-size:11px;flex:1;display:flex;align-items:center;gap:6px;}
+  .tg-card .row .v .acc-img{display:inline-block;width:28px;height:28px;background-color:#f3f3f3;border:1px solid #00000018;border-radius:3px;flex-shrink:0;}
+  .tg-card-spec .row{display:flex;border-bottom:1px solid #ccc;}
+  .tg-card-spec .row:last-child{border-bottom:0;}
+  .planimg{max-width:100%;max-height:360px;border:1px solid #bbb;border-radius:4px;margin:6px 0;display:block;}
+  /* 階ごとの A3横ページ（左:間取り図＋仕様／右:建具カード） */
+  .tg-floor-page{display:grid;grid-template-columns:0.85fr 1fr;gap:6mm;margin-top:10px;align-items:start;}
+  .tg-floor-page + .tg-floor-page{page-break-before:always;margin-top:0;}
+  /* 画面プレビューでは「全建具が一覧で見やすい」レイアウトに切替（印刷は上のグリッドを維持） */
+  @media screen {
+    #sheet.tg-mode .tg-floor-page{display:block;margin-top:18px;}
+    #sheet.tg-mode .tg-floor-page + .tg-floor-page{margin-top:22px;border-top:2px dashed #aaa;padding-top:18px;}
+    #sheet.tg-mode .tg-floor-left{display:grid;grid-template-columns:340px 1fr 1fr;gap:10px;align-items:start;margin-bottom:10px;}
+    #sheet.tg-mode .tg-floor-plan{height:auto;min-height:220px;}
+    #sheet.tg-mode .tg-floor-col{margin-top:6px;}
+    #sheet.tg-mode .tg-cards{grid-template-columns:repeat(auto-fill, minmax(min(340px, 100%), 1fr));}
+  }
+  .tg-floor-left{display:flex;flex-direction:column;gap:5mm;}
+  .tg-floor-plan{display:flex;flex-direction:column;border:1px solid #888;border-radius:4px;overflow:hidden;background:#fff;height:130mm;}
+  .tg-floor-plan .ph{background:#3b4a5c;color:#fff;padding:3px 10px;font-weight:bold;font-size:13px;display:flex;justify-content:space-between;align-items:center;}
+  .tg-floor-plan .pbody{flex:1;display:flex;align-items:center;justify-content:center;padding:3mm;background:#fafaf6;min-height:0;}
+  .tg-floor-plan .pbody img{max-width:100%;max-height:100%;object-fit:contain;}
+  .tg-floor-plan .empty{color:#999;font-size:12px;text-align:center;line-height:1.6;}
+  .tg-floor-col{display:flex;flex-direction:column;}
+  .tg-floor-col .tg-floor-title{margin:0 0 5px;}
+  .tg-floor-col .tg-cards{margin:0;}
+  /* 各階ページ内の 建具仕様（共通）／床仕様 はコンパクト表示 */
+  .tg-floor-left .sec{margin-bottom:0;}
+  .tg-floor-left .sec-h{padding:3px 8px;font-size:12px;}
+  .tg-floor-left .sec-b{padding:4px 8px;}
+  .tg-floor-left .kv{font-size:11px;padding:2px 0;}
+  .tg-floor-left .kv .k{width:120px;}
+
+  /* ===== クロス図面：階ごと A3横ページ ===== */
+  .kr-floor-page{display:grid;grid-template-columns:0.85fr 1fr;gap:6mm;margin-top:10px;align-items:start;}
+  .kr-floor-page + .kr-floor-page{page-break-before:always;margin-top:0;}
+  .kr-floor-left{display:flex;flex-direction:column;gap:5mm;}
+  .kr-floor-plan{display:flex;flex-direction:column;border:1px solid #888;border-radius:4px;overflow:hidden;background:#fff;height:160mm;}
+  .kr-floor-plan .ph{background:#3b4a5c;color:#fff;padding:3px 10px;font-weight:bold;font-size:13px;display:flex;justify-content:space-between;align-items:center;}
+  .kr-floor-plan .pbody{flex:1;display:flex;align-items:center;justify-content:center;padding:3mm;background:#fafaf6;min-height:0;}
+  .kr-floor-plan .pbody img{max-width:100%;max-height:100%;object-fit:contain;}
+  .kr-floor-plan .empty{color:#999;font-size:12px;text-align:center;line-height:1.6;}
+  .kr-floor-col{display:flex;flex-direction:column;}
+  .kr-floor-title{background:#3b4a5c;color:#fff;padding:3px 10px;font-weight:bold;font-size:14px;border-radius:3px;margin:0 0 6px;}
+  .kr-meta{margin-top:8px;padding:6px 10px;border:1px solid #ccc;border-radius:4px;background:#f8f8f5;}
+  .kr-meta .row{display:flex;font-size:11px;padding:1px 0;}
+  .kr-meta .row .k{width:110px;color:#555;}
+  .kr-meta .row .v{font-weight:bold;color:#222;}
+  .kr-meta .note{color:#777;font-size:10px;margin-top:4px;line-height:1.5;}
+  /* クロスカード */
+  .kr-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+  .kr-card{border:1px solid #888;border-radius:4px;overflow:hidden;background:#fff;break-inside:avoid;page-break-inside:avoid;display:flex;flex-direction:column;}
+  .kr-card-head{display:flex;justify-content:space-between;align-items:center;background:#3b4a5c;color:#fff;padding:3px 8px;font-size:11px;font-weight:bold;}
+  .kr-card-head .part{font-weight:normal;font-size:10px;background:rgba(255,255,255,.18);padding:1px 6px;border-radius:2px;}
+  .kr-card-style{padding:3px 6px;text-align:center;font-size:11px;font-weight:bold;color:#b0734a;background:#fff7f0;border-bottom:1px solid #f0e0d0;}
+  .kr-card-img{height:90px;background-color:#fff;border-bottom:1px solid #ddd;}
+  .kr-card-foot{padding:4px 6px;text-align:center;font-size:11px;font-weight:bold;color:#222;}
+  /* 画面プレビュー：tg-modeで階ページを縦積み・カード幅を枠追従に */
+  @media screen {
+    #sheet.tg-mode .kr-floor-page{display:block;margin-top:18px;}
+    #sheet.tg-mode .kr-floor-page + .kr-floor-page{margin-top:22px;border-top:2px dashed #aaa;padding-top:18px;}
+    #sheet.tg-mode .kr-floor-left{display:grid;grid-template-columns:340px 1fr;gap:10px;align-items:start;margin-bottom:10px;}
+    #sheet.tg-mode .kr-floor-plan{height:auto;min-height:220px;}
+    #sheet.tg-mode .kr-cards{grid-template-columns:repeat(auto-fill, minmax(min(200px, 100%), 1fr));}
+  }
+
+  /* ===== 照明図面（商品カタログ式） ===== */
+  .lt-floor-title{background:#3b4a5c;color:#fff;padding:4px 12px;font-weight:bold;font-size:14px;border-radius:3px;margin:14px 0 8px;}
+  /* お客様出し（大きく目立たせる） */
+  .lt-grand{display:flex;align-items:center;justify-content:space-between;border:2px solid #a26a1f;background:#fffaee;border-radius:6px;padding:8px 14px;margin:12px 0;}
+  .lt-grand-label{font-size:13px;font-weight:bold;color:#a26a1f;}
+  .lt-grand-yen{font-size:22px;font-weight:bold;color:#222;letter-spacing:1px;}
+  /* 照明カード（商品画像内の品番・スペックも読めるサイズ） */
+  .lt-cards{display:grid;grid-template-columns:repeat(auto-fill, minmax(380px,1fr));gap:8px;}
+  .lt-card{border:1px solid #888;border-radius:4px;overflow:hidden;background:#fff;break-inside:avoid;page-break-inside:avoid;display:flex;flex-direction:column;}
+  .lt-card-head{display:flex;justify-content:space-between;align-items:center;background:#3b4a5c;color:#fff;padding:5px 10px;font-size:13px;font-weight:bold;}
+  .lt-card-head .qty{background:#f5b342;color:#1a1a1a;padding:2px 8px;border-radius:9px;font-size:12px;}
+  .lt-card-img{height:280px;background-color:#fff;border-bottom:1px solid #ddd;}
+  .lt-card-body{padding:6px 10px;font-size:11px;line-height:1.5;}
+  .lt-card-body .name{font-weight:bold;font-size:12px;color:#222;}
+  .lt-card-body .meta{color:#555;margin-top:2px;}
+  .lt-card-body .hb{color:#1a4a7a;font-weight:bold;}
+  /* 集計表 */
+  .lt-sum{margin-top:10px;border:1px solid #888;border-radius:4px;overflow:hidden;}
+  .lt-sum-h{background:#a26a1f;color:#fff;padding:4px 10px;font-weight:bold;font-size:13px;}
+  table.lt-sum-table{width:100%;border-collapse:collapse;font-size:11px;}
+  table.lt-sum-table th,table.lt-sum-table td{border:1px solid #888;padding:3px 6px;text-align:center;vertical-align:middle;}
+  table.lt-sum-table th{background:#eef2f6;color:#2a3744;font-weight:bold;}
+  table.lt-sum-table td.l{text-align:left;}
+  table.lt-sum-table td.total{background:#fff7e0;font-weight:bold;}
+  /* 画面プレビューではカード幅を枠追従に（商品画像内の品番が読める380px～） */
+  @media screen {
+    #sheet.tg-mode .lt-cards{grid-template-columns:repeat(auto-fill, minmax(min(380px, 100%), 1fr));}
+  }
+
+  .wrap{display:flex;gap:0;}
+  #editor{width:46%;min-width:380px;padding:14px;overflow:auto;}
+  #previewWrap{flex:1;padding:14px;overflow:auto;background:#e7e9e4;}
+
+  /* ===== 編集パネル ===== */
+  .card{background:#fff;border:1px solid #ddd;border-radius:8px;margin-bottom:12px;overflow:hidden;}
+  .card>summary{cursor:pointer;padding:9px 12px;font-weight:bold;background:#eef3e9;
+    border-bottom:1px solid #e0e6da;list-style:none;display:flex;align-items:center;gap:8px;}
+  .card>summary::-webkit-details-marker{display:none;}
+  .card>summary .area{font-size:11px;background:#5a8a3c;color:#fff;padding:1px 7px;border-radius:10px;}
+  .card .body{padding:10px 12px;}
+  .field{display:flex;align-items:center;gap:8px;margin:6px 0;}
+  .field label{width:130px;color:#555;font-size:12px;flex-shrink:0;}
+  .field input,.field select,.field textarea{flex:1;padding:5px 7px;border:1px solid #ccc;border-radius:5px;font-size:13px;font-family:inherit;}
+  .hint{font-size:11px;color:#888;margin:2px 0 8px;}
+  .choices{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+  .choice{border:2px solid #ddd;border-radius:8px;padding:8px;width:calc(50% - 4px);cursor:pointer;background:#fafafa;position:relative;transition:.1s;}
+  .choice:hover{border-color:var(--green-line);}
+  .choice.on{border-color:var(--decide-line);background:var(--decide);}
+  .choice .sw{height:34px;border-radius:5px;border:1px solid #00000022;margin-bottom:6px;}
+  .choice .nm{font-size:12px;font-weight:bold;}
+  .choice .sub{font-size:11px;color:#666;}
+  .choice .badge{position:absolute;top:-9px;right:-7px;background:var(--decide-line);color:#fff;
+    font-size:10px;padding:1px 6px;border-radius:9px;display:none;}
+  .choice.on .badge{display:block;}
+  .secmeta{font-size:11px;color:#999;margin-top:8px;}
+  .comp{margin-top:5px;font-size:11px;font-weight:bold;border-radius:4px;padding:2px 5px;}
+  .comp.ok{background:#e3f2d6;color:#3a7a17;}
+  .comp.ng{background:#fbe0e0;color:#b32424;}
+  .comp .mz{font-weight:normal;color:#666;margin-left:4px;}
+  .regcard .body{background:#fffdf5;}
+  .reg-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:5px 0;}
+  .reg-row .n{font-size:12px;color:#555;}
+  .reg-row input[type=number]{width:58px;padding:4px;border:1px solid #ccc;border-radius:4px;}
+  .reglink{font-size:11px;}
+  .toggle{display:inline-flex;}
+  .tg{border:1px solid #bbb;background:#fff;padding:4px 16px;cursor:pointer;font-size:13px;}
+  .tg:first-child{border-radius:5px 0 0 5px;}
+  .tg:last-child{border-radius:0 5px 5px 0;border-left:0;}
+  .tg.on{background:#5a8a3c;color:#fff;border-color:#5a8a3c;}
+  .tg.on.no{background:#b0734a;border-color:#b0734a;}
+  .optoff{opacity:.4;pointer-events:none;}
+
+  /* ===== プレビュー（印刷シート） ===== */
+  #sheet{background:#fff;width:980px;margin:0 auto;padding:22px 26px;box-shadow:0 2px 10px #0003;}
+  /* 建具表モードのプレビューはプレビュー枠に追従（max 1400px）。印刷時は @page で実寸 */
+  #sheet.tg-mode{width:auto;max-width:1400px;padding:18px 22px;}
+  .sheet-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #2f3e2f;padding-bottom:8px;margin-bottom:10px;}
+  .sheet-head .title{font-size:22px;font-weight:bold;letter-spacing:2px;}
+  .sheet-head .proj{font-size:14px;font-weight:bold;margin-top:3px;}
+  .sheet-head .meta{font-size:11px;color:#555;text-align:right;line-height:1.6;}
+  .areaTitle{background:#2f3e2f;color:#fff;font-weight:bold;padding:4px 10px;margin:14px 0 6px;font-size:14px;border-radius:3px;}
+  table.spec{width:100%;border-collapse:collapse;margin-bottom:8px;}
+  table.spec th,table.spec td{border:1px solid #999;padding:4px 7px;font-size:12px;vertical-align:middle;}
+  table.spec th{background:#eef3e9;width:150px;text-align:left;color:#333;font-weight:bold;}
+  .sec{border:1px solid #888;border-radius:4px;margin-bottom:10px;overflow:hidden;page-break-inside:avoid;}
+  .sec-h{background:#d7e9c9;border-bottom:1px solid #9cc27a;padding:5px 10px;font-weight:bold;font-size:13px;}
+  .sec-b{padding:8px 10px;}
+  .kv{display:flex;font-size:12px;border-bottom:1px dotted #ccc;padding:3px 0;}
+  .kv .k{width:170px;color:#555;flex-shrink:0;}
+  .kv .v{font-weight:bold;}
+  .decided-box{display:flex;align-items:center;gap:12px;background:var(--decide);border:1.5px solid var(--decide-line);border-radius:6px;padding:8px 10px;margin-top:8px;}
+  .decided-box .sw{width:46px;height:46px;border-radius:5px;border:1px solid #00000022;flex-shrink:0;}
+  .decided-box .dsw{width:98px;height:76px;border-radius:5px;border:1px solid #00000022;flex-shrink:0;background-color:#f3f3f3;}
+  .decided-box .dinfo{flex:1;}
+  .decided-box .label{font-size:10px;color:var(--decide-line);font-weight:bold;}
+  .decided-box .nm{font-size:14px;font-weight:bold;}
+  .decided-box .det{font-size:11px;color:#444;margin-top:2px;}
+  .decided-box .none{color:#999;font-style:italic;}
+  .cands{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px;}
+  .cand{border:1px solid #bbb;border-radius:5px;padding:5px;width:112px;position:relative;background:#fff;page-break-inside:avoid;}
+  .cand.on{border:2px solid var(--decide-line);background:var(--decide);}
+  .cand .csw{height:84px;border:1px solid #00000018;border-radius:3px;}
+  .cand .cnm{font-size:10px;font-weight:bold;margin-top:4px;line-height:1.25;}
+  .cand .cdet{font-size:9px;color:#555;line-height:1.25;margin-top:1px;}
+  .cand .cbadge{position:absolute;top:-8px;right:-6px;background:var(--decide-line);color:#fff;font-size:9px;font-weight:bold;padding:1px 7px;border-radius:9px;}
+  .cstamp{font-size:9px;padding:0 4px;border-radius:3px;font-weight:bold;}
+  .cstamp.ok{background:#e3f2d6;color:#3a7a17;}
+  .cstamp.ng{background:#fbe0e0;color:#b32424;}
+  .undecided{font-size:11px;color:#b07a00;font-weight:bold;margin-top:6px;}
+  .sign{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:18px;border-top:2px solid #2f3e2f;padding-top:10px;}
+  .sign .box{border:1px solid #999;border-radius:4px;min-height:70px;padding:5px 8px;font-size:11px;color:#555;}
+  .sign .box b{display:block;margin-bottom:4px;color:#222;}
+  .foot{display:flex;justify-content:space-between;font-size:10px;color:#666;margin-top:10px;border-top:1px solid #ccc;padding-top:6px;}
+  .note{font-size:10px;color:#777;margin-top:6px;}
+  .stamp{display:inline-block;margin-left:10px;font-size:11px;font-weight:bold;padding:1px 8px;border-radius:4px;border:1.5px solid;vertical-align:middle;}
+  .stamp.ok{color:#3a7a17;border-color:#3a7a17;background:#eef7e6;}
+  .stamp.ng{color:#b32424;border-color:#b32424;background:#fbecec;}
+  .warnbar{background:#fbe0e0;border:1.5px solid #b32424;color:#8a1c1c;padding:7px 11px;border-radius:5px;font-size:12px;margin-bottom:10px;font-weight:bold;}
+  .regline{font-size:10px;color:#666;margin:2px 0 8px;}
+
+  /* ===== 印刷 ===== */
+  @media print{
+    #toolbar,#editor{display:none!important;}
+    body{background:#fff;}
+    #previewWrap{padding:0;background:#fff;overflow:visible;}
+    #sheet{width:auto;box-shadow:none;margin:0;padding:6mm 8mm;}
+    @page{size:A3 landscape;margin:8mm;}
+    /* 照明カードは A3 横で 8列×4行 = 32個 入るように小さく整える */
+    #sheet .lt-cards{grid-template-columns:repeat(8, 1fr)!important;gap:2mm!important;}
+    #sheet .lt-card{height:54mm;overflow:hidden;border-radius:2px;}
+    #sheet .lt-card-head{padding:1mm 1.5mm!important;font-size:8.5px!important;line-height:1.2!important;}
+    #sheet .lt-card-head .room{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    #sheet .lt-card-head .qty{font-size:8px!important;padding:0 1.5mm!important;border-radius:6px;}
+    #sheet .lt-card-img{height:22mm!important;}
+    #sheet .lt-card-body{padding:1mm 1.5mm!important;font-size:7.5px!important;line-height:1.3!important;}
+    #sheet .lt-card-body .meta{margin-top:0.5mm!important;}
+    #sheet .lt-floor-title{font-size:11px!important;padding:2px 8px!important;margin:6px 0 4px!important;}
+    #sheet .lt-grand{padding:4px 10px!important;margin:6px 0!important;}
+    #sheet .lt-grand-label{font-size:11px!important;}
+    #sheet .lt-grand-yen{font-size:16px!important;}
+  }
+</style>
+</head>
+<body>
+
+<div id="toolbar">
+  <h1 id="h1title">📋 仕様書メーカー</h1>
+  <button class="doc active" id="docSpec" onclick="switchDoc('spec')">仕様一覧表</button>
+  <button class="doc" id="docTategu" onclick="switchDoc('tategu')">建具表</button>
+  <button class="doc" id="docKurosu" onclick="switchDoc('kurosu')">クロス図面</button>
+  <button class="doc" id="docLighting" onclick="switchDoc('lighting')">照明図面</button>
+  <button class="doc" id="docWiring" onclick="switchDoc('wiring')">配線数量表</button>
+  <span style="width:14px"></span>
+  <button class="tab active" id="tabEdit" onclick="showTab('edit')">編集</button>
+  <button class="tab" id="tabView" onclick="showTab('view')">プレビュー</button>
+  <span class="spacer"></span>
+  <button onclick="printDoc()">🖨 印刷 / PDF保存</button>
+  <button class="ghost" onclick="saveJson()">💾 物件を保存</button>
+  <button class="ghost" onclick="document.getElementById('loadFile').click()">📂 読込</button>
+  <button class="ghost" onclick="if(confirm('新しい物件として候補をリセットします。よろしいですか？'))resetProject()">🆕 新規</button>
+  <input type="file" id="loadFile" accept="application/json" style="display:none" onchange="loadJson(event)">
+</div>
+
+<div class="wrap">
+  <div id="editor"></div>
+  <div id="previewWrap"><div id="sheet"></div></div>
+</div>
+
+<script>
+/* ============================================================
+   マスタ（候補リスト） ＝ ここを編集すれば候補が増減できます
+   - area: '外部' / '内部'
+   - common: 固定で表示する項目（{k:項目名, v:内容}）
+   - attrs : 候補ごとに比べる項目の行ラベル（複数可）
+   - variants: 候補。values にattrsの値、sw に色(または画像URL)
+   - decided: 既定で決定にしておく候補番号（0始まり / 無し=null）
+   ============================================================ */
+const MASTER = {
+  project:{
+    title:"外部・内部仕様一覧表",
+    name:"サンプル物件 新築工事",
+    taste:"A",
+    area_designation:"22条地域 ／ 風致地区：対象外",
+    author:"河合 知加",
+    decided_date:"",
+    company:"アイニコグループ株式会社 一級建築士事務所",
+    tel:"0742-71-9990",
+    fax:"0742-71-9980",
+    /* 景観・風致のマンセル色彩規制（外壁・屋根などの外部色を自動判定）
+       新方式：奈良市景観計画の区域・地区を選択 → 基準テーブルで判定
+       旧方式：簡易プリセット（reg.on/valMin/chromaR 等）は段階的に廃止予定 */
+    reg:{
+      on:false, label:"対象外",
+      // 旧方式の閾値（後方互換のため温存）
+      valMin:0, valMax:10, chromaR:4, chromaYR:6, chromaY:4, chromaOther:2, allowN:true,
+      // 新方式の区域・地区選択（Phase 2 で追加）
+      designatedZone:"指定なし",   // 防火/準防火地域 → 玄関ドアの自動判定にも使う
+      generalArea:"対象外",         // 8区域：大和青垣・自然・歴史的な風土・平地の里・山間の里・都心・市街地・西北部住宅地
+      priorityDistrict:"対象外",    // 景観形成重点地区 27件
+      fuchiType:"対象外",           // 風致地区種別
+      fuchiName:"対象外",           // 風致地区名称
+      fuchiZone:"対象外"            // 風致地区ゾーン
+    }
+  },
+  sections:[
+    /* ---------------- 外部 ---------------- */
+    {id:"door", area:"外部", title:"玄関ドア",
+      common:[
+        {k:"商品名・種類", v:"開き戸　ジエスタ2"},
+        {k:"エントリーシステム", v:"FamiLock　タグキーセット"},
+        {k:"把手デザイン", v:"F型"}
+      ],
+      attrs:["型番","扉色","把手色（外）","把手色（内）"],
+      variants:[
+        {nm:"ナチュラルホワイト", sw:"genkan_white.jpg", values:{"型番":"M17","扉色":"ナチュラルホワイト","把手色（外）":"ブラストシルバー","把手色（内）":"ダークブラウン"}},
+        {nm:"マットブラック",   sw:"genkan_black.jpg", values:{"型番":"M17","扉色":"マットブラック","把手色（外）":"シルキーマットブラック","把手色（内）":"ダークブラウン"}}
+      ], decided:1},
+
+    {id:"siding", area:"外部", title:"外壁（サイディング）",
+      common:[
+        {k:"メーカー", v:"KMEW（サイディング）・エクセレージ　親水15"},
+        {k:"張り方向", v:"ヨコ"},
+        {k:"メイン", v:"QWラントダークグレー　EW7533H"},
+        {k:"貼り分け", v:"貼り分け図面に品番記載"}
+      ],
+      attrs:["品番","カラー（マンセル値）"],
+      variants:[
+        {nm:"QWラントホワイト",      sw:"EW7531H_C_200.jpg", values:{"品番":"EW7531H","カラー（マンセル値）":"2.3Y 8.1/0.9"}},
+        {nm:"QWセレノベージュ",      sw:"EW7532H_C_200.jpg", values:{"品番":"EW7532H","カラー（マンセル値）":"1.6Y 6.7/1.2"}},
+        {nm:"QWラントダークグレー",  sw:"EW7533H_C_200.jpg", values:{"品番":"EW7533H","カラー（マンセル値）":"1.3Y 5.3/0.6"}},
+        {nm:"QWセレノディープグレー",sw:"EW7534H_C_200.jpg", values:{"品番":"EW7534H","カラー（マンセル値）":"7.5Y 4/0.2"}},
+        {nm:"QWセレノブラウニーブラック",sw:"EW7535H_C_200.jpg", values:{"品番":"EW7535H","カラー（マンセル値）":"5.7Y 3.3/0.3"}},
+        {nm:"QWアルバブラック",      sw:"EW7536H_C_200.jpg", values:{"品番":"EW7536H","カラー（マンセル値）":"2.1P 3.1/0.1"}}
+      ], decided:2},
+
+    {id:"roof", area:"外部", title:"屋根・破風",
+      common:[
+        {k:"本屋根", v:"ガルバリウム鋼板"},
+        {k:"張り方向", v:"タテヒラ"},
+        {k:"備考", v:"屋根・破風色は共通"}
+      ],
+      attrs:["品番","カラー（マンセル値）"],
+      variants:[
+        {nm:"ダークブラウンKNC", sw:"#4A3B30", values:{"品番":"K031","カラー（マンセル値）":"10R 3.2/0.5"}},
+        {nm:"ジェットブラックKNC", sw:"#26262B", values:{"品番":"K041","カラー（マンセル値）":"2.2RP 2.7/0.2"}}
+      ], decided:1},
+
+    {id:"gutter", area:"外部", title:"雨樋（軒樋・竪樋・呼樋）",
+      common:[
+        {k:"軒樋", v:"KAKU　RK85"},
+        {k:"竪樋・呼び樋", v:"瞬水S15"}
+      ],
+      attrs:["軒樋カラー","竪樋・呼び樋カラー"],
+      variants:[
+        {nm:"しんちゃ系", sw:"#8a7a5c", values:{"軒樋カラー":"しんちゃ","竪樋・呼び樋カラー":"ミルクホワイト"}},
+        {nm:"ブラック系", sw:"#222222", values:{"軒樋カラー":"ブラック","竪樋・呼び樋カラー":"ブラック"}}
+      ], decided:1},
+
+    {id:"sash", area:"外部", title:"室内外サッシ色・外部水切り・バルコニー笠木",
+      common:[{k:"備考", v:"サーモスLは外部内部サッシ色同色"}],
+      attrs:["カラー"],
+      variants:[
+        {nm:"ホワイト", sw:"#ffffff", values:{"カラー":"ホワイト"}},
+        {nm:"ブラック", sw:"#1a1a1a", values:{"カラー":"ブラック"}}
+      ], decided:1},
+
+    /* ---------------- 内部 ---------------- */
+    {id:"dotile_out", area:"内部", title:"外部土間タイル",
+      common:[{k:"施工", v:"外構工事施工"}], attrs:[], variants:[], decided:null},
+
+    {id:"dotile_in", area:"内部", title:"内部土間タイル",
+      common:[
+        {k:"メーカー", v:"ニッタイ"},
+        {k:"商品名", v:"ジャルディーノ"},
+        {k:"品番", v:"JAR-30-50"},
+        {k:"出隅", v:"角"},
+        {k:"巾木", v:"ウッドワン　ドレスタシリーズM型　パールホワイト色"}
+      ], attrs:[], variants:[], decided:null},
+
+    {id:"paint_in", area:"内部", title:"内部塗装色",
+      common:[
+        {k:"対象", v:"見せ梁・化粧柱・畳寄せ、カウンター・造作家具・ニッチ・笠木、階段（踏板・蹴込板・側板）"},
+        {k:"軒天", v:"ウエスタンレッドシダー　クリア"}
+      ],
+      attrs:["選択仕様","型番"],
+      variants:[
+        {nm:"クリア塗装", sw:"#e8dcc2", values:{"選択仕様":"クリア塗装","型番":"M17"}},
+        {nm:"バトンオーク塗装", sw:"#9c7a4d", values:{"選択仕様":"バトンオーク塗装","型番":"M17"}}
+      ], decided:0},
+
+    {id:"paint_out", area:"内部", title:"外部塗装色", optional:true, present:true,
+      common:[{k:"対象", v:"化粧柱・木格子・外部板張"}],
+      attrs:[],
+      variants:[{nm:"オリーブ", sw:"#6e7a3d", values:{}}], decided:0},
+
+    {id:"window_frame", area:"内部", title:"窓枠仕様（共通仕様）",
+      common:[
+        {k:"基本", v:"建材四方枠仕様：ホワイト"},
+        {k:"掃き出し窓・勝手口・とびら枠", v:"建材三方枠仕様：ホワイト"}
+      ], attrs:[], variants:[], decided:null},
+
+    {id:"wall_in", area:"内部", title:"内部壁・天井（クロス）",
+      common:[
+        {k:"仕上げ", v:"クロス（ビニルクロス）"},
+        {k:"品番・割付", v:"クロス図面参照"}
+      ], attrs:[], variants:[], decided:null},
+
+    {id:"equip", area:"内部", title:"設備仕様（キッチン・UB・洗面台）",
+      common:[
+        {k:"アクセサリ設置位置", v:"決定図面・見積書をご参照ください"},
+        {k:"単独手洗い 設置有無", v:"無"}
+      ], attrs:[], variants:[], decided:null},
+
+    {id:"toilet", area:"内部", title:"トイレ",
+      common:[
+        {k:"1階 本体", v:"LIXIL　ベーシアシャワートイレ"},
+        {k:"1階 アクセサリ", v:"LIXIL（設置位置：決定図面参照）"},
+        {k:"2階 本体", v:"LIXIL　ベーシアシャワートイレ"},
+        {k:"2階 アクセサリ", v:"LIXIL（設置位置：決定図面参照）"}
+      ], attrs:[], variants:[], decided:null}
+  ]
+};
+
+/* ============================================================
+   状態管理
+   ============================================================ */
+let DATA = JSON.parse(JSON.stringify(MASTER)); // 現在編集中の物件（仕様一覧表）
+let TG   = null;                                // 建具表データ（後で初期化）
+let KR   = null;                                // クロス図面データ（後で初期化）
+let LT   = null;                                // 照明図面データ（後で初期化）
+let WR   = null;                                // 配線数量表データ（後で初期化）
+let DOC  = 'spec';                              // 'spec' | 'tategu' | 'kurosu' | 'lighting' | 'wiring'
+const SAVEKEY = "naigaisou_project_v1";
+const TGKEY   = "naigaisou_tategu_v1";
+const KRKEY   = "naigaisou_kurosu_v1";
+const LTKEY   = "naigaisou_lighting_v1";
+const WRKEY   = "naigaisou_wiring_v1";
+
+/* 候補カタログ（写真・品番・色など）は常に MASTER（ファイル）から読み込み、
+   保存データからは「選んだ結果」だけを重ねる。
+   → 写真や候補を更新すれば必ず反映され、各物件の選択は保たれる。 */
+/* 旧形式のテイスト値（"内部 A" "外部B" 等）を A/B/C に正規化。読み取れなければ A 既定 */
+function normalizeTaste(v){
+  if(!v) return 'A';
+  const s=String(v).trim().toUpperCase();
+  if(s==='A'||s==='B'||s==='C') return s;
+  const m=s.match(/[ABC]/);
+  return m ? m[0] : 'A';
+}
+function mergeWithMaster(saved){
+  const base = JSON.parse(JSON.stringify(MASTER));
+  if(!saved || !saved.project) return base;
+  // 物件情報（テキスト項目）を上書き
+  Object.keys(base.project).forEach(k=>{ if(k!=='reg' && (k in saved.project)) base.project[k]=saved.project[k]; });
+  base.project.taste=normalizeTaste(base.project.taste); // 旧"内部 A"等→"A"
+  if(saved.project.reg) base.project.reg=Object.assign(JSON.parse(JSON.stringify(MASTER.project.reg)), saved.project.reg);
+  // 各セクション：決定番号と、手入力で直した共通仕様の値だけを引き継ぐ
+  base.sections.forEach(bs=>{
+    const ss=(saved.sections||[]).find(x=>x.id===bs.id);
+    if(!ss) return;
+    if('decided' in ss) bs.decided=ss.decided;
+    if('present' in ss && bs.optional) bs.present=ss.present;
+    if(Array.isArray(ss.common)) bs.common.forEach(bc=>{
+      const sc=ss.common.find(x=>x.k===bc.k); if(sc && 'v' in sc) bc.v=sc.v;
+    });
+  });
+  return base;
+}
+function loadLocal(){
+  let saved=null;
+  const s = localStorage.getItem(SAVEKEY);
+  if(s){ try{ saved = JSON.parse(s); }catch(e){} }
+  DATA = mergeWithMaster(saved);
+  let ts=localStorage.getItem(TGKEY);
+  TG = ts ? normalizeTG(safeParse(ts)) : JSON.parse(JSON.stringify(TATEGU_MASTER));
+  let ks=localStorage.getItem(KRKEY);
+  KR = ks ? normalizeKR(safeParse(ks)) : JSON.parse(JSON.stringify(KUROSU_MASTER));
+  let ls=localStorage.getItem(LTKEY);
+  LT = ls ? normalizeLT(safeParse(ls)) : JSON.parse(JSON.stringify(LIGHTING_MASTER));
+  let ws=localStorage.getItem(WRKEY);
+  WR = ws ? normalizeWR(safeParse(ws)) : JSON.parse(JSON.stringify(WIRING_MASTER));
+}
+function autosave(){
+  try{ localStorage.setItem(SAVEKEY, JSON.stringify(DATA)); localStorage.setItem(TGKEY, JSON.stringify(TG)); localStorage.setItem(KRKEY, JSON.stringify(KR)); localStorage.setItem(LTKEY, JSON.stringify(LT)); localStorage.setItem(WRKEY, JSON.stringify(WR)); }
+  catch(e){ console.warn('autosave失敗', e); if(!autosave._warned){ autosave._warned=true; alert('自動保存の容量上限を超えました。取り込み画像が多い場合は「💾 物件を保存」でファイル保存してください。'); } }
+}
+function safeParse(s){ try{ return JSON.parse(s); }catch(e){ return null; } }
+
+/* ============================================================
+   編集パネル描画
+   ============================================================ */
+function renderSpecEditor(){
+  const p = DATA.project;
+  let h = `<details class="card" open><summary><span class="area" style="background:#445">物件</span>物件情報</summary><div class="body">
+    ${pf('物件名','name')}
+    ${tasteField()}
+    ${pf('指定区域','area_designation')}
+    ${pf('作成者','author')}
+    ${pf('決定日','decided_date')}
+  </div></details>`;
+
+  h += zoneCard();   // 新：奈良市景観計画 区域・地区選択
+  h += regCard();    // 旧：簡易プリセット（Phase 4 で統合予定）
+
+  DATA.sections.forEach((s,si)=>{
+    const off = s.optional && !s.present;
+    h += `<details class="card"><summary><span class="area">${s.area}</span>${s.title}${s.optional&&!s.present?' <span style="font-weight:normal;color:#b0734a;font-size:11px;">（なし）</span>':''}${s.variants.length?` <span style="font-weight:normal;color:#888;font-size:11px;">（候補${s.variants.length}）</span>`:''}</summary><div class="body">`;
+    // 有無トグル（optional項目）
+    if(s.optional){
+      h += `<div class="field"><label>この物件で使用</label>
+        <span class="toggle">
+          <button class="tg ${s.present?'on':''}" onclick="setPresent(${si},true)">あり</button>
+          <button class="tg no ${!s.present?'on':''}" onclick="setPresent(${si},false)">なし</button>
+        </span>
+        <span class="hint" style="margin:0">「なし」は印刷結果に出ません</span></div>`;
+    }
+    h += `<div class="${off?'optoff':''}">`;
+    // 共通仕様（編集可）
+    s.common.forEach((c,ci)=>{
+      h += `<div class="field"><label>${c.k}</label><input value="${esc(c.v)}" oninput="setCommon(${si},${ci},this.value)"></div>`;
+    });
+    // 候補（クリックで決定）
+    if(s.variants.length){
+      h += `<div class="hint">▼ 決定する候補をクリックしてください</div><div class="choices">`;
+      s.variants.forEach((v,vi)=>{
+        const sub = s.attrs.map(a=>v.values[a]).filter(Boolean).join(' / ');
+        h += `<div class="choice ${s.decided===vi?'on':''}" onclick="setDecided(${si},${vi})">
+          <div class="badge">決定</div>
+          <div class="sw" style="background:${swStyle(v.sw)}"></div>
+          <div class="nm">${esc(v.nm)}</div>
+          <div class="sub">${esc(sub)}</div>
+          ${compBadge(s,v)}
+        </div>`;
+      });
+      h += `</div>`;
+    }
+    h += `</div>`; // /optoff wrapper
+    h += `</div></details>`;
+  });
+  document.getElementById('editor').innerHTML = h;
+}
+function renderEditor(){
+  if(DOC==='tategu') renderTateguEditor();
+  else if(DOC==='kurosu') renderKurosuEditor();
+  else if(DOC==='lighting') renderLightingEditor();
+  else if(DOC==='wiring') renderWiringEditor();
+  else renderSpecEditor();
+}
+function renderSheet(){
+  if(DOC==='tategu') renderTateguSheet();
+  else if(DOC==='kurosu') renderKurosuSheet();
+  else if(DOC==='lighting') renderLightingSheet();
+  else if(DOC==='wiring') renderWiringSheet();
+  else renderSpecSheet();
+}
+/* 印刷フロー：照明図面/配線数量表は会計上ペアなので、どちらのタブから印刷しても
+   「照明図面 → 改ページ → 配線数量表」の連結書類として出力。他のタブは単独印刷。 */
+function printDoc(){
+  if(DOC==='lighting' || DOC==='wiring'){
+    const origDoc = DOC;
+    // 照明シートを生成
+    DOC = 'lighting';
+    renderLightingSheet();
+    const lightingHTML = document.getElementById('sheet').innerHTML;
+    // 配線シートを生成
+    DOC = 'wiring';
+    renderWiringSheet();
+    const wiringHTML = document.getElementById('sheet').innerHTML;
+    // 連結（A3横の改ページを強制）
+    document.getElementById('sheet').innerHTML =
+      `<div class="print-section">${lightingHTML}</div>` +
+      `<div class="print-section" style="page-break-before:always;break-before:page;">${wiringHTML}</div>`;
+    // 印刷ダイアログが閉じたら元の表示に戻す
+    const restore = ()=>{
+      window.removeEventListener('afterprint', restore);
+      DOC = origDoc;
+      renderSheet();
+    };
+    window.addEventListener('afterprint', restore);
+    window.print();
+  } else {
+    window.print();
+  }
+}
+function pf(label,key){return `<div class="field"><label>${label}</label><input value="${esc(DATA.project[key]||'')}" oninput="setProj('${key}',this.value)"></div>`;}
+/* テイスト（A/B/C）プルダウン。A=GE / B=LC / C=CL。想定外の保存値も先頭に温存 */
+function tasteField(){
+  const cur=DATA.project.taste||'';
+  let opts=['A','B','C'];
+  const extra=(cur && !opts.includes(cur))?`<option value="${esc(cur)}" selected>${esc(cur)}</option>`:'';
+  const body=opts.map(t=>`<option value="${t}"${cur===t?' selected':''}>${t}（${TASTE_LABEL[t]}）</option>`).join('');
+  return `<div class="field"><label>テイスト</label><select onchange="setTaste(this.value)">${extra}${body}</select></div>`
+    +`<div class="hint">テイストを選ぶと、建具表のドア色・建具/床の画像（A=GE／B=LC／C=CL）がまとめて切り替わります。</div>`;
+}
+/* テイスト選択：建具表のドア色一式＋各建具の色（オフホワイト変更は維持）を連動 */
+function setTaste(v){
+  DATA.project.taste=v;
+  const color=TASTE_COLOR[v];
+  if(color){
+    applyDoorColorPreset(color);
+    TG.doors.forEach(d=>{
+      if(d.color!=='WH（オフホワイト）') {
+        d.color=color;
+        d.handle=leverForTaste(d.handle, v); // 非WH建具のレバーハンドルBA↔RAをテイスト連動
+      }
+      else applyWhHandleIfNeeded(d, v); // WH色は把手をテイスト＋種類で連動（引違い戸は SH型ブラック/シルバー）
+      if(d.threshold==='有') d.sill=TASTE_SILL[v]||''; // 敷居ありの建具は敷居色もテイスト連動
+    });
+  }
+  renderEditor(); sync();
+}
+function setProj(k,v){DATA.project[k]=v; sync();}
+function setCommon(si,ci,v){DATA.sections[si].common[ci].v=v; sync();}
+function setDecided(si,vi){const s=DATA.sections[si]; s.decided = (s.decided===vi?null:vi); renderEditor(); sync();}
+function setPresent(si,val){ DATA.sections[si].present=val; renderEditor(); sync(); }
+
+/* ============================================================
+   プレビュー（印刷シート）描画
+   ============================================================ */
+function renderSpecSheet(){
+  const p = DATA.project;
+  let h = `<div class="sheet-head">
+      <div>
+        <div class="title">${esc(p.title)}</div>
+        <div class="proj">${esc(p.name)}　<span style="font-size:12px;color:#666;">［テイスト：${esc(p.taste)}］</span></div>
+      </div>
+      <div class="meta">
+        指定区域：${esc(p.area_designation)}<br>
+        ${p.reg.on?`色彩規制：${esc(p.reg.label)}<br>`:''}
+        決定日：${esc(p.decided_date)||'　　　年　　月　　日'}<br>
+        作成者：${esc(p.author)}
+      </div>
+    </div>`;
+
+  // 景観・風致：決定済みの外部色を判定。新方式（区域・地区）優先、旧reg.onはフォールバック。
+  const _apps = applicableKeikanBases();
+  if(_apps.length){
+    const ng=[];
+    DATA.sections.filter(s=>s.variants.length && s.decided!=null && sectionKeikanTarget(s)).forEach(s=>{
+      const v=s.variants[s.decided], mp=variantMunsell(s,v);
+      if(!mp) return;
+      const target = sectionKeikanTarget(s);
+      const reasons=[];
+      _apps.forEach(({bid,src})=>{ const j=checkColorBasis(bid,target,mp); if(!j.ok) reasons.push(`【${src} 基準${bid}】${j.reason}`); });
+      if(reasons.length) ng.push(`${s.title}「${v.nm}」（${mp.hue} ${mp.value}/${mp.chroma}）：${reasons.join(' ／ ')}`);
+    });
+    const appLabel = _apps.map(a=>`${a.bid}（${a.src}）`).join('　／　');
+    h += `<div class="regline">適用色彩基準：${esc(appLabel)}</div>`;
+    if(ng.length) h += `<div class="warnbar">⚠ 景観色彩基準に不適合：<br>・${ng.map(esc).join('<br>・')}</div>`;
+  } else if(p.reg.on){
+    const ng=[];
+    DATA.sections.filter(s=>s.area==='外部'&&s.variants.length&&s.decided!=null).forEach(s=>{
+      const v=s.variants[s.decided], mp=variantMunsell(s,v);
+      if(mp){ const j=judgeMunsell(mp,p.reg); if(!j.ok) ng.push(`${s.title}「${v.nm}」（${mp.hue} ${mp.value}/${mp.chroma}）：${j.errs.join('・')}`); }
+    });
+    h += `<div class="regline">適用色彩規制（簡易プリセット）：${esc(p.reg.label)}　／　明度 ${p.reg.valMin}〜${p.reg.valMax}　彩度上限 R${p.reg.chromaR}・YR${p.reg.chromaYR}・Y${p.reg.chromaY}・他${p.reg.chromaOther}</div>`;
+    if(ng.length) h += `<div class="warnbar">⚠ 色彩規制に不適合の可能性：<br>・${ng.map(esc).join('<br>・')}</div>`;
+  }
+
+  ['外部','内部'].forEach(area=>{
+    h += `<div class="areaTitle">${area}</div>`;
+    DATA.sections.filter(s=>s.area===area && !(s.optional && !s.present)).forEach(s=>{
+      h += `<div class="sec"><div class="sec-h">${esc(s.title)}</div><div class="sec-b">`;
+      s.common.forEach(c=>{ if(c.v!=='') h += `<div class="kv"><div class="k">${esc(c.k)}</div><div class="v">${esc(c.v)}</div></div>`; });
+      if(s.variants.length){
+        const reg=DATA.project.reg;
+        const v = (s.decided!=null)? s.variants[s.decided] : null;
+        if(v){
+          const det = s.attrs.map(a=>`${a}：${v.values[a]}`).filter(x=>!x.endsWith('：')).join('　／　');
+          let stamp='';
+          const _mp = variantMunsell(s,v);
+          const _t  = sectionKeikanTarget(s);
+          if(_mp && _t && _apps.length){
+            // 新方式：適用基準すべてで判定 → 全てokなら適合
+            const allOk = _apps.every(({bid})=>checkColorBasis(bid,_t,_mp).ok);
+            stamp = `<span class="stamp ${allOk?'ok':'ng'}">${allOk?'景観基準 適合':'景観基準 不適合'}</span>`;
+          } else if(reg.on && _mp){
+            const j=judgeMunsell(_mp,reg);
+            stamp=`<span class="stamp ${j.ok?'ok':'ng'}">${j.ok?'色彩規制 適合':'色彩規制 不適合'}</span>`;
+          }
+          h += `<div class="decided-box">
+              <div class="dsw" style="background:${swStyle(v.sw,'contain')}"></div>
+              <div class="dinfo"><div class="label">【 決 定 】</div><div class="nm">${esc(v.nm)}${stamp}</div><div class="det">${esc(det)}</div></div>
+            </div>`;
+        } else {
+          h += `<div class="undecided">― 未決定（候補：${s.variants.map(x=>esc(x.nm)).join('・')}）―</div>`;
+        }
+      }
+      h += `</div></div>`;
+    });
+  });
+
+  h += `<div class="sign">
+      <div class="box"><b>お客様ご署名</b></div>
+      <div class="box"><b>承認書提出</b></div>
+      <div class="box"><b>捺印欄</b></div>
+    </div>
+    <div class="note">※ 安全性・デザイン性・施工性を優先する場合、仕様詳細図面通りの施工とならない場合がございます。</div>
+    <div class="foot"><div>${esc(p.company)}</div><div>TEL ${esc(p.tel)}　／　FAX ${esc(p.fax)}</div></div>`;
+
+  document.getElementById('sheet').innerHTML = h;
+}
+
+/* ============================================================
+   ユーティリティ
+   ============================================================ */
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function swStyle(sw,size,bg){ size=size||'cover'; bg=bg||'#f3f3f3'; if(!sw) return bg==='#f3f3f3'?'#ddd':bg; if(/^https?:|^data:/.test(sw)||/\.(png|jpe?g|webp|gif)$/i.test(sw)) return `${bg} center/${size} no-repeat url('${encodeURI(sw)}')`; return sw; }
+/* 建具画像：📷取り込み(data:URI)や明示ファイル名があれば優先、無ければ 建具/{色}/{種類}.jpg を自動参照（色×種類カタログ） */
+function doorImgSrc(d){ if(d.img) return d.img; if(d.color && d.type) return `建具/${d.color}/${d.type}.jpg`; return ''; }
+/* 敷居色：保存/手入力値を優先。無ければ「敷居有無＝有」のとき現在テイストの既定色を自動表示（A=WH/B=PL/C=GE） */
+function doorSill(d){ if(d.sill) return d.sill; if((d.threshold||'').trim()==='有') return TASTE_SILL[DATA.project.taste]||''; return ''; }
+/* 把手画像のファイル名：(色) は除外、「表示錠付き」は残す（SH型表示錠付き.jpg のような専用画像を見られるように） */
+function handleDesign(h){ return (h||'').replace(/（[^）]*）/g,'').trim(); }
+/* 各WDの付属画像パス（建具/{色}/...）。色未設定なら空 */
+function handleImgSrc(d){ const n=handleDesign(d.handle); return (d.color&&n) ? `建具/${d.color}/${n}.jpg` : ''; }
+function lightScopeImgSrc(d){ return d.color ? `建具/${d.color}/ライトスコープ.jpg` : ''; }
+function lockImgSrc(d){ return d.color ? `建具/${d.color}/表示錠.jpg` : ''; }
+function sync(){ renderSheet(); autosave(); }
+
+/* ============================================================
+   奈良市景観計画 色彩基準テーブル（チェッカーから移植：app.py由来）
+   ============================================================ */
+const _EPS = 1e-9;
+// _band(v_min_excl, v_max_incl, chroma_max) → [v_min_incl, v_max_incl, c_max]
+const _b = (vminExcl, vmaxIncl, cmax) => [vminExcl + _EPS, vmaxIncl, cmax];
+// _band_incl(v_min_incl, v_max_incl, chroma_max)
+const _bi = (vminIncl, vmaxIncl, cmax) => [vminIncl, vmaxIncl, cmax];
+
+const KEIKAN_BASIS = {
+  // 1-① 大和青垣・自然・歴史的な風土
+  "1-①": {
+    "外壁": {
+      "0.0R-5.0R":   [_b(5.0,7.0,1.0), _bi(2.0,5.0,2.0)],
+      "5.0R-10.0R":  [_b(5.0,7.0,2.0), _bi(2.0,5.0,3.0)],
+      "0.0YR-5.0YR": [_b(5.0,7.0,2.0), _bi(2.0,5.0,4.0)],
+      "5.0YR-10.0YR":[_b(5.0,7.0,3.0), _bi(2.0,5.0,4.0)],
+      "0.0Y-5.0Y":   [_b(5.0,7.0,3.0), _bi(2.0,5.0,4.0)],
+      "5.0Y-10.0Y":  [_b(5.0,7.0,2.0), _bi(2.0,5.0,4.0)],
+      "無彩色":       [_bi(2.0,7.0,null)]
+    },
+    "屋根": {
+      "0.0R-5.0R":   [],
+      "5.0R-10.0R":  [],
+      "0.0YR-5.0YR": [_bi(0.0,4.0,1.0)],
+      "5.0YR-10.0YR":[_bi(0.0,4.0,2.0)],
+      "0.0Y-5.0Y":   [_bi(0.0,4.0,2.0)],
+      "5.0Y-10.0Y":  [_bi(0.0,4.0,1.0)],
+      "無彩色":       [_bi(0.0,4.0,null)]
+    }
+  },
+  // 1-② 平地の里・山間の里
+  "1-②": {
+    "外壁": {
+      "0.0R-5.0R":   [_b(5.0,7.0,1.0), _bi(0.0,5.0,2.0)],
+      "5.0R-10.0R":  [_b(5.0,7.0,2.0), _bi(0.0,5.0,3.0)],
+      "0.0YR-5.0YR": [_b(5.0,7.0,2.0), _bi(0.0,5.0,4.0)],
+      "5.0YR-10.0YR":[_b(5.0,7.0,3.0), _bi(0.0,5.0,4.0)],
+      "0.0Y-5.0Y":   [_b(5.0,7.0,3.0), _bi(0.0,5.0,4.0)],
+      "5.0Y-10.0Y":  [_b(5.0,7.0,2.0), _bi(0.0,5.0,4.0)],
+      "無彩色":       [_bi(0.0,7.0,null)]
+    },
+    "屋根": {
+      "0.0R-5.0R":[], "5.0R-10.0R":[],
+      "0.0YR-5.0YR":[_bi(0.0,4.0,1.0)], "5.0YR-10.0YR":[_bi(0.0,4.0,2.0)],
+      "0.0Y-5.0Y":[_bi(0.0,4.0,2.0)],   "5.0Y-10.0Y":[_bi(0.0,4.0,1.0)],
+      "無彩色":[_bi(0.0,4.0,null)]
+    }
+  },
+  // 1-③ 都心
+  "1-③": {
+    "外壁": {
+      "0.0R-5.0R":   [_bi(0.0,8.0,2.0)],
+      "5.0R-10.0R":  [_b(7.0,8.0,3.0), _bi(0.0,7.0,4.0)],
+      "0.0YR-5.0YR": [_b(7.0,8.0,2.0), _b(6.0,7.0,3.0), _b(5.0,6.0,4.0), _bi(0.0,5.0,5.0)],
+      "5.0YR-10.0YR":[_b(7.0,8.0,2.0), _b(6.0,7.0,3.0), _b(5.0,6.0,4.0), _bi(0.0,5.0,5.0)],
+      "0.0Y-5.0Y":   [_b(7.0,8.0,3.0), _b(5.0,7.0,4.0), _bi(0.0,5.0,6.0)],
+      "5.0Y-10.0Y":  [_b(5.0,8.0,4.0), _bi(0.0,5.0,6.0)],
+      "無彩色":       [_bi(0.0,8.0,null)]
+    },
+    "屋根": {
+      "0.0R-5.0R":[_bi(0.0,4.0,2.0)], "5.0R-10.0R":[_bi(0.0,4.0,2.0)],
+      "0.0YR-5.0YR":[_bi(0.0,4.0,4.0)], "5.0YR-10.0YR":[_bi(0.0,4.0,6.0)],
+      "0.0Y-5.0Y":[_bi(0.0,4.0,6.0)],   "5.0Y-10.0Y":[_bi(0.0,4.0,4.0)],
+      "無彩色":[_bi(0.0,4.0,null)]
+    }
+  },
+  // 1-④ 市街地・西北部住宅地
+  "1-④": {
+    "外壁": {
+      "0.0R-5.0R":   [_bi(0.0,8.0,2.0)],
+      "5.0R-10.0R":  [_b(5.0,8.0,2.0), _bi(0.0,5.0,4.0)],
+      "0.0YR-5.0YR": [_b(5.0,8.0,3.0), _bi(0.0,5.0,5.0)],
+      "5.0YR-10.0YR":[_b(6.0,8.0,3.0), _bi(0.0,6.0,5.0)],
+      "0.0Y-5.0Y":   [_b(5.0,8.0,4.0), _bi(0.0,5.0,6.0)],
+      "5.0Y-10.0Y":  [_b(5.0,8.0,3.0), _bi(0.0,5.0,6.0)],
+      "無彩色":       [_bi(0.0,8.0,null)]
+    },
+    "屋根": {
+      "0.0R-5.0R":[_bi(0.0,4.0,2.0)], "5.0R-10.0R":[_bi(0.0,4.0,2.0)],
+      "0.0YR-5.0YR":[_bi(0.0,4.0,2.0)], "5.0YR-10.0YR":[_bi(0.0,4.0,3.0)],
+      "0.0Y-5.0Y":[_bi(0.0,4.0,3.0)],   "5.0Y-10.0Y":[_bi(0.0,4.0,2.0)],
+      "無彩色":[_bi(0.0,4.0,null)]
+    }
+  },
+  // 2-① ならまちA・きたまちA地区
+  "2-①": {
+    "外壁": {
+      "0.0R-5.0R":[],
+      "5.0R-10.0R":[_b(5.0,7.0,1.0), _bi(2.0,5.0,2.0)],
+      "0.0YR-5.0YR":[_b(5.0,7.0,2.0), _bi(2.0,5.0,4.0)],
+      "5.0YR-10.0YR":[_b(5.0,7.0,3.0), _bi(2.0,5.0,4.0)],
+      "0.0Y-5.0Y":[_b(5.0,7.0,2.0), _bi(2.0,5.0,3.0)],
+      "5.0Y-10.0Y":[],
+      "無彩色":[_bi(2.0,7.0,null)]
+    },
+    "屋根": {
+      "0.0R-5.0R":[], "5.0R-10.0R":[],
+      "0.0YR-5.0YR":[_bi(0.0,4.0,1.0)], "5.0YR-10.0YR":[_bi(0.0,4.0,2.0)],
+      "0.0Y-5.0Y":[_bi(0.0,4.0,2.0)],   "5.0Y-10.0Y":[_bi(0.0,4.0,1.0)],
+      "無彩色":[_bi(0.0,4.0,null)]
+    }
+  },
+  // 2-② 歴史型重点地区
+  "2-②": {
+    "外壁": {
+      "0.0R-5.0R":[_b(5.0,7.0,1.0), _bi(2.0,5.0,2.0)],
+      "5.0R-10.0R":[_b(5.0,7.0,2.0), _bi(2.0,5.0,3.0)],
+      "0.0YR-5.0YR":[_b(5.0,7.0,2.0), _bi(2.0,5.0,4.0)],
+      "5.0YR-10.0YR":[_b(5.0,7.0,3.0), _bi(2.0,5.0,4.0)],
+      "0.0Y-5.0Y":[_b(5.0,7.0,3.0), _bi(2.0,5.0,4.0)],
+      "5.0Y-10.0Y":[_b(5.0,7.0,2.0), _bi(2.0,5.0,4.0)],
+      "無彩色":[_bi(2.0,7.0,null)]
+    },
+    "屋根": {
+      "0.0R-5.0R":[], "5.0R-10.0R":[],
+      "0.0YR-5.0YR":[_bi(0.0,4.0,1.0)], "5.0YR-10.0YR":[_bi(0.0,4.0,2.0)],
+      "0.0Y-5.0Y":[_bi(0.0,4.0,2.0)],   "5.0Y-10.0Y":[_bi(0.0,4.0,1.0)],
+      "無彩色":[_bi(0.0,4.0,null)]
+    }
+  },
+  // 2-③ 自然型沿道
+  "2-③": {
+    "外壁": {
+      "0.0R-5.0R":[_b(5.0,7.0,1.0), _bi(0.0,5.0,2.0)],
+      "5.0R-10.0R":[_b(5.0,7.0,2.0), _bi(0.0,5.0,3.0)],
+      "0.0YR-5.0YR":[_b(5.0,7.0,2.0), _bi(0.0,5.0,4.0)],
+      "5.0YR-10.0YR":[_b(5.0,7.0,3.0), _bi(0.0,5.0,4.0)],
+      "0.0Y-5.0Y":[_b(5.0,7.0,3.0), _bi(0.0,5.0,4.0)],
+      "5.0Y-10.0Y":[_b(5.0,7.0,2.0), _bi(0.0,5.0,4.0)],
+      "無彩色":[_bi(0.0,7.0,null)]
+    },
+    "屋根": {
+      "0.0R-5.0R":[], "5.0R-10.0R":[],
+      "0.0YR-5.0YR":[_bi(0.0,4.0,1.0)], "5.0YR-10.0YR":[_bi(0.0,4.0,2.0)],
+      "0.0Y-5.0Y":[_bi(0.0,4.0,2.0)],   "5.0Y-10.0Y":[_bi(0.0,4.0,1.0)],
+      "無彩色":[_bi(0.0,4.0,null)]
+    }
+  },
+  // 2-④ まちなか・市街地型
+  "2-④": {
+    "外壁": {
+      "0.0R-5.0R":[_bi(0.0,8.0,2.0)],
+      "5.0R-10.0R":[_b(5.0,8.0,2.0), _bi(0.0,5.0,4.0)],
+      "0.0YR-5.0YR":[_b(7.0,8.0,2.0), _b(5.0,7.0,3.0), _bi(0.0,5.0,4.0)],
+      "5.0YR-10.0YR":[_b(6.0,8.0,2.0), _b(5.0,6.0,3.0), _bi(0.0,5.0,4.0)],
+      "0.0Y-5.0Y":[_b(5.0,8.0,3.0), _bi(0.0,5.0,4.0)],
+      "5.0Y-10.0Y":[_b(5.0,8.0,2.0), _bi(0.0,5.0,4.0)],
+      "無彩色":[_bi(0.0,8.0,null)]
+    },
+    "屋根": {
+      "0.0R-5.0R":[_bi(0.0,4.0,2.0)], "5.0R-10.0R":[_bi(0.0,4.0,2.0)],
+      "0.0YR-5.0YR":[_bi(0.0,4.0,2.0)], "5.0YR-10.0YR":[_bi(0.0,4.0,3.0)],
+      "0.0Y-5.0Y":[_bi(0.0,4.0,3.0)],   "5.0Y-10.0Y":[_bi(0.0,4.0,2.0)],
+      "無彩色":[_bi(0.0,4.0,null)]
+    }
+  }
+};
+
+/* 一般区域 → 基準ID */
+const GENERAL_AREA_TO_BASIS = {
+  "大和青垣":"1-①","自然":"1-①","歴史的な風土":"1-①",
+  "平地の里":"1-②","山間の里":"1-②",
+  "都心":"1-③",
+  "市街地":"1-④","西北部住宅地":"1-④"
+};
+
+/* 景観形成重点地区 → 基準ID */
+const PRIORITY_DISTRICT_TO_BASIS = {
+  "ならまち A地区":"2-①",
+  "ならまち B・C地区":"2-②",
+  "きたまち A地区":"2-①",
+  "きたまち B・C地区":"2-②",
+  "西の京歴史的景観形成重点地区":"2-②",
+  "薬師寺周辺歴史的景観形成重点地区":"2-②",
+  "柳生の里歴史的景観形成重点地区":"2-②",
+  "月ヶ瀬歴史的景観形成重点地区":"2-②",
+  "ＪＲ奈良駅周辺まちなか景観形成重点地区":"2-④",
+  "近鉄奈良駅周辺まちなか景観形成重点地区":"2-④",
+  "大宮通り沿道（歴史型）":"2-②",
+  "大宮通り沿道（市街地型Ⅰ）":"2-④",
+  "大宮通り沿道（市街地型Ⅱ）":"2-④",
+  "三条通り沿道（歴史型）":"2-②",
+  "三条通り沿道（市街地型Ⅰ）":"2-④",
+  "三条通り沿道（市街地型Ⅱ）":"2-④",
+  "県道木津横田線沿道（自然型）":"2-③",
+  "一般国道169号線沿道（自然型）":"2-③",
+  "一般国道169号線沿道（市街地型Ⅱ）":"2-④",
+  "（都）西九条佐保線沿道（市街地型Ⅰ）":"2-④",
+  "（都）西九条佐保線沿道（市街地型Ⅱ）":"2-④",
+  "（都）大森高畑線沿道（市街地型Ⅰ）":"2-④",
+  "一般国道24号沿道（自然型）":"2-③",
+  "一般国道24号沿道（市街地型Ⅱ）":"2-④",
+  "主要地方道奈良生駒線沿道（自然型）":"2-③",
+  "主要地方道枚方大和郡山線沿道（自然型）":"2-③",
+  "主要地方道枚方大和郡山線沿道（市街地型Ⅰ）":"2-④"
+};
+
+/* 風致地区は基準PDF未取得のため、選択時は近似として 2-② を適用 */
+const FUCHI_DEFAULT_BASIS = "2-②";
+
+/* 色相帯キーを返す。R/YR/Y 以外は null（その他色相 → 禁止判定） */
+function hueRangeKey(letter, num){
+  if(letter==='R')  return num < 5.0 ? '0.0R-5.0R'   : '5.0R-10.0R';
+  if(letter==='YR') return num < 5.0 ? '0.0YR-5.0YR' : '5.0YR-10.0YR';
+  if(letter==='Y')  return num < 5.0 ? '0.0Y-5.0Y'   : '5.0Y-10.0Y';
+  return null;
+}
+
+/* 1つの基準に対し外壁/屋根のマンセル値を判定 → {ok, reason} */
+function checkColorBasis(basisId, target, mv){
+  const table = (KEIKAN_BASIS[basisId]||{})[target];
+  if(!table) return {ok:true, reason:'基準データなし（適合とみなす）'};
+  if(mv.family==='N'){
+    const bands = table['無彩色']||[];
+    for(const [vmin,vmax,cmax] of bands){
+      if(vmin <= mv.value && mv.value <= vmax) return {ok:true, reason:''};
+    }
+    return {ok:false, reason:`無彩色N${mv.value}が基準${basisId}の範囲外`};
+  }
+  const rk = hueRangeKey(mv.family, mv.hueNum||0);
+  if(rk===null) return {ok:false, reason:`色相${mv.family}は基準${basisId}の対象外（その他色相）`};
+  const bands = table[rk]||[];
+  if(!bands.length) return {ok:false, reason:`色相帯${rk}は基準${basisId}で全面禁止`};
+  for(const [vmin,vmax,cmax] of bands){
+    if(vmin <= mv.value && mv.value <= vmax){
+      if(cmax===null || mv.chroma <= cmax) return {ok:true, reason:''};
+      return {ok:false, reason:`明度${mv.value}は${rk}の範囲内だが、彩度${mv.chroma}が許容${cmax}を超過`};
+    }
+  }
+  return {ok:false, reason:`明度${mv.value}は${rk}のどの許容帯にも入らない`};
+}
+
+/* DATA.project.reg から適用すべき基準ID一覧を計算 → [{bid, src}] */
+function applicableKeikanBases(){
+  const r = DATA.project.reg || {};
+  const out = [];
+  if(r.generalArea && r.generalArea !== '対象外'){
+    const b = GENERAL_AREA_TO_BASIS[r.generalArea];
+    if(b) out.push({bid:b, src:`一般区域: ${r.generalArea}`});
+  }
+  if(r.priorityDistrict && r.priorityDistrict !== '対象外'){
+    const b = PRIORITY_DISTRICT_TO_BASIS[r.priorityDistrict];
+    if(b) out.push({bid:b, src:`重点地区: ${r.priorityDistrict}`});
+  }
+  if((r.fuchiName && r.fuchiName !== '対象外') ||
+     (r.fuchiType && r.fuchiType !== '対象外')){
+    const lbl = [r.fuchiName, r.fuchiType, r.fuchiZone].filter(x=>x && x!=='対象外').join('/');
+    out.push({bid:FUCHI_DEFAULT_BASIS, src:`風致地区: ${lbl}（近似: ${FUCHI_DEFAULT_BASIS}）`});
+  }
+  return out;
+}
+
+/* ============================================================
+   景観・風致 マンセル色彩規制（旧システム：Phase 4 で段階的に置換）
+   ============================================================ */
+const REG_PRESETS={
+  "対象外":            {on:false,label:"対象外",      valMin:0,valMax:10,chromaR:4,chromaYR:6,chromaY:4,chromaOther:2,allowN:true},
+  "景観地区（標準）":   {on:true, label:"景観地区（標準）",valMin:0,valMax:10,chromaR:4,chromaYR:6,chromaY:4,chromaOther:2,allowN:true},
+  "風致地区（厳しめ）": {on:true, label:"風致地区（厳しめ）",valMin:0,valMax:6, chromaR:4,chromaYR:4,chromaY:4,chromaOther:2,allowN:true}
+};
+
+/* マンセル文字列を分解： "1.3Y 5.3/0.6" → {family:'Y', value:5.3, chroma:0.6} */
+function parseMunsell(str){
+  if(str==null) return null;
+  str=String(str).trim();
+  let m=str.match(/^N\s*([\d.]+)/i);
+  if(m) return {family:'N', hue:'N', value:+m[1], chroma:0, txt:str};
+  m=str.match(/([\d.]+)\s*([A-Za-z]{1,2})\s+([\d.]+)\s*\/\s*([\d.]+)/);
+  if(!m) return null;
+  return {hueNum:+m[1], family:m[2].toUpperCase(), hue:m[1]+m[2].toUpperCase(), value:+m[3], chroma:+m[4], txt:str};
+}
+/* 規制に照らして判定 */
+function judgeMunsell(p,reg){
+  if(!p) return null;
+  const e=[];
+  if(p.family==='N'){ if(!reg.allowN) e.push('無彩色は使用不可'); }
+  else{
+    let maxC = p.family==='R'?reg.chromaR : p.family==='YR'?reg.chromaYR : p.family==='Y'?reg.chromaY : reg.chromaOther;
+    if(maxC<=0) e.push(`色相${p.family}系は使用不可`);
+    else if(p.chroma>maxC+1e-9) e.push(`彩度 ${p.chroma} ＞ 上限${maxC}`);
+  }
+  if(p.value<reg.valMin-1e-9) e.push(`明度 ${p.value} ＜ 下限${reg.valMin}`);
+  if(p.value>reg.valMax+1e-9) e.push(`明度 ${p.value} ＞ 上限${reg.valMax}`);
+  return {ok:e.length===0, errs:e, p};
+}
+/* 外部セクションの候補からマンセル値を拾う */
+function variantMunsell(s,v){
+  if(s.area!=='外部') return null;
+  for(const a of s.attrs){ const p=parseMunsell(v.values[a]); if(p) return p; }
+  return null;
+}
+/* セクションのターゲット（外壁／屋根）を推定 */
+function sectionKeikanTarget(s){
+  if(s.id==='siding' || s.id==='paint_out') return '外壁';
+  if(s.id==='roof') return '屋根';
+  return null;
+}
+/* 編集パネル：候補カードの適合バッジ
+   優先順位：景観基準（区域・地区選択あり）＞ 旧プリセット（reg.on）＞ 表示なし */
+function compBadge(s,v){
+  const p = variantMunsell(s,v);
+  if(!p) return '';
+  // 新方式：適用基準があれば判定
+  const target = sectionKeikanTarget(s);
+  const apps = applicableKeikanBases();
+  if(apps.length && target){
+    const ngs = [];
+    for(const {bid, src} of apps){
+      const j = checkColorBasis(bid, target, p);
+      if(!j.ok) ngs.push(`【${src} 基準${bid}】${j.reason}`);
+    }
+    const ok = ngs.length===0;
+    const srcList = apps.map(a=>`基準${a.bid}`).join('・');
+    return `<div class="comp ${ok?'ok':'ng'}">${ok?'✓ 適合':'✗ 不適合'}
+      <span class="mz">${esc(p.hue)} ${p.value}/${p.chroma}　${esc(srcList)}</span>${ok?'':'<br>'+esc(ngs.join(' ／ '))}</div>`;
+  }
+  // 旧方式：プリセット（reg.on）
+  const reg=DATA.project.reg; if(!reg.on) return '';
+  const j=judgeMunsell(p,reg);
+  return `<div class="comp ${j.ok?'ok':'ng'}">${j.ok?'✓ 適合':'✗ 不適合'}
+    <span class="mz">${esc(p.hue)} ${p.value}/${p.chroma}</span>${j.ok?'':'<br>'+esc(j.errs.join('・'))}</div>`;
+}
+/* 編集パネル：規制カード */
+function regCard(){
+  const r=DATA.project.reg;
+  const opt=Object.keys(REG_PRESETS).map(k=>`<option ${r.label===k?'selected':''}>${k}</option>`).join('');
+  const num=(lab,key)=>`<span class="n">${lab}</span><input type="number" step="0.1" value="${r[key]}" oninput="setReg('${key}',this.value)">`;
+  return `<details class="card regcard" ${r.on?'open':''}><summary><span class="area" style="background:#a26a1f">地区</span>景観・風致 マンセル色彩規制</summary><div class="body">
+    <div class="field"><label>地区プリセット</label>
+      <select onchange="applyPreset(this.value)">${opt}</select></div>
+    <div class="field"><label>規制を適用</label>
+      <input type="checkbox" ${r.on?'checked':''} onchange="setReg('on',this.checked)" style="flex:0;width:18px;height:18px;"> <span class="hint" style="margin:0">ONで外壁・屋根の色を自動判定</span></div>
+    <div class="reg-row">${num('明度 下限','valMin')} ${num('明度 上限','valMax')}</div>
+    <div class="reg-row">${num('彩度上限 R系','chromaR')} ${num('YR系','chromaYR')} ${num('Y系','chromaY')} ${num('その他色相','chromaOther')}</div>
+    <div class="field"><label>無彩色(N)を許可</label>
+      <input type="checkbox" ${r.allowN?'checked':''} onchange="setReg('allowN',this.checked)" style="flex:0;width:18px;height:18px;"></div>
+    <div class="hint">※ 数値は一般的な景観基準の目安です。<b>必ず該当地区の条例・ガイドラインで確認のうえ調整</b>してください。<br>
+      参考：<a class="reglink" href="https://www.city.nara.lg.jp/site/keikan/138503.html" target="_blank">奈良市景観計画</a>／
+      <a class="reglink" href="https://www.city.nara.lg.jp/uploaded/attachment/142230.pdf" target="_blank">奈良市景観ガイドライン(色彩編)</a></div>
+  </div></details>`;
+}
+function applyPreset(name){ const pre=REG_PRESETS[name]; if(!pre)return; DATA.project.reg=Object.assign(DATA.project.reg||{},pre); renderEditor(); sync(); }
+function setReg(key,val){
+  // 文字列フィールド（新規追加の区域選択）
+  const stringKeys = ['label','designatedZone','generalArea','priorityDistrict','fuchiType','fuchiName','fuchiZone'];
+  if(key==='on'||key==='allowN') DATA.project.reg[key]=val;
+  else if(stringKeys.includes(key)) DATA.project.reg[key]=val;
+  else DATA.project.reg[key]=parseFloat(val)||0;
+  renderEditor(); sync();
+}
+
+/* 区域・地区選択カード（新方式） */
+function zoneCard(){
+  const r = DATA.project.reg||{};
+  const opt = (val, list)=>list.map(x=>`<option value="${esc(x)}"${val===x?' selected':''}>${esc(x)}</option>`).join('');
+  const generalOpts = ["対象外", ...Object.keys(GENERAL_AREA_TO_BASIS)];
+  const priorityOpts = ["対象外", ...Object.keys(PRIORITY_DISTRICT_TO_BASIS)];
+  const fuchiTypeOpts = ["対象外","一種風致地区","二種風致地区","三種風致地区","四種風致地区"];
+  const designatedOpts = ["指定なし","防火地域","準防火地域","法22条地域","その他"];
+  const apps = applicableKeikanBases();
+  const legacyOn = !!r.on;
+  const appLine = apps.length
+    ? apps.map(a=>`<span style="background:#fff3d6;padding:1px 6px;border-radius:3px;font-size:11px;">${esc(a.bid)}（${esc(a.src)}）</span>`).join(' ')
+    : (legacyOn
+        ? `<span class="hint" style="margin:0;color:#a26a1f;">⚠ 現在は下の「簡易プリセット」を使用中。<b>区域を選ぶと正式な奈良市基準に自動切替</b>されます</span>`
+        : `<span class="hint" style="margin:0;">区域・地区が未指定（または対象外）：色彩判定は行われません</span>`);
+  return `<details class="card regcard" ${apps.length?'open':''}><summary><span class="area" style="background:#1f6a7a">区域</span>奈良市景観計画 区域・地区</summary><div class="body">
+    <div class="field"><label>指定区域（防火）</label>
+      <select onchange="setReg('designatedZone',this.value)">${opt(r.designatedZone||'指定なし', designatedOpts)}</select></div>
+    <div class="field"><label>一般区域</label>
+      <select onchange="setReg('generalArea',this.value)">${opt(r.generalArea||'対象外', generalOpts)}</select></div>
+    <div class="field"><label>景観形成重点地区</label>
+      <select onchange="setReg('priorityDistrict',this.value)">${opt(r.priorityDistrict||'対象外', priorityOpts)}</select></div>
+    <div class="field"><label>風致地区 種別</label>
+      <select onchange="setReg('fuchiType',this.value)">${opt(r.fuchiType||'対象外', fuchiTypeOpts)}</select></div>
+    <div class="field"><label>風致地区 名称</label>
+      <input value="${esc(r.fuchiName||'対象外')}" oninput="setReg('fuchiName',this.value)" placeholder="対象外 または 名称を入力"></div>
+    <div class="field"><label>風致地区 ゾーン</label>
+      <input value="${esc(r.fuchiZone||'対象外')}" oninput="setReg('fuchiZone',this.value)" placeholder="対象外 または ゾーン名を入力"></div>
+    <div style="margin:8px 0 4px;font-size:12px;color:#1f6a7a;font-weight:bold;">適用される色彩基準</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;">${appLine}</div>
+    <div class="hint">奈良市景観計画に基づき、選択した区域・地区の色彩基準を外壁・屋根のマンセル値で自動判定します（Phase 3）。<br>
+      参考：<a class="reglink" href="https://www.city.nara.lg.jp/site/keikan/138503.html" target="_blank">奈良市景観計画</a></div>
+  </div></details>`;
+}
+
+function showTab(t){
+  const e=document.getElementById('editor'), v=document.getElementById('previewWrap');
+  const te=document.getElementById('tabEdit'), tv=document.getElementById('tabView');
+  if(window.innerWidth>1100){ e.style.display='block'; v.style.display='block'; }
+  else if(t==='edit'){ e.style.display='block'; v.style.display='none'; }
+  else { e.style.display='none'; v.style.display='block'; }
+  te.classList.toggle('active',t==='edit'); tv.classList.toggle('active',t==='view');
+}
+
+/* ============================================================
+   建具表（建具・床図面）モジュール
+   ============================================================ */
+const TATEGU_MASTER = {
+  meta:{ title:"建具・床図面", maker:"ウッドテック DOORETUS Bタイプ", plan_image:"", plan_images:{"1階":"","2階":""}, spec_images:[] },
+  common:[
+    {k:"ドア色", v:"GE（グレージュ）", note:""},
+    {k:"ストッパー", v:"ブラック色"},
+    {k:"キャッチャー", v:"シルバー色"},
+    {k:"枠色", v:"GE（グレージュ）"},
+    {k:"ハンドル", v:"ブラック"}
+  ],
+  floor:[
+    {k:"フローリング", v:"ウッドワン　12mm　アイボリー　FKK224D-J1", pattern:"", img:"床/FKK224D-J1.jpg"},
+    {k:"畳", type:"", color:"", count:"", img:""},
+    {k:"床下点検口", v:"アイボリー"},
+    {k:"床下エアコン", v:""}
+  ],
+  doors:[
+    {floor:"1階", no:"WD101", room:"脱衣室", type:"片引戸", hinban:"B-XF", color:"GE（グレージュ）", w:"1324", h:"2035", handle:"SH型（ブラック）", threshold:"有", remark:"スイッチ設置のため", remark2:"", img:""},
+    {floor:"1階", no:"WD102", room:"洗面所", type:"片引戸", hinban:"B-XF", color:"GE（グレージュ）", w:"1609", h:"1961", handle:"SH型（ブラック）表示錠付き", threshold:"有", remark:"", remark2:"表示錠・ライトスコープ付き", img:""},
+    {floor:"1階", no:"WD103", room:"トイレ", type:"片引戸トイレタイプ", hinban:"B-XF", color:"GE（グレージュ）", w:"1155", h:"1961", handle:"SH型表示錠付き", threshold:"有", lightScope:true, lock:true, remark:"スイッチ設置のため", remark2:"表示錠・ライトスコープ付き", img:""},
+    {floor:"1階", no:"WD104", room:"収納", type:"両開き戸", hinban:"B-FT", color:"WH（オフホワイト）", w:"734", h:"2327", handle:"D型", threshold:"", remark:"建具カラー変更（オフホワイト）", remark2:"", img:""},
+    {floor:"2階", no:"WD201", room:"洋室①", type:"片開きドア", hinban:"B-XF", color:"GE（グレージュ）", w:"778", h:"2035", handle:"レバーハンドルBA型", threshold:"", remark:"", remark2:"", img:""},
+    {floor:"2階", no:"WD202", room:"洋室②", type:"片開きドア", hinban:"B-XF", color:"GE（グレージュ）", w:"778", h:"2035", handle:"レバーハンドルBA型", threshold:"", remark:"", remark2:"", img:""},
+    {floor:"2階", no:"WD203", room:"トイレ", type:"トイレドア", hinban:"B-XF", color:"GE（グレージュ）", w:"654", h:"2035", handle:"レバーハンドルBA型表示錠付き", threshold:"", lightScope:true, lock:true, remark:"スイッチ設置のため", remark2:"表示錠・ライトスコープ付き", img:""},
+    {floor:"2階", no:"WD204", room:"主寝室", type:"片引戸", hinban:"B-XF", color:"GE（グレージュ）", w:"1609", h:"1961", handle:"SH型（ブラック）", threshold:"", remark:"", remark2:"", img:""},
+    {floor:"2階", no:"WD205", room:"主寝室 収納（WIC）", type:"折戸（6枚）", hinban:"B-FT", color:"WH（オフホワイト）", w:"2558", h:"2339", handle:"D型", threshold:"", remark:"建具カラー変更（オフホワイト）", remark2:"", img:""}
+  ]
+};
+/* 入力候補（ドロップダウン。自由入力も可） */
+const TG_OPTS={
+  type:[
+    "片開きドア","リビング片開きドア",
+    "トイレドア","スライディングドア（トイレ）",
+    "片引戸","片引き戸　上吊り","片引戸トイレタイプ",
+    "リビング片引戸","リビングアウトセットドア",
+    "アウトセット","アウトセットトイレタイプ",
+    "両開き戸","折戸（6枚）","引違い戸",
+    "クローゼットドアノンレール3尺","クローゼットドアノンレール4.5尺",
+    "クローゼットドアノンレール6尺","クローゼットドアノンレール9尺",
+    "クローゼットドアレールタイプ3尺","クローゼットドアレールタイプ4.5尺",
+    "クローゼットドアレールタイプ6尺","クローゼットドアレールタイプ9尺"
+  ],
+  color:["CL（ナチュラルクリア）","GE（グレージュ）","LC（ライトクリア）","WH（オフホワイト）"],
+  handle:["SH型","SH型表示錠付き","D型","E型","レバーハンドルBA型","レバーハンドルBA型表示錠付き","レバーハンドルRA型","レバーハンドルRA型表示錠付き","SH型（ブラック）","SH型（ブラック）表示錠付き","SH型（シルバー）","アウトセットトイレタイプ表示錠付き","なし"],
+  threshold:["","有","無"],
+  hinban:["B-XG","B-XF","B-FT"],
+  remark1:["有効いっぱい取りたいため","建具カラー変更（オフホワイト）","スイッチ設置のため"],
+  remark2:["表示錠","ライトスコープ付き","表示錠・ライトスコープ付き"],
+  floor:["1階","2階","3階"],
+  room:["玄関","ホール","LDK","脱衣室","洗面所","トイレ","浴室","洋室①","洋室②","洋室③","主寝室","和室","収納","クローゼット","WIC","パントリー","階段下収納"],
+  doorColor:["GE（グレージュ）","WH（オフホワイト）"],
+  partColor:["ブラック色","シルバー色","ミディアム色","ライト色","ホワイト色"],
+  handleColor:["ブラック","シルバー","ホワイト"]
+};
+/* ドア色・枠色の共通選択肢 */
+const TG_DOORCOLOR=["CL（ナチュラルクリア）","GE（グレージュ）","LC（ライトクリア）"];
+/* 建具仕様（共通）の項目名 → プルダウン選択肢 */
+const TG_COMMON_OPTS={
+  "ドア色":TG_DOORCOLOR, "枠色":TG_DOORCOLOR,
+  "ストッパー":TG_OPTS.partColor, "キャッチャー":TG_OPTS.partColor,
+  "ハンドル":TG_OPTS.handleColor
+};
+/* プルダウンに加えて「一部変更（任意）」を自由入力できる項目（共通仕様の全項目） */
+const TG_COMMON_NOTE=["ドア色","枠色","ストッパー","キャッチャー","ハンドル"];
+/* ドア色を選ぶと他の共通項目を自動セット（選択後、手動で個別変更も可） */
+const DOOR_COLOR_PRESET={
+  "GE（グレージュ）":   {"ストッパー":"ブラック色", "キャッチャー":"シルバー色",   "枠色":"GE（グレージュ）",   "ハンドル":"ブラック", "フローリング":"ウッドワン　12mm　アイボリー　FKK224D-J1"},
+  "LC（ライトクリア）": {"ストッパー":"ミディアム色","キャッチャー":"ミディアム色","枠色":"LC（ライトクリア）", "ハンドル":"シルバー", "フローリング":"ウッドワン　12mm　クリア　FKK224D-B"},
+  "CL（ナチュラルクリア）":{"ストッパー":"ライト色",  "キャッチャー":"ミディアム色","枠色":"CL（ナチュラルクリア）","ハンドル":"シルバー", "フローリング":"ウッドワン　12mm　グレー　FKK224D-JG"}
+};
+/* 種類を選ぶと品番を自動入力（品番は色に関係なく固定）。対象外の種類は手動入力のまま */
+const TYPE_HINBAN={ "リビング片開きドア":"B-XG", "リビング片引戸":"B-XG", "リビングアウトセットドア":"B-XG" };
+/* 種類を選ぶと把手・ライトスコープ・表示錠を自動セット */
+const TYPE_PRESET={
+  "トイレドア":                   { handle:"レバーハンドルBA型表示錠付き", lightScope:true,  lock:true  },
+  "片引戸トイレタイプ":           { handle:"SH型表示錠付き",                 lightScope:true,  lock:true  },
+  "アウトセットトイレタイプ":     { handle:"SH型表示錠付き",                 lightScope:true,  lock:true  },
+  "スライディングドア（トイレ）": { handle:"SH型表示錠付き",                 lightScope:true,  lock:true  },
+  "リビング片開きドア":           { handle:"レバーハンドルBA型",             lightScope:false, lock:false },
+  "リビング片引戸":               { handle:"レバーハンドルBA型",             lightScope:false, lock:false },
+  "リビングアウトセットドア":     { handle:"レバーハンドルBA型",             lightScope:false, lock:false }
+};
+/* 旧種類名→新種類名（読み込み時にデータを揃える）。お手元のファイル名に合わせた短い名前へ統一 */
+const TYPE_RENAME={
+  // 直近のカタログ名（中間段階）→ お手元のファイル名
+  "標準ドア":"片開きドア",
+  "リビングドア":"リビング片開きドア",
+  "片引き戸（レールタイプ）":"片引戸",
+  "片引き戸（上吊タイプ）":"片引き戸　上吊り",
+  "アウトセット上吊り引き戸":"アウトセット",
+  "リビングドア引き戸":"リビング片引戸",
+  "リビングドアアウトセット上吊り引き戸":"リビングアウトセットドア",
+  // さらに古い名前から直接
+  "両開きドア":"両開き戸",
+  "アウトセット上吊り引戸":"アウトセット",
+  "リビング標準ドア":"リビング片開きドア",
+  // クローゼット系：旧プルダウンからファイル名と一致する短い名前へ統一
+  "クローゼットドアノンレール 3尺":"クローゼットドアノンレール3尺",
+  "クローゼットドアレールタイプ 4.5尺":"クローゼットドアレールタイプ4.5尺",
+  // 「ノンレールタイプ」は「ノンレール」と同義のため統合
+  "クローゼットドアノンレールタイプ 3尺":"クローゼットドアノンレール3尺",
+  "クローゼットドアノンレールタイプ 4.5尺":"クローゼットドアノンレール4.5尺",
+  "クローゼットドアノンレールタイプ 6尺":"クローゼットドアノンレール6尺",
+  "クローゼットドアノンレールタイプ 9尺":"クローゼットドアノンレール9尺",
+  "引違い戸（レールタイプ）":"引違い戸"
+};
+/* テイスト（仕様一覧表で選択）⇔ 建具ドア色（建具表）の対応。A=GE / B=LC / C=CL */
+const TASTE_COLOR={ "A":"GE（グレージュ）", "B":"LC（ライトクリア）", "C":"CL（ナチュラルクリア）" };
+const TASTE_LABEL={ "A":"GE グレージュ", "B":"LC ライトクリア", "C":"CL ナチュラルクリア" };
+const COLOR_TASTE={ "GE（グレージュ）":"A", "LC（ライトクリア）":"B", "CL（ナチュラルクリア）":"C" };
+/* 敷居有無＝「有」のとき、テイストに応じて自動で入れる敷居色 */
+const TASTE_SILL={ "A":"WHホワイト色", "B":"PLペール色", "C":"GEグレージュ色" };
+/* WH（オフホワイト）色の建具：テイストごとに使う把手デザイン。テイストAは D型、B/Cは E型 */
+const TASTE_WH_HANDLE={ "A":"D型", "B":"E型", "C":"E型" };
+/* WH（オフホワイト）色の建具：種類別の把手例外ルール。引違い戸はテイストAで「SH型（ブラック）」、B/Cで「SH型（シルバー）」 */
+function whHandleForTaste(taste, type){
+  if(type==='引違い戸') return taste==='A' ? 'SH型（ブラック）' : 'SH型（シルバー）';
+  return TASTE_WH_HANDLE[taste]||'';
+}
+function applyWhHandleIfNeeded(d, taste){
+  if(d.color!=='WH（オフホワイト）') return;
+  const h=whHandleForTaste(taste, d.type);
+  if(h) d.handle=h;
+}
+/* レバーハンドル系はテイストに応じて型番が変わる：A=BA型／B,C=RA型。
+   表示錠付きも含めて文字列を機械的に入れ替える。 */
+function leverForTaste(handle, taste){
+  if(!handle) return handle;
+  const useRA = (taste==='B' || taste==='C');
+  return useRA ? handle.replace(/レバーハンドルBA型/g,'レバーハンドルRA型')
+               : handle.replace(/レバーハンドルRA型/g,'レバーハンドルBA型');
+}
+/* 種類別の色プルダウン候補。引違い戸はどの色にもある商品なので、テイスト色＋WHの2択に絞る */
+function colorOptionsForType(type, taste){
+  if(type==='引違い戸'){
+    const tc=TASTE_COLOR[taste]||'GE（グレージュ）';
+    return [tc, 'WH（オフホワイト）'];
+  }
+  return TG_OPTS.color;
+}
+/* ドア色ごとのフローリング画像（「床」フォルダーに品番名で保存して参照） */
+const FLOOR_IMG={
+  "GE（グレージュ）":   "床/FKK224D-J1.jpg",
+  "LC（ライトクリア）": "床/FKK224D-B.jpg",
+  "CL（ナチュラルクリア）":"床/FKK224D-JG.jpg"
+};
+/* 畳の選択肢 */
+const TG_TATAMI_TYPE=["1畳畳（縁有り）","1畳畳（縁なし）","琉球畳"];
+const TG_TATAMI_COLOR=["01銀白色","02黄金色","06亜麻色","09墨染色","10乳白色","11銀鼠色","12栗色","14灰桜色","15白茶色","16若草色","17藍色","18薄桜色","19胡桃色","20青磁色","21小麦色"];
+/* 畳タイプを選ぶと床仕様に自動追加される和室付随行（v=製品、spec=仕様・注記） */
+const WASHITSU_ROWS=[
+  {k:"和室の敷居", v:"ロイヤル", spec:"仕様（サイズ現場によって調整）※①建具が上吊りの場合 ②開口に三方枠を利用している場合"},
+  {k:"和室畳よせ", v:"ロイヤル", spec:"仕様（サイズ現場によって調整）※畳天と天端そろえる"},
+  {k:"和室 雑巾摺（フロア施工箇所）", v:"ロイヤル", spec:"仕様（サイズ15×15）"}
+];
+const WASHITSU_KEYS=WASHITSU_ROWS.map(r=>r.k);
+
+/* ============================================================
+   クロス図面（クロス・タイル・天井CF）モジュール
+   ============================================================ */
+const KUROSU_MASTER = {
+  meta:{
+    title:"クロス図面",
+    subtitle_1f:"1F 壁・天井（クロス・タイル）・床CF仕上げ",
+    subtitle_2f:"2F 壁・天井（クロス・タイル）・床CF仕上げ",
+    base_cloth_label:"基本クロス",
+    base_cloth_hinban:"XR631",
+    plan_images:{"1階":"","2階":""},
+    note:"※雰囲気・デザイン・施工方法を優先する場合、仕様詳細図面通りの施工とならない場合がございます。"
+  },
+  /* 「基本クロス以外」を採用した部屋・部位だけカード化する。
+     part: 壁／床／天井 の3択。style: アクセント／クッションフロア／タイル など。
+     新規物件は空からスタートし、「＋追加」ボタンでエントリを増やしていく。 */
+  rooms:[]
+};
+/* 入力候補 */
+const KR_OPTS={
+  floor:["1階","2階","3階"],
+  part:["壁","床","天井"],  // strict 3択
+  style:["アクセント","クッションフロア"],  // strict 2択（KR_CATALOGのキーと一致）
+  room:["玄関","ホール","LDK","リビング","ダイニング","キッチン","脱衣室","洗面所","トイレ","浴室","洋室①","洋室②","洋室③","主寝室","和室","収納","クローゼット","WIC","パントリー","階段下収納"]
+};
+/* スタイル別のクロス品番カタログ。品番に紐づく実物画像（任意）を持つ。
+   品番を選ぶと品番フィールドがプルダウン化＆画像が自動セットされる。
+   品番を増やす時は当該配列に {hinban:"...", img:"クロス/{スタイル}/{品番}.jpg"} を追記。 */
+const KR_CATALOG={
+  "アクセント":[
+    {hinban:"LB-9806", img:"クロス/アクセント/LB-9806.jpg"},
+    {hinban:"LB-9821", img:"クロス/アクセント/LB-9821.jpg"},
+    {hinban:"LB-9840", img:"クロス/アクセント/LB-9840.jpg"},
+    {hinban:"LB-9841", img:"クロス/アクセント/LB-9841.jpg"},
+    {hinban:"LB-9846", img:"クロス/アクセント/LB-9846.jpg"},
+    {hinban:"LB-9847", img:"クロス/アクセント/LB-9847.jpg"},
+    {hinban:"LB-9854", img:"クロス/アクセント/LB-9854.jpg"},
+    {hinban:"LB-9886", img:"クロス/アクセント/LB-9886.jpg"},
+    {hinban:"LB-9887", img:"クロス/アクセント/LB-9887.jpg"},
+    {hinban:"LB-9888", img:"クロス/アクセント/LB-9888.jpg"},
+    {hinban:"LB-9889", img:"クロス/アクセント/LB-9889.jpg"},
+    {hinban:"LB-9893", img:"クロス/アクセント/LB-9893.jpg"},
+    {hinban:"LB-9896", img:"クロス/アクセント/LB-9896.jpg"},
+    {hinban:"LB-9897", img:"クロス/アクセント/LB-9897.jpg"},
+    {hinban:"RM_743",  img:"クロス/アクセント/RM_743.jpg"},
+    {hinban:"RM_746",  img:"クロス/アクセント/RM_746.jpg"},
+    {hinban:"RM_747",  img:"クロス/アクセント/RM_747.jpg"},
+    {hinban:"RM_748",  img:"クロス/アクセント/RM_748.jpg"},
+    {hinban:"XR-647",  img:"クロス/アクセント/XR-647.jpg"},
+    {hinban:"XR-664",  img:"クロス/アクセント/XR-664.jpg"}
+  ],
+  "クッションフロア":[
+    {hinban:"CF9650",   img:"クロス/クッションフロア/CF9650.jpg"},
+    {hinban:"CF9651",   img:"クロス/クッションフロア/CF9651.jpg"},
+    {hinban:"CF9652",   img:"クロス/クッションフロア/CF9652.jpg"},
+    {hinban:"CF9653",   img:"クロス/クッションフロア/CF9653.jpg"},
+    {hinban:"CF9654",   img:"クロス/クッションフロア/CF9654.jpg"},
+    {hinban:"CF9668",   img:"クロス/クッションフロア/CF9668.jpg"},
+    {hinban:"CF9669",   img:"クロス/クッションフロア/CF9669.jpg"},
+    {hinban:"CF9673",   img:"クロス/クッションフロア/CF9673.jpg"},
+    {hinban:"CF9681",   img:"クロス/クッションフロア/CF9681.jpg"},
+    {hinban:"CF9693",   img:"クロス/クッションフロア/CF9693.jpg"},
+    {hinban:"CF9694",   img:"クロス/クッションフロア/CF9694.jpg"},
+    {hinban:"CF9695",   img:"クロス/クッションフロア/CF9695.jpg"},
+    {hinban:"CF9696",   img:"クロス/クッションフロア/CF9696.jpg"},
+    {hinban:"LH-81501", img:"クロス/クッションフロア/LH-81501.jpg"},
+    {hinban:"LH-81502", img:"クロス/クッションフロア/LH-81502.jpg"},
+    {hinban:"LH-81546", img:"クロス/クッションフロア/LH-81546.jpg"},
+    {hinban:"LH-81547", img:"クロス/クッションフロア/LH-81547.jpg"},
+    {hinban:"LH-81550", img:"クロス/クッションフロア/LH-81550.jpg"},
+    {hinban:"LH-81551", img:"クロス/クッションフロア/LH-81551.jpg"}
+  ]
+};
+function normalizeKR(k){
+  const base=JSON.parse(JSON.stringify(KUROSU_MASTER));
+  if(!k || typeof k!=='object') return base;
+  if(!k.meta) k.meta=base.meta;
+  ['title','subtitle_1f','subtitle_2f','base_cloth_label','base_cloth_hinban','note'].forEach(key=>{ if(k.meta[key]==null) k.meta[key]=base.meta[key]; });
+  if(!k.meta.plan_images || typeof k.meta.plan_images!=='object'){
+    k.meta.plan_images={"1階":"","2階":""};
+  }
+  if(!Array.isArray(k.rooms)) k.rooms=base.rooms;
+  // 各 room エントリのキーを補完＋部位の旧表記を移行
+  k.rooms=k.rooms.map(r=>{
+    const o=Object.assign({floor:"1階",name:"",part:"壁",style:"",hinban:"",img:""}, r);
+    // 旧データの「壁(クッションフロア)」「床(クッションフロア)」「タイル」を新3択に揃え、スタイルへ振り分け
+    if(/^壁[\s（(].*クッション/.test(o.part)){ o.part='壁'; if(!o.style) o.style='クッションフロア'; }
+    else if(/^床[\s（(].*クッション/.test(o.part)){ o.part='床'; if(!o.style) o.style='クッションフロア'; }
+    else if(o.part==='タイル'){ o.part='壁'; if(!o.style) o.style='タイル'; }
+    return o;
+  });
+  return k;
+}
+/* ============================================================
+   照明図面（照明器具配線表）モジュール
+   ============================================================ */
+const LIGHTING_MASTER = {
+  meta:{
+    title:"照明器具配線表",
+    note:"※写真はイメージです。実際の色・形状は商品仕様書をご確認ください。"
+  },
+  /* 各部屋にどんな照明器具を何台、いくらで使うか。
+     画像は📷で都度取り込み（クロスと同じ）。同じ画像なら印刷時に1カードに集約される。 */
+  entries:[]
+};
+const LT_OPTS = {
+  floor:["1階","2階","3階"],
+  room:["玄関","ホール","LDK","リビング","ダイニング","キッチン","脱衣室","洗面所","トイレ","浴室","洋室①","洋室②","洋室③","主寝室","和室","収納","クローゼット","WIC","パントリー","階段","階段下収納","廊下","外部"],
+  /* 商品項目（よく使うもの。これにない場合は自由入力でOK）
+     name→このリストにあれば img を自動セット。自由入力品は📷で個別取り込み。 */
+  item:[
+    "玄関ポーチ　人感",
+    "ダウンライト（60W相当）（温白色）",
+    "ダウンライト（100W相当）（温白色）",
+    "階段（温白色）",
+    "人感ダウンライト（60W相当）（温白色）",
+    "人感ダウンライト（100W相当）（温白色）",
+    "外部ダウンライト（電球色）",
+    "ダクトレール①",
+    "ダクトレール②",
+    "ダクトレール③",
+    "外壁用　ブラック",
+    "外壁用　ホワイト",
+    "お施主様手配",
+    "内部ブラケット（温白色）",
+    "内部スポットライト　ブラック",
+    "内部スポットライト　ホワイト",
+    "外部スポットライト"
+  ]
+};
+/* 項目→画像パスの対応表（カタログ）。自由入力品はここに無いので、画像は📷で取り込む。
+   ※「お施主様手配」だけ .png（他は .jpg） */
+const LT_ITEM_IMG = {
+  "玄関ポーチ　人感":                "照明/玄関ポーチ　人感.jpg",
+  "ダウンライト（60W相当）（温白色）":  "照明/ダウンライト（60W相当）（温白色）.jpg",
+  "ダウンライト（100W相当）（温白色）": "照明/ダウンライト（100W相当）（温白色）.jpg",
+  "階段（温白色）":                  "照明/階段（温白色）.jpg",
+  "人感ダウンライト（60W相当）（温白色）":  "照明/人感ダウンライト（60W相当）（温白色）.jpg",
+  "人感ダウンライト（100W相当）（温白色）": "照明/人感ダウンライト（100W相当）（温白色）.jpg",
+  "外部ダウンライト（電球色）":         "照明/外部ダウンライト（電球色）.jpg",
+  "ダクトレール①":                  "照明/ダクトレール①.jpg",
+  "ダクトレール②":                  "照明/ダクトレール②.jpg",
+  "ダクトレール③":                  "照明/ダクトレール③.jpg",
+  "外壁用　ブラック":                "照明/外壁用　ブラック.jpg",
+  "外壁用　ホワイト":                "照明/外壁用　ホワイト.jpg",
+  "お施主様手配":                   "照明/お施主様手配.png",
+  "内部ブラケット（温白色）":          "照明/内部ブラケット（温白色）.jpg",
+  "内部スポットライト　ブラック":       "照明/内部スポットライト　ブラック.jpg",
+  "内部スポットライト　ホワイト":       "照明/内部スポットライト　ホワイト.jpg",
+  "外部スポットライト":              "照明/外部スポットライト.jpg"
+};
+/* お客様出し計算：総額 × この係数。仕入れに対する顧客提示価格の割合（0.8 = 20%引き） */
+const LT_KAKERITSU = 0.8;
+function normalizeLT(l){
+  const base = JSON.parse(JSON.stringify(LIGHTING_MASTER));
+  if(!l || typeof l!=='object') return base;
+  if(!l.meta) l.meta = base.meta;
+  ['title','note'].forEach(k=>{ if(l.meta[k]==null) l.meta[k]=base.meta[k]; });
+  if(!Array.isArray(l.entries)) l.entries = [];
+  // 各エントリのキーを補完。旧データの hinban/type/kelvin/watt は廃止、price は数値化。
+  l.entries = l.entries.map(e=>{
+    const o = Object.assign({
+      floor:"1階", room:"", maker:"", name:"", qty:1, price:0, img:"", remark:""
+    }, e);
+    delete o.hinban;  // 旧：品番（廃止）
+    delete o.type;    // 旧：種類（廃止）
+    delete o.kelvin;  // 旧：色温度（廃止。項目名に含めて表現）
+    delete o.watt;    // 旧：W数（廃止。項目名に含めて表現）
+    o.price = Number(o.price)||0;
+    o.qty = Math.max(1, parseInt(o.qty)||1);
+    // 既存エントリに項目があり画像が空ならカタログから自動セット（決まってる商品は画像も自動）
+    if(o.name && !o.img && typeof LT_ITEM_IMG !== 'undefined' && LT_ITEM_IMG[o.name]){
+      o.img = LT_ITEM_IMG[o.name];
+    }
+    return o;
+  });
+  return l;
+}
+/* 金額を「¥123,456」形式に整形 */
+function formatYen(n){
+  const v = Number(n)||0;
+  return '¥' + v.toLocaleString('ja-JP');
+}
+
+/* ============================================================
+   配線数量表モジュール
+   ============================================================ */
+const WIRING_MASTER = {
+  meta:{
+    title:"配線数量表",
+    note:"※UBの照明は電気工事に含んでいるため、電灯数の数値に含めておりません。"
+  },
+  tsubo:        0,      // 坪数（手入力）
+  base_price:   8000,   // 基本金額（プルダウン：8000/10000/11500/15000）
+  memo:         "",     // 備考欄（自由記入・印刷下部に出る）
+  // 基本数量 追加表（現状数量はユーザー入力、それ以外はマスタ／坪数連動）
+  items: [
+    // fromTsubo: 'lighting' or 'outlet' を指定すると基本数量を坪数別から取得
+    {key:'lighting',   name:'電灯数',                       note:'',                                       base:null, unit:3500,  current:0, fromTsubo:'lighting'},
+    {key:'outlet2',    name:'2口コンセント',                 note:'',                                       base:null, unit:3500,  current:0, fromTsubo:'outlet'},
+    {key:'earth',      name:'アース付専用コンセント',         note:'小規模での必要に応じ追加',                base:5,    unit:15000, current:0},
+    {key:'circuit',    name:'専用回路',                     note:'',                                       base:2,    unit:15000, current:0},
+    {key:'cooler',     name:'クーラーコンセント＋スリーブ',   note:'100V・200V問わず',                       base:5,    unit:15000, current:0},
+    {key:'tv',         name:'TV＋2口コンセント',             note:'',                                       base:3,    unit:10000, current:0},
+    {key:'lan',        name:'LAN・HDMI中空配',               note:'',                                       base:1,    unit:8500,  current:0},
+    {key:'fan',        name:'換気扇',                       note:'換気扇1台用配線含む',                     base:3,    unit:8000,  current:0},
+    {key:'waterproof', name:'外部 防水コンセント',           note:'フロー・上ブラン付',                      base:0,    unit:10000, current:0},
+    {key:'extSwitch',  name:'外構用照明スイッチ',            note:'',                                       base:1,    unit:3500,  current:0},
+    {key:'pull',       name:'電動ユニット（1口コンセント）',  note:'個数はサッシ御提案時、合計はサッシに含む', base:null, unit:null,  current:0, calc:'skip'}
+  ],
+  // 追加配線等 数量表（基本数量は0が既定。現状数量がそのまま追加個数になる）
+  // category: 'switch' / 'outlet_ex' / 'net'
+  extraItems: [
+    // スイッチ配線
+    {key:'sw3way',       name:'3路 スイッチ配線',              note:'',                  base:0, unit:3500, current:0, category:'switch'},
+    {key:'sw4way',       name:'4路 スイッチ配線',              note:'',                  base:0, unit:5000, current:0, category:'switch'},
+    {key:'sw4wayPlus1',  name:'4路+1 スイッチ配線',           note:'',                  base:0, unit:6500, current:0, category:'switch'},
+    // 各種コンセント追加
+    {key:'outletAdopt',  name:'採用コンセント',               note:'',                  base:0, unit:8000, current:0, category:'outlet_ex'},
+    {key:'bathFanDry',   name:'浴室換気乾燥',                 note:'',                  base:0, unit:15000, current:0, category:'outlet_ex'},
+    {key:'cooking',      name:'クッキングヒーター',            note:'',                  base:0, unit:15000, current:0, category:'outlet_ex'},
+    {key:'autoFaucet',   name:'自動水栓',                     note:'',                  base:0, unit:8000, current:0, category:'outlet_ex'},
+    {key:'panel200v',    name:'住宅分電盤 200V',              note:'',                  base:0, unit:15000, current:0, category:'outlet_ex'},
+    {key:'outlet3',      name:'3口コンセント',                note:'',                  base:0, unit:5000, current:0, category:'outlet_ex'},
+    {key:'gasCo',        name:'ガスコンセント',               note:'',                  base:0, unit:8000, current:0, category:'outlet_ex'},
+    // 電話ネット関係
+    {key:'panaAkagas',   name:'パナアカガス置工事',           note:'',                  base:0, unit:10000, current:0, category:'net'},
+    {key:'bscs',         name:'BS/CS 配線',                  note:'',                  base:0, unit:8000, current:0, category:'net'},
+    {key:'lan1',         name:'LAN 1線',                     note:'',                  base:0, unit:8500, current:0, category:'net'},
+    {key:'lan2',         name:'LAN 2線',                     note:'',                  base:0, unit:12000, current:0, category:'net'},
+    {key:'telTube',      name:'TEL用 中空配',                note:'',                  base:0, unit:6000, current:0, category:'net'}
+  ]
+};
+// 追加配線等のカテゴリ表示名
+const WR_CATEGORY_LABEL = {
+  switch:     'スイッチ配線',
+  outlet_ex:  '各種コンセント追加',
+  net:        '電話ネット関係'
+};
+const WR_OPTS = {
+  basePrices: [8000, 10000, 11500, 15000]
+};
+/* 坪数 → 標準個数（電灯数・コンセント）対応表 */
+const WR_TSUBO_STANDARD = [
+  // {min, max(exclusive), lighting, outlet}  ※maxは「未満」、最後は45坪以上
+  { min:20, max:25, lighting:20, outlet:17 },
+  { min:25, max:30, lighting:22, outlet:20 },
+  { min:30, max:35, lighting:24, outlet:22 },
+  { min:35, max:40, lighting:26, outlet:24 },
+  { min:40, max:45, lighting:28, outlet:26 },
+  { min:45, max:Infinity, lighting:30, outlet:28 }
+];
+/* 坪数から標準数量を返す（範囲外は最も近い帯のもの。20坪未満はnull） */
+function wrStandardForTsubo(tsubo){
+  const t = Number(tsubo)||0;
+  if(t < 20) return null;  // 20坪未満は表に無いのでnull返却
+  for(const r of WR_TSUBO_STANDARD){
+    if(t >= r.min && t < r.max) return {lighting:r.lighting, outlet:r.outlet};
+  }
+  return null;
+}
+/* 配線数量表データの正規化（型補完） */
+function normalizeWR(w){
+  const base = JSON.parse(JSON.stringify(WIRING_MASTER));
+  if(!w || typeof w!=='object') return base;
+  if(!w.meta) w.meta = base.meta;
+  ['title','note'].forEach(k=>{ if(w.meta[k]==null) w.meta[k]=base.meta[k]; });
+  w.tsubo      = Number(w.tsubo)||0;
+  w.base_price = Number(w.base_price)||8000;
+  if(typeof w.memo !== 'string') w.memo = '';
+  // items / extraItems：保存済みの 1F/2F/その他＋place を引き継ぎ、マスタ定義は最新で上書き
+  const mergeFloors = (masterArr, savedArr)=>{
+    const saved = {};
+    (Array.isArray(savedArr)?savedArr:[]).forEach(it=>{
+      if(!it || !it.key) return;
+      saved[it.key] = {
+        floor1: Number(it.floor1)||0,
+        floor2: Number(it.floor2)||0,
+        other:  Number(it.other) || (it.floor1==null && it.floor2==null ? Number(it.current)||0 : 0),
+        place:  String(it.place||'')
+      };
+    });
+    return masterArr.map(masterItem=>{
+      const o = Object.assign({floor1:0, floor2:0, other:0, place:''}, masterItem);
+      const sv = saved[o.key] || {floor1:0, floor2:0, other:0, place:''};
+      o.floor1 = sv.floor1; o.floor2 = sv.floor2; o.other = sv.other; o.place = sv.place;
+      o.current = o.floor1 + o.floor2 + o.other;
+      return o;
+    });
+  };
+  w.items      = mergeFloors(base.items,      w.items);
+  w.extraItems = mergeFloors(base.extraItems, w.extraItems);
+  return w;
+}
+function wrTeika(){    return Math.round((Number(WR.tsubo)||0) * (Number(WR.base_price)||0)); }
+function wrMochibun(){ return Math.round(wrTeika() * 0.8); }
+/* 各itemの基本数量を返す（fromTsubo指定なら坪数別表から取得） */
+function wrItemBase(it){
+  if(it.calc==='skip') return null;
+  if(it.fromTsubo){
+    const std = wrStandardForTsubo(WR.tsubo);
+    if(!std) return 0;
+    return it.fromTsubo==='lighting' ? std.lighting : std.outlet;
+  }
+  return Number(it.base)||0;
+}
+/* 追加個数＝max(0, 現状数量−基本数量)。calc:'skip'は計算対象外 */
+function wrItemAdditional(it){
+  if(it.calc==='skip') return null;
+  const b = wrItemBase(it) || 0;
+  const c = Number(it.current)||0;
+  return Math.max(0, c - b);
+}
+/* 総額＝追加個数×工事代金 */
+function wrItemSubtotal(it){
+  if(it.calc==='skip') return null;
+  const a = wrItemAdditional(it) || 0;
+  return a * (Number(it.unit)||0);
+}
+/* 上部集計：照明データから自動算出
+   - 定価合計（税抜）＝LTエントリの (price × qty) の合計
+   - お客様だし合計（税抜）＝LTエントリの (price × qty × 0.8) の合計
+   - ①差額＝お客様だし合計−持ち分（マイナスでもそのまま符号付きで返す）
+   - 計上個数合計＝LTエントリの qty 合計
+   - ②配線追加工事合計＝WR.itemsのsubtotal合計
+   - ③①+②＝お客様だし合計＋配線追加工事合計（追加電気工事等合計） */
+function wrSummary(){
+  let teika = 0, customer = 0, qty = 0;
+  if(LT && Array.isArray(LT.entries)){
+    LT.entries.forEach(e=>{
+      const sub = (Number(e.price)||0) * (parseInt(e.qty)||0);
+      teika += sub;
+      qty += (parseInt(e.qty)||0);
+    });
+    customer = Math.round(teika * (typeof LT_KAKERITSU!=='undefined' ? LT_KAKERITSU : 0.8));
+  }
+  const itemsSub  = (WR && Array.isArray(WR.items))      ? WR.items.reduce((s,it)=>s + (wrItemSubtotal(it)||0), 0) : 0;
+  const extraSub  = (WR && Array.isArray(WR.extraItems)) ? WR.extraItems.reduce((s,it)=>s + (wrItemSubtotal(it)||0), 0) : 0;
+  const wiringSub = itemsSub + extraSub;
+  return {
+    okyakuTotal: customer,                  // ① お客様だし金額合計（=照明追加工事代金）
+    teikaTotal:  teika,                     // 照明器具代金定価合計
+    diff: customer - wrMochibun(),          // ①差額（お客様だし金額合計 − 持ち分）
+    qtyTotal: qty,                          // 計上商品個数合計
+    wiringTotal: wiringSub,                 // ② 配線工事ご請求代金合計
+    grandTotal:  customer + wiringSub       // ③ ①+② 追加電気工事等合計
+  };
+}
+
+/* 床下エアコンの選択肢。"斜線"は印刷シートで本物の斜め線として描画する */
+const TG_FLOOR_AC=["ガラリ図面参照","斜線"];
+const SLASH_SVG=`<svg viewBox="0 0 100 20" preserveAspectRatio="none" style="width:170px;height:16px;display:inline-block;vertical-align:middle"><line x1="0" y1="20" x2="100" y2="0" stroke="#333" stroke-width="1.2" vector-effect="non-scaling-stroke"/></svg>`;
+/* カード内セル用：横いっぱいに引く斜め線 */
+const SLASH_CELL=`<svg viewBox="0 0 100 16" preserveAspectRatio="none" style="flex:1;height:14px;align-self:center"><line x1="0" y1="16" x2="100" y2="0" stroke="#333" stroke-width="1" vector-effect="non-scaling-stroke"/></svg>`;
+function normalizeTG(t){
+  const base=JSON.parse(JSON.stringify(TATEGU_MASTER));
+  if(!t || typeof t!=='object') return base;
+  if(!t.meta) t.meta=base.meta;
+  ['title','maker','plan_image'].forEach(k=>{ if(t.meta[k]==null) t.meta[k]=base.meta[k]; });
+  if(!Array.isArray(t.meta.spec_images)) t.meta.spec_images=[];
+  // 階ごとの間取り図画像。旧 plan_image（単一）は 1階の画像として自動移行。
+  if(!t.meta.plan_images || typeof t.meta.plan_images!=='object'){
+    t.meta.plan_images = {"1階":"", "2階":""};
+    if(t.meta.plan_image) t.meta.plan_images["1階"]=t.meta.plan_image;
+  }
+  t.common = migrateCommon(Array.isArray(t.common)?t.common:base.common);
+  t.floor = migrateFloor(Array.isArray(t.floor)?t.floor:base.floor);
+  t.doors = migrateDoors(Array.isArray(t.doors)?t.doors:base.doors);
+  return t;
+}
+/* 各建具の付属フラグ（ライトスコープ/表示錠）を整備。未設定なら把手・備考から自動判定 */
+function migrateDoors(arr){
+  return (arr||[]).map(d=>{
+    const o=Object.assign({lightScope:false, lock:false, sill:''}, d);
+    if(o.handle) o.handle=o.handle.replace(/レバーハンドルB\.A型/g,'レバーハンドルBA型'); // 旧表記→新表記
+    // トイレ室の建具種類を専用タイプへ自動移行（把手等もリセット）
+    if((o.room||'').trim()==='トイレ'){
+      if(o.type==='片開きドア') o.type='トイレドア';
+      else if(o.type==='片引戸') o.type='片引戸トイレタイプ';
+      const pre=TYPE_PRESET[o.type];
+      if(pre){
+        if(pre.handle!=null) o.handle=pre.handle;
+        o.lightScope=pre.lightScope;
+        o.lock=pre.lock;
+      }
+    }
+    // 旧種類名→新種類名（表記を統一）
+    if(TYPE_RENAME[o.type]) o.type=TYPE_RENAME[o.type];
+    if(d.lightScope===undefined) o.lightScope = /ライトスコープ/.test(d.remark||'');
+    if(d.lock===undefined)       o.lock       = /表示錠付き/.test(o.handle||'') || /表示錠/.test(d.remark||'');
+    // 備考②（remark2）が無い旧データから自動分離：
+    //   旧remark に「表示錠付き／ライトスコープ付き／表示錠・ライトスコープ付き」が含まれていれば remark2 へ移し、
+    //   それでも空なら lightScope/lock のフラグから初期値を決める。
+    //   旧remark 側からは該当語句と区切りを除去して、備考①は素のテキストに整える。
+    if(d.remark2===undefined){
+      const r=String(d.remark||'');
+      let r2='';
+      if(/表示錠[・･]?ライトスコープ付き/.test(r)) r2='表示錠・ライトスコープ付き';
+      else if(/表示錠付き/.test(r)||/^表示錠$/.test(r.trim())) r2='表示錠';
+      else if(/ライトスコープ付き/.test(r)) r2='ライトスコープ付き';
+      else if(o.lightScope&&o.lock) r2='表示錠・ライトスコープ付き';
+      else if(o.lock) r2='表示錠';
+      else if(o.lightScope) r2='ライトスコープ付き';
+      let nr=r.replace(/表示錠[・･]?ライトスコープ付き/g,'')
+              .replace(/表示錠付き/g,'').replace(/ライトスコープ付き/g,'')
+              .replace(/ライトスコープ[A-ZＡ-Ｚ]/g,'').replace(/表示錠/g,'')
+              .replace(/[／\/]{2,}/g,'／').replace(/^[\s／\/]+|[\s／\/]+$/g,'');
+      o.remark=nr;
+      o.remark2=r2;
+    }
+    return o;
+  });
+}
+/* 建具仕様（共通）を整える。ドア色など対象項目は、旧データの
+   「GE（グレージュ）　※一部変更：オフホワイト」を 本体(v) と 一部変更(note) に分解。 */
+function migrateCommon(arr){
+  return (arr||[]).map(c=>{
+    const item={k:c.k, v:c.v||'', note:c.note||''};
+    if(TG_COMMON_NOTE.includes(c.k) && !item.note){
+      const m=/^(.*?)[　\s]*※\s*一部変更\s*[:：]\s*(.+)$/.exec(item.v);
+      if(m){ item.v=m[1].trim(); item.note=m[2].trim(); }
+    }
+    return item;
+  });
+}
+/* 床仕様を整える。基本＝フローリング／畳／床下点検口／床下エアコン。
+   旧データの内部土間仕上げ・無垢フローリング等は除外し、「フローリング（2P/3P）」は「フローリング」へ統合。
+   畳タイプが選択されている場合のみ、和室付随行（敷居・畳よせ・雑巾摺）を畳の直後に追加。 */
+function migrateFloor(arr){
+  arr=arr||[];
+  const pick=k=> arr.find(x=> x.k===k || (k==='フローリング'&&/^フローリング/.test(x.k||'')) );
+  const fl=pick('フローリング')||{};
+  const ta=pick('畳')||{};
+  const tatami={k:'畳', type:ta.type||'', color:ta.color||'', count:ta.count||'', img:ta.img||''};
+  const out=[ {k:'フローリング', v:fl.v||'', pattern:fl.pattern||'', img:fl.img||''}, tatami ];
+  if(tatami.type){
+    WASHITSU_ROWS.forEach(w=>{
+      const ex=arr.find(x=>x.k===w.k);
+      out.push(ex ? {k:w.k, v:ex.v||'', spec:ex.spec||''} : JSON.parse(JSON.stringify(w)));
+    });
+  }
+  out.push({k:'床下点検口', v:(pick('床下点検口')||{}).v||''});
+  out.push({k:'床下エアコン', v:(pick('床下エアコン')||{}).v||''});
+  return out;
+}
+
+/* 建具表：編集パネル */
+function renderTateguEditor(){
+  const m=TG;
+  const tf=(i,key,label,list)=>{ const v=m.doors[i][key]||''; return `<div class="f"><label>${label}</label><input value="${esc(v)}" ${list?`list="${list}"`:''} oninput="tgDoor(${i},'${key}',this.value)"></div>`; };
+  const tff=(i,key,label)=>{ const v=m.doors[i][key]||''; return `<div class="f full"><label>${label}</label><input value="${esc(v)}" oninput="tgDoor(${i},'${key}',this.value)"></div>`; };
+  /* プルダウン生成（未選択＋選択肢。保存済みの想定外の値も保持して表示） */
+  const tgSel=(opts,val,handler)=>{ let o=opts.slice(); if(val && !o.includes(val)) o.unshift(val);
+    return `<select onchange="${handler}"><option value=""${!val?' selected':''}>（未選択）</option>`
+      +o.map(x=>`<option value="${esc(x)}"${x===val?' selected':''}>${esc(x)}</option>`).join('')+`</select>`; };
+  /* 床材の画像欄（📷取り込み＝データ埋め込み／ドア色連動の自動セットにも対応） */
+  const tgFloorImgField=(i,img,label)=>`<div class="field"><label>${esc(label)}</label>
+    <div style="flex:1;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+      <label class="btn-sm" style="cursor:pointer;">📷 画像を選択<input type="file" accept="image/*" style="display:none" onchange="tgFloorImgPick(${i},this)"></label>
+      ${img?`<button class="btn-sm btn-del" onclick="tgFloorImg(${i},'')">消す</button>`:''}
+      ${img?`<div class="dthumb" style="width:48px;height:48px;background:${swStyle(img,'cover')}"></div>`
+           :`<span class="hint" style="margin:0">（未設定）</span>`}
+    </div></div>`;
+  let h=`<div class="card"><div class="body" style="font-size:12px;color:#666;">
+     物件情報（物件名・作成者・決定日）は「仕様一覧表」タブと共通で、建具表のヘッダーにも使われます。</div></div>`;
+  h+=`<details class="card" open><summary><span class="area" style="background:#3b4a5c">建具</span>図面情報</summary><div class="body">
+     <div class="field"><label>図面タイトル</label><input value="${esc(m.meta.title)}" oninput="tgMeta('title',this.value)"></div>
+     <div class="field"><label>建具メーカー</label><input value="${esc(m.meta.maker)}" oninput="tgMeta('maker',this.value)"></div>`;
+  // 階ごとの間取り画像（スライド等で色付け済の画像を取り込む想定）
+  const planFloors=[...new Set([...Object.keys(m.meta.plan_images||{}), ...m.doors.map(d=>d.floor||'').filter(Boolean)])];
+  if(!planFloors.length) planFloors.push('1階','2階');
+  h+=`<div class="hint" style="margin:8px 0 4px;">スライド等で色付けした「階ごとの間取り図」を 📷 で取り込んでください。印刷では階ごとにA3横1ページ（左：間取り図 ／ 右：建具カード）として出力されます。</div>`;
+  planFloors.forEach(fl=>{
+    const img=(m.meta.plan_images||{})[fl]||'';
+    h+=`<div class="dcard" style="margin-bottom:6px;">
+        <div style="font-weight:bold;color:#3b4a5c;margin-bottom:4px;">${esc(fl)}　間取り図</div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          ${img?`<div class="dthumb" style="width:120px;height:80px;background:${swStyle(img,'contain')}"></div>`:'<span class="hint" style="margin:0;">未取り込み</span>'}
+          <label class="btn-sm" style="cursor:pointer;">📷 ${img?'別の画像に差し替え':'画像を選択'}
+            <input type="file" accept="image/*" style="display:none" onchange="tgPlanImgPick('${esc(fl)}',this)"></label>
+          ${img?`<button class="btn-sm btn-del" onclick="tgPlanImgClear('${esc(fl)}')">画像を消す</button>`:''}
+        </div>
+      </div>`;
+  });
+  h+=`</div></details>`;
+  // 設計仕様詳細（参考画像）
+  h+=`<details class="card" open><summary><span class="area" style="background:#3b4a5c">参考</span>設計仕様詳細（建具の内容画像）</summary><div class="body">
+     <div class="hint">建具の幅・高さなどが載った画像を、<b>下の「📷 画像を選択」から直接取り込めます</b>（フォルダ保存・ファイル名入力は不要）。取り込んだ画像は物件データに保存され、印刷シートにも載ります。</div>`;
+  const slots = m.meta.spec_images.length ? m.meta.spec_images : [{label:"",file:""}];
+  slots.forEach((s,i)=>{
+    const isData=/^data:/.test(s.file||'');
+    h+=`<div class="dcard">
+        <div class="f full"><label>見出し</label><input value="${esc(s.label||'')}" oninput="tgSpec(${i},'label',this.value)" placeholder="例: 1階 建具表"></div>
+        <div style="margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <label class="btn-sm" style="cursor:pointer;">📷 画像を選択
+            <input type="file" accept="image/*" style="display:none" onchange="tgSpecPick(${i},this)"></label>
+          ${s.file?`<button class="btn-sm btn-del" onclick="tgSpec(${i},'file','')">画像を消す</button>`:''}
+          ${s.file?`<button class="btn-sm" id="ocrbtn${i}" onclick="tgOcrSpec(${i})" style="background:#3b6ea5">📐 画像から W・H を自動入力</button>`:''}
+          <span class="hint" style="margin:0">${s.file?(isData?'✅ 取り込み済み':'フォルダ参照中'):'未選択'}</span>
+        </div>
+        ${s.file?`<div class="hint" style="margin:4px 0 0">「📐 画像から W・H を自動入力」を押すと、画像のWD番号・幅・高さを読み取って建具リストに反映します（初回はネット接続が必要・読み取り後は数値をご確認ください）。</div>`:''}
+        ${s.file?`<img src="${imgSrc(s.file)}" style="max-width:100%;max-height:170px;margin-top:8px;border:1px solid #ccc;border-radius:4px;display:block;">`:''}
+        <div style="text-align:right;margin-top:4px;"><button class="btn-sm btn-del" onclick="tgDelSpec(${i})">この欄を削除</button></div>
+       </div>`;
+  });
+  h+=`<div class="addrow"><button class="btn-sm" onclick="tgAddSpec()">＋ 画像の欄を追加</button></div></div></details>`;
+  // 建具仕様（共通）
+  h+=`<details class="card" open><summary><span class="area" style="background:#3b4a5c">建具</span>建具仕様（共通）</summary><div class="body">`;
+  m.common.forEach((c,i)=>{ const opts=TG_COMMON_OPTS[c.k];
+    const ctrl = opts ? tgSel(opts,c.v,`tgCommon(${i},this.value)`)
+                      : `<input value="${esc(c.v)}" oninput="tgCommon(${i},this.value)">`;
+    h+=`<div class="field"><label>${esc(c.k)}</label>${ctrl}</div>`;
+    if(TG_COMMON_NOTE.includes(c.k)){
+      h+=`<div class="field"><label>${esc(c.k)}：一部変更（任意）</label><input value="${esc(c.note||'')}" oninput="tgCommonNote(${i},this.value)" placeholder="例：オフホワイト"></div>`;
+    } });
+  h+=`</div></details>`;
+  // 床仕様（フローリング／畳／床下点検口／床下エアコン）
+  h+=`<details class="card"><summary><span class="area" style="background:#7a5a2a">床</span>床仕様</summary><div class="body">`;
+  m.floor.forEach((c,i)=>{
+    if(c.k==='畳'){
+      h+=`<div class="field"><label>畳のタイプ</label>${tgSel(TG_TATAMI_TYPE,c.type||'',`tgTatami(${i},'type',this.value)`)}</div>`;
+      h+=`<div class="field"><label>畳色</label>${tgSel(TG_TATAMI_COLOR,c.color||'',`tgTatami(${i},'color',this.value)`)}</div>`;
+      h+=`<div class="field"><label>畳 枚数</label><input value="${esc(c.count||'')}" oninput="tgTatami(${i},'count',this.value)" placeholder="例：6枚"></div>`;
+      h+=tgFloorImgField(i,c.img,'畳 画像');
+      if(c.type) h+=`<div class="hint" style="margin:0 0 6px">畳タイプを選んだので、下に和室の付随仕様（敷居・畳よせ・雑巾摺）を自動追加しました。不要なら畳タイプを「（未選択）」に戻すと消えます。</div>`;
+      return;
+    }
+    if(WASHITSU_KEYS.includes(c.k)){
+      h+=`<div class="field"><label>${esc(c.k)}</label><input value="${esc(c.v)}" oninput="tgFloor(${i},this.value)"></div>`;
+      h+=`<div class="field"><label>${esc(c.k)}：仕様・注記</label><input value="${esc(c.spec||'')}" oninput="tgFloorSpec(${i},this.value)"></div>`;
+      return;
+    }
+    if(c.k==='床下エアコン'){
+      h+=`<div class="field"><label>床下エアコン</label>${tgSel(TG_FLOOR_AC,c.v||'',`tgFloorAC(${i},this.value)`)}</div>`;
+      if(c.v==='斜線') h+=`<div class="field"><label>表示プレビュー</label><div style="flex:1;display:flex;align-items:center;gap:8px;">${SLASH_SVG}<span class="hint" style="margin:0">印刷ではこの斜め線が入ります</span></div></div>`;
+      return;
+    }
+    h+=`<div class="field"><label>${esc(c.k)}</label><input value="${esc(c.v)}" oninput="tgFloor(${i},this.value)"></div>`;
+    if(c.k==='フローリング'){
+      h+=`<div class="field"><label>フローリング 割付（2P／3P）</label>${tgSel(['2P','3P'],c.pattern||'',`tgFloorPattern(${i},this.value)`)}</div>`;
+      h+=tgFloorImgField(i,c.img,'フローリング 画像');
+    }
+  });
+  h+=`</div></details>`;
+  // 建具リスト
+  h+=`<details class="card" open><summary><span class="area" style="background:#3b4a5c">建具</span>建具リスト（${m.doors.length}件）</summary><div class="body">`;
+  m.doors.forEach((d,i)=>{
+    const dsrc=doorImgSrc(d), isManual=!!d.img;
+    const thumb = dsrc ? `<div class="dthumb" style="background:${swStyle(dsrc,'contain')}"></div>` : '';
+    const imgNote = isManual ? '📷取り込み画像を使用中'
+      : (d.color&&d.type ? `自動：建具/${esc(d.color)}/${esc(d.type)}.jpg` : '種類・色を入れると自動表示');
+    h+=`<div class="dcard">
+       <div class="dhead"><span class="dno">${esc(d.floor)}　${esc(d.no)}　${esc(d.room)}</span>
+         <button class="btn-sm btn-del" onclick="tgDelDoor(${i})">削除</button></div>
+       <div class="dgrid">
+         ${tf(i,'floor','階','tgFloor')} ${tf(i,'no','番号')}
+         ${tf(i,'room','室名','tgRoom')}
+         <div class="f"><label>種類</label>${tgSel(TG_OPTS.type,d.type||'',`tgDoor(${i},'type',this.value)`)}</div>
+         ${tf(i,'hinban','品番','tgHinban')} ${ d.type==='引違い戸'
+            ? `<div class="f"><label>色</label>${tgSel(colorOptionsForType(d.type, DATA.project.taste), d.color||'', `tgDoor(${i},'color',this.value)`)}</div>`
+            : tf(i,'color','色','tgColor') }
+         ${tf(i,'w','幅 W')} ${tf(i,'h','高 H')}
+         ${tf(i,'handle','把手デザイン','tgHandle')} ${tf(i,'threshold','敷居有無','tgThr')}
+         <div class="f"><label>敷居色／種類</label><input value="${esc(doorSill(d))}" oninput="tgDoor(${i},'sill',this.value)"></div>
+         <div class="f"><label>ライトスコープ</label><label style="display:flex;align-items:center;gap:6px;font-size:12px;color:#333;"><input type="checkbox" ${d.lightScope?'checked':''} onchange="tgDoorBool(${i},'lightScope',this.checked)">あり</label></div>
+         <div class="f"><label>表示錠</label><label style="display:flex;align-items:center;gap:6px;font-size:12px;color:#333;"><input type="checkbox" ${d.lock?'checked':''} onchange="tgDoorBool(${i},'lock',this.checked)">あり</label></div>
+         <div class="f full"><label>備考①（理由・特記）</label>${tgSel(TG_OPTS.remark1,d.remark||'',`tgDoor(${i},'remark',this.value)`)}</div>
+         <div class="f full"><label>備考②（表示錠／ライトスコープ）</label>${tgSel(TG_OPTS.remark2,d.remark2||'',`tgDoor(${i},'remark2',this.value)`)}</div>
+         <div class="f full"><label>建具画像</label>
+           <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+             ${thumb||'<span class="hint" style="margin:0">種類と色を選ぶと自動で表示されます</span>'}
+             <span class="hint" style="margin:0">${imgNote}</span>
+             <label class="btn-sm" style="cursor:pointer;background:#888;">📷 別の画像に差し替え<input type="file" accept="image/*" style="display:none" onchange="tgDoorPick(${i},this)"></label>
+             ${isManual?`<button class="btn-sm btn-del" onclick="tgDoor(${i},'img','')">差し替えを解除</button>`:''}
+           </div></div>
+       </div></div>`;
+  });
+  h+=`<div class="addrow">
+       <button class="btn-sm" onclick="tgAddDoorFloor('1階')">＋ 1階の建具を追加</button>
+       <button class="btn-sm" onclick="tgAddDoorFloor('2階')" style="margin-left:6px;">＋ 2階の建具を追加</button>
+     </div></div></details>`;
+  const dl=(id,arr)=>`<datalist id="${id}">${arr.map(o=>`<option value="${esc(o)}">`).join('')}</datalist>`;
+  h+=dl('tgType',TG_OPTS.type)+dl('tgColor',TG_OPTS.color)+dl('tgHandle',TG_OPTS.handle)+dl('tgThr',TG_OPTS.threshold)
+    +dl('tgFloor',TG_OPTS.floor)+dl('tgRoom',TG_OPTS.room)+dl('tgHinban',TG_OPTS.hinban)
+    +dl('tgDoorColor',TG_OPTS.doorColor)+dl('tgPartColor',TG_OPTS.partColor)+dl('tgHandleColor',TG_OPTS.handleColor);
+  document.getElementById('editor').innerHTML=h;
+}
+function tgMeta(k,v){ TG.meta[k]=v; sync(); }
+/* ドア色を起点に共通項目（ストッパー等）＋フローリング（文字・画像）を一括セット */
+function applyDoorColorPreset(color){
+  const di=TG.common.findIndex(c=>c.k==='ドア色');
+  if(di>=0) TG.common[di].v=color;
+  const p=DOOR_COLOR_PRESET[color];
+  if(p){
+    TG.common.forEach(c=>{ if(p[c.k]!=null) c.v=p[c.k]; });
+    const fi=TG.floor.findIndex(c=>c.k==='フローリング');
+    if(fi>=0 && p['フローリング']!=null) TG.floor[fi].v=p['フローリング'];
+    if(fi>=0 && FLOOR_IMG[color]) TG.floor[fi].img=FLOOR_IMG[color];
+  }
+}
+function tgCommon(i,v){
+  TG.common[i].v=v;
+  if(TG.common[i].k==='ドア色' && DOOR_COLOR_PRESET[v]){
+    applyDoorColorPreset(v);
+    if(COLOR_TASTE[v]) DATA.project.taste=COLOR_TASTE[v]; // 仕様一覧表のテイスト表示も同期
+    renderEditor();
+  }
+  sync();
+}
+function tgCommonNote(i,v){ TG.common[i].note=v; sync(); }
+function tgFloor(i,v){ TG.floor[i].v=v; sync(); }
+function tgFloorPattern(i,v){ TG.floor[i].pattern=v; sync(); }
+function tgFloorSpec(i,v){ TG.floor[i].spec=v; sync(); }
+function tgFloorAC(i,v){ TG.floor[i].v=v; renderEditor(); sync(); } // 斜線プレビュー反映のため再描画
+function tgFloorImg(i,v){ TG.floor[i].img=v; renderEditor(); sync(); }
+function tgFloorImgPick(i,input){ const f=input.files[0]; if(!f) return; fileToDataURL(f,1400,durl=>{ TG.floor[i].img=durl; renderEditor(); sync(); }); input.value=''; }
+function tgTatami(i,k,v){
+  TG.floor[i][k]=v;
+  if(k==='type'){ TG.floor=migrateFloor(TG.floor); renderEditor(); } // 畳タイプ有無で和室行を自動追加/削除
+  if(k==='color'){ TG.floor[i].img = v ? `畳/${v}.jpg` : ''; renderEditor(); } // 畳色ごとに「畳」フォルダーの画像を自動参照
+  sync();
+}
+function tgDoorBool(i,k,v){ TG.doors[i][k]=!!v; renderEditor(); sync(); }
+function tgDoor(i,k,v){
+  TG.doors[i][k]=v;
+  let needRender=false;
+  if(k==='type'){
+    if(TYPE_HINBAN[v]){
+      TG.doors[i].hinban=TYPE_HINBAN[v];
+      const tc=TASTE_COLOR[DATA.project.taste]; if(tc) TG.doors[i].color=tc;
+    }
+    const pre=TYPE_PRESET[v];
+    if(pre){
+      if(pre.handle!=null)         TG.doors[i].handle=pre.handle;
+      if(pre.lightScope!==undefined) TG.doors[i].lightScope=pre.lightScope;
+      if(pre.lock!==undefined)       TG.doors[i].lock=pre.lock;
+    }
+    // 非WH建具のレバーハンドルはテイストに合わせてBA↔RA変換（TYPE_PRESETはBA固定なので）
+    if(TG.doors[i].color!=='WH（オフホワイト）') TG.doors[i].handle=leverForTaste(TG.doors[i].handle, DATA.project.taste);
+    applyWhHandleIfNeeded(TG.doors[i], DATA.project.taste); // WH色の建具は種類によって把手を自動セット
+    needRender=true;
+  }
+  if(k==='color'){                              // 色変更時：WHになったら種類に応じた把手を自動セット
+    applyWhHandleIfNeeded(TG.doors[i], DATA.project.taste);
+    needRender=true;
+  }
+  if(k==='threshold'){                         // 敷居「有」→テイストに応じた敷居色を自動入力、「無/空」→クリア
+    TG.doors[i].sill = (v==='有') ? (TASTE_SILL[DATA.project.taste]||'') : '';
+    needRender=true;
+  }
+  if(k==='img') needRender=true;
+  if(needRender) renderEditor();
+  sync();
+}
+function tgSpec(i,k,v){ if(!TG.meta.spec_images[i]) TG.meta.spec_images[i]={label:"",file:""}; TG.meta.spec_images[i][k]=v; if(k==='file') renderEditor(); sync(); }
+/* 階ごとの間取り図画像：取り込み（縮小して data:URI 保存）と削除 */
+function tgPlanImgPick(floor,input){
+  const f=input.files[0]; if(!f) return;
+  fileToDataURL(f,2400,durl=>{
+    if(!TG.meta.plan_images) TG.meta.plan_images={};
+    TG.meta.plan_images[floor]=durl;
+    renderEditor(); renderSheet(); sync();
+  });
+  input.value='';
+}
+function tgPlanImgClear(floor){
+  if(TG.meta.plan_images) TG.meta.plan_images[floor]='';
+  renderEditor(); renderSheet(); sync();
+}
+function tgAddSpec(){ TG.meta.spec_images.push({label:"",file:""}); renderEditor(); sync(); }
+function tgDelSpec(i){ TG.meta.spec_images.splice(i,1); renderEditor(); sync(); }
+function imgSrc(v){ return /^data:/.test(v) ? v : encodeURI(v); }
+/* 画像ファイルを縮小して data:URI に変換（容量を抑える） */
+function fileToDataURL(file,maxW,cb){
+  const r=new FileReader();
+  r.onload=()=>{
+    const img=new Image();
+    img.onload=()=>{
+      const scale=Math.min(1, maxW/img.naturalWidth);
+      const cw=Math.max(1,Math.round(img.naturalWidth*scale)), ch=Math.max(1,Math.round(img.naturalHeight*scale));
+      const cv=document.createElement('canvas'); cv.width=cw; cv.height=ch;
+      cv.getContext('2d').drawImage(img,0,0,cw,ch);
+      let durl; try{ durl=cv.toDataURL('image/jpeg',0.82); }catch(e){ durl=r.result; }
+      cb(durl);
+    };
+    img.onerror=()=>{ alert('画像を読み込めませんでした。'); };
+    img.src=r.result;
+  };
+  r.readAsDataURL(file);
+}
+/* 設計仕様詳細の画像を取り込み */
+function tgSpecPick(i,input){
+  const f=input.files[0]; if(!f) return;
+  fileToDataURL(f,3000,durl=>{
+    if(!TG.meta.spec_images[i]) TG.meta.spec_images[i]={label:"",file:""};
+    TG.meta.spec_images[i].file=durl;
+    if(!TG.meta.spec_images[i].label) TG.meta.spec_images[i].label=f.name.replace(/\.[^.]+$/,'');
+    renderEditor(); sync();
+  });
+  input.value='';
+}
+/* 各建具の写真を取り込み（小さめに縮小） */
+function tgDoorPick(i,input){
+  const f=input.files[0]; if(!f) return;
+  fileToDataURL(f,700,durl=>{ TG.doors[i].img=durl; renderEditor(); sync(); });
+  input.value='';
+}
+
+/* ---- 設計仕様詳細の画像から WD番号・幅・高さ を自動読み取り（OCR） ---- */
+let _tessPromise=null;
+function loadTesseract(){
+  if(window.Tesseract) return Promise.resolve(window.Tesseract);
+  if(_tessPromise) return _tessPromise;
+  _tessPromise=new Promise((res,rej)=>{
+    const s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+    s.onload=()=>res(window.Tesseract);
+    s.onerror=()=>rej(new Error('OCRライブラリを読み込めません（インターネット接続が必要です）'));
+    document.head.appendChild(s);
+  });
+  return _tessPromise;
+}
+/* OCRテキストから WD番号 / W値 / H値 を抽出（WDのWは「W＋数字」ではないので幅Wと混ざらない） */
+function tgParseSizes(text){
+  // 全角英数字を半角化、区切り掃除
+  let t=String(text||'')
+    .replace(/[Ａ-ｚ]/g,c=>String.fromCharCode(c.charCodeAt(0)-0xFEE0))
+    .replace(/[０-９]/g,c=>String.fromCharCode(c.charCodeAt(0)-0xFEE0))
+    .replace(/[，、]/g,',').replace(/[Ｘx×]/g,'x');
+  const wds=(t.match(/WD\s?\d{2,3}/gi)||[]).map(x=>x.replace(/\s/g,'').toUpperCase());
+  const ws=[...t.matchAll(/W\s?[:=]?\s?(\d{3,4})/gi)].map(m=>m[1]);
+  const hs=[...t.matchAll(/H\s?[:=]?\s?(\d{3,4})/gi)].map(m=>m[1]);
+  return {wds,ws,hs};
+}
+/* OCR前処理：拡大＋白黒くっきり化（細かい表の数字を読みやすく） */
+function preprocessForOcr(src){
+  return new Promise(res=>{
+    const img=new Image();
+    img.onload=()=>{
+      // 小さい画像ほど大きく拡大（目標幅 約2400px、最大6倍）して文字をくっきりさせる
+      let up = 2400 / img.naturalWidth; up = Math.max(1, Math.min(6, up));
+      const w=Math.round(img.naturalWidth*up), h=Math.round(img.naturalHeight*up);
+      const cv=document.createElement('canvas'); cv.width=w; cv.height=h;
+      const ctx=cv.getContext('2d'); ctx.imageSmoothingEnabled=true; ctx.drawImage(img,0,0,w,h);
+      try{
+        const id=ctx.getImageData(0,0,w,h), d=id.data;
+        for(let p=0;p<d.length;p+=4){ const g=0.299*d[p]+0.587*d[p+1]+0.114*d[p+2]; const v=g<155?0:255; d[p]=d[p+1]=d[p+2]=v; }
+        ctx.putImageData(id,0,0);
+      }catch(e){}
+      res(cv.toDataURL('image/png'));
+    };
+    img.onerror=()=>res(src);
+    img.src=src;
+  });
+}
+/* ローカルAIサーバー（ocr_server.py）のURL */
+const OCR_API_URL='http://127.0.0.1:8788/api/ocr-tategu';
+
+/* 読み取り結果（{no,type,w,h,room}の配列）を建具リストに反映（既存は更新／無ければ新規） */
+function tgApplyDoorData(list){
+  let filled=0, created=0;
+  (list||[]).forEach(d=>{
+    const no=String(d.no||'').replace(/\s/g,'').toUpperCase();
+    if(!no) return;
+    let ex=TG.doors.find(x=>(x.no||'').replace(/\s/g,'').toUpperCase()===no);
+    if(!ex){
+      const num=no.replace(/\D/g,'');
+      const fl=num.length>=3 ? num[0]+'階' : '1階';
+      ex={floor:fl,no,room:"",type:"",hinban:"B-XF",color:"GE（グレージュ）",w:"",h:"",handle:"",threshold:"",remark:"",remark2:"",img:""};
+      TG.doors.push(ex); created++;
+    }
+    if(d.w) ex.w=String(d.w); if(d.h) ex.h=String(d.h);
+    if(d.type && !ex.type) ex.type=String(d.type);
+    if(d.room && !ex.room) ex.room=String(d.room);
+    filled++;
+  });
+  TG.doors.sort((a,b)=>(a.no||'').localeCompare(b.no||'',undefined,{numeric:true}));
+  renderEditor(); renderSheet(); autosave();
+  return {filled,created};
+}
+/* ① AIサーバーで読み取り（高精度） */
+async function tgOcrViaApi(dataUrl){
+  let res;
+  try{ res=await fetch(OCR_API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:dataUrl})}); }
+  catch(e){ const err=new Error('AIサーバーに接続できません'); err.noServer=true; throw err; }
+  if(!res.ok){ let msg='サーバーエラー '+res.status; try{const j=await res.json(); if(j.error) msg=j.error;}catch(e){} throw new Error(msg); }
+  const data=await res.json();
+  return Array.isArray(data.doors)?data.doors:[];
+}
+/* ② 端末内の簡易OCR（サーバー未起動時のフォールバック） */
+async function tgOcrViaTesseract(dataUrl){
+  const T=await loadTesseract();
+  const proc=await preprocessForOcr(dataUrl);
+  const {data}=await T.recognize(proc,'eng');
+  window._lastOcr=data.text;
+  const {wds,ws,hs}=tgParseSizes(data.text);
+  const n=Math.min(wds.length,ws.length,hs.length);
+  const list=[];
+  for(let k=0;k<n;k++) list.push({no:wds[k], w:ws[k], h:hs[k]});
+  return list;
+}
+async function tgOcrSpec(i){
+  const s=TG.meta.spec_images[i];
+  if(!s||!s.file){ alert('先に「📷 画像を選択」で画像を取り込んでください。'); return; }
+  const btn=document.getElementById('ocrbtn'+i);
+  if(btn){ btn.disabled=true; btn.dataset.t=btn.dataset.t||btn.textContent; }
+  const setBtn=t=>{ if(btn) btn.textContent=t; };
+  let usedApi=false, list=[];
+  try{
+    setBtn('AIで読み取り中…');
+    try{ list=await tgOcrViaApi(s.file); usedApi=true; }
+    catch(apiErr){
+      console.warn('OCR API 失敗', apiErr);
+      if(apiErr && apiErr.noServer){
+        if(!confirm('⚠ AIサーバーに接続できませんでした。\n\n「OCR起動.bat」をダブルクリックして起動し（黒い画面が出たままにする）、もう一度「📐」を押してください。\n\n［OK］を押すと、今回はかわりに簡易OCR（精度低め）で試します。')) return;
+        setBtn('簡易OCRで読み取り中…');
+        list=await tgOcrViaTesseract(s.file); usedApi=false;
+      } else {
+        alert('AIサーバーでエラーが発生しました：\n'+(apiErr&&apiErr.message?apiErr.message:apiErr)); return;
+      }
+    }
+    if(!list.length){ alert((usedApi?'AIが表を読み取れませんでした。':'簡易OCRでは読み取れませんでした。')+'\n表（WD番号・幅・高さ）がはっきり大きく写った画像でお試しください。'+(usedApi?'':'\n\nAIサーバー（OCR起動.bat）を使うと精度が上がります。')); return; }
+    const {filled,created}=tgApplyDoorData(list);
+    alert(`読み取り完了（${usedApi?'AI':'簡易OCR'}）：${filled}件を反映（新規${created}件）。\n\n${usedApi?'※ 念のため数値をご確認ください。':'※ 簡易OCRは誤読が出やすいです。OCR起動.bat でAIサーバーを起動すると精度が上がります。数値を必ずご確認ください。'}`);
+  }catch(e){
+    alert('読み取りに失敗しました：'+(e&&e.message?e.message:e));
+  }finally{
+    if(btn){ btn.disabled=false; btn.textContent=btn.dataset.t||'📐 画像から W・H を自動入力'; }
+  }
+}
+/* 階ごとに自動採番して建具を追加（WD1xx=1階 / WD2xx=2階。1階あたりWD13まで等、必要数を追加可） */
+function tgAddDoorFloor(floor){
+  const prefix = floor==='2階' ? 'WD2' : 'WD1';
+  const n = String(TG.doors.filter(d=>d.floor===floor).length + 1).padStart(2,'0');
+  const door={floor, no:prefix+n, room:"", type:"", hinban:"B-XF", color:"GE（グレージュ）", w:"", h:"", handle:"", threshold:"", sill:"", remark:"", remark2:"", img:""};
+  let idx=-1; TG.doors.forEach((d,i)=>{ if(d.floor===floor) idx=i; });
+  TG.doors.splice(idx+1,0,door);
+  renderEditor(); sync();
+}
+function tgDelDoor(i){ if(confirm('この建具を削除しますか？')){ TG.doors.splice(i,1); renderEditor(); sync(); } }
+
+/* 建具表：印刷シート */
+function renderTateguSheet(){
+  const p=DATA.project, m=TG;
+  let h=`<div class="sheet-head">
+      <div><div class="title">${esc(m.meta.title)}</div>
+        <div class="proj">${esc(p.name)}</div></div>
+      <div class="meta">建具：${esc(m.meta.maker)}<br>決定日：${esc(p.decided_date)||'　　　年　　月　　日'}<br>作成者：${esc(p.author)}</div>
+    </div>`;
+  // 建具カードHTML生成（階ごとページから共用）
+  const cardHtml = d => {
+    const size=(d.w||d.h)?`W${esc(d.w)} × H${esc(d.h)}`:'';
+    const hinbanColor=[d.hinban,d.color].filter(Boolean).map(esc).join('　');
+    return `<div class="tg-card">
+      <div class="tg-card-head"><span class="no">${esc(d.no)}</span><span class="room">${esc(d.room)}</span></div>
+      <div class="tg-card-body">
+        <div class="tg-card-img-wrap"><div class="tg-card-img" style="background:${swStyle(doorImgSrc(d),'contain','#fff')}"></div></div>
+        <div class="tg-card-attrs">
+          <div class="row"><span class="k">把手デザイン</span><span class="v">${esc(d.handle)}${handleImgSrc(d)?`<span class="acc-img" style="background:${swStyle(handleImgSrc(d),'contain','#fff')}"></span>`:''}</span></div>
+          <div class="row"><span class="k">敷居有無</span><span class="v">${d.threshold?esc(d.threshold):SLASH_CELL}</span></div>
+          <div class="row"><span class="k">敷居色／種類</span><span class="v">${doorSill(d)?esc(doorSill(d)):SLASH_CELL}</span></div>
+          ${d.lightScope?`<div class="row"><span class="k">ライトスコープ</span><span class="v">あり<span class="acc-img" style="background:${swStyle(lightScopeImgSrc(d),'contain','#fff')}"></span></span></div>`:''}
+          ${d.lock?`<div class="row"><span class="k">表示錠</span><span class="v">あり<span class="acc-img" style="background:${swStyle(lockImgSrc(d),'contain','#fff')}"></span></span></div>`:''}
+          <div class="note">枠色は建具仕様をご確認ください</div>
+        </div>
+      </div>
+      <div class="tg-card-spec">
+        <div class="row"><span class="k">種類</span><span class="v">${esc(d.type)}</span></div>
+        <div class="row"><span class="k">品番</span><span class="v">${hinbanColor}</span></div>
+        <div class="row"><span class="k">大きさ</span><span class="v">${size}</span></div>
+        <div class="row"><span class="k">備考①</span><span class="v">${d.remark?esc(d.remark):SLASH_CELL}</span></div>
+        <div class="row"><span class="k">備考②</span><span class="v">${d.remark2?esc(d.remark2):SLASH_CELL}</span></div>
+      </div>
+    </div>`;
+  };
+  // 建具仕様（共通）と床仕様のHTMLは階ごとページ内で再利用するため関数化
+  const kvrow=(k,v)=>`<div class="kv"><div class="k">${esc(k)}</div><div class="v">${v}</div></div>`;
+  const fImg=(img)=> img?`<div style="display:inline-block;width:48px;height:48px;vertical-align:middle;margin-left:8px;border:1px solid #ccc;border-radius:4px;background:${swStyle(img,'cover')}"></div>`:'';
+  const commonHtml = () => {
+    let s=`<div class="sec"><div class="sec-h">建具仕様（共通）</div><div class="sec-b">`;
+    m.common.forEach(c=>{ if(c.v==='' && !c.note) return; let v=esc(c.v);
+      if(c.note) v+=`　※一部変更：${esc(c.note)}`;
+      s+=`<div class="kv"><div class="k">${esc(c.k)}</div><div class="v">${v}</div></div>`; });
+    s+=`</div></div>`;
+    return s;
+  };
+  const floorSpecHtml = (floorName) => {
+    // 床下点検口・床下エアコンは1階のみ印刷に出す（2階以上では非表示）
+    const isUpper = floorName && floorName!=='1階';
+    let s=`<div class="sec"><div class="sec-h">床仕様</div><div class="sec-b">`;
+    m.floor.forEach(c=>{
+      if(isUpper && (c.k==='床下点検口' || c.k==='床下エアコン')) return;
+      if(c.k==='畳'){
+        const t=[c.type,c.color,c.count].filter(Boolean).map(esc).join('　');
+        if(t||c.img) s+=kvrow('畳', t+fImg(c.img));
+        return;
+      }
+      if(WASHITSU_KEYS.includes(c.k)){
+        const v=[c.v,c.spec].filter(Boolean).map(esc).join('　');
+        if(v) s+=kvrow(c.k,v);
+        return;
+      }
+      if(c.v==='') return;
+      let v = c.v==='斜線' ? SLASH_SVG : esc(c.v);
+      if(c.k==='フローリング'&&c.pattern) v+=`　（${esc(c.pattern)}）`;
+      if(c.k==='フローリング') v+=fImg(c.img);
+      s+=kvrow(c.k,v);
+    });
+    s+=`</div></div>`;
+    return s;
+  };
+  const signHtml = () => `
+    <div class="sign"><div class="box"><b>お客様ご署名</b></div><div class="box"><b>承認書提出</b></div><div class="box"><b>捺印欄</b></div></div>
+    <div class="note">※ 安全性・デザイン性・施工性を優先する場合、仕様詳細図面通りの施工とならない場合がございます。</div>
+    <div class="foot"><div>${esc(p.company)}</div><div>TEL ${esc(p.tel)}　／　FAX ${esc(p.fax)}</div></div>`;
+
+  // 階ごとに A3横の1ページ：左に[間取り図＋共通仕様＋床仕様]、右に建具カード。署名は最後の階のみ末尾に。
+  const floors=[...new Set(m.doors.map(d=>d.floor||''))].filter(Boolean);
+  floors.forEach((fl,fi)=>{
+    const list=m.doors.filter(d=>(d.floor||'')===fl);
+    if(!list.length) return;
+    const planImg=(m.meta.plan_images||{})[fl]||'';
+    const isLast = fi===floors.length-1;
+    h+=`<div class="tg-floor-page">
+      <div class="tg-floor-left">
+        <div class="tg-floor-plan">
+          <div class="ph"><span>${esc(fl)}　間取り図</span><span style="font-size:11px;font-weight:normal;">（スライドで色付け済の画像）</span></div>
+          <div class="pbody">${planImg?`<img src="${imgSrc(planImg)}" alt="${esc(fl)}間取り図">`:`<div class="empty">📐 ${esc(fl)} の間取り図は未取り込みです<br><span style="font-size:10px;">編集画面で 📷 から取り込んでください</span></div>`}</div>
+        </div>
+        ${commonHtml()}
+        ${floorSpecHtml(fl)}
+        ${isLast?signHtml():''}
+      </div>
+      <div class="tg-floor-col">
+        <div class="tg-floor-title">${esc(fl)}　建具表</div>
+        <div class="tg-cards">${list.map(cardHtml).join('')}</div>
+      </div>
+    </div>`;
+  });
+  // ※ 設計仕様詳細の画像は「入力画面のみ」表示。印刷シートには載せない。
+  document.getElementById('sheet').innerHTML=h;
+}
+
+/* ============================================================
+   クロス図面：編集パネル＋印刷シート（最小骨組み。Phase 2/3で拡充）
+   ============================================================ */
+function renderKurosuEditor(){
+  const m=KR;
+  const p=DATA.project;
+  let h=`<div class="card"><div class="body" style="font-size:12px;color:#666;">
+     物件情報（物件名・作成者・決定日）は「仕様一覧表」タブと共通で、クロス図面のヘッダーにも使われます。</div></div>`;
+  h+=`<details class="card" open><summary><span class="area" style="background:#3b4a5c">クロス</span>図面情報</summary><div class="body">
+     <div class="field"><label>図面タイトル</label><input value="${esc(m.meta.title)}" oninput="krMeta('title',this.value)"></div>
+     <div class="field"><label>基本クロス（ラベル）</label><input value="${esc(m.meta.base_cloth_label)}" oninput="krMeta('base_cloth_label',this.value)" placeholder="例：基本クロス"></div>
+     <div class="field"><label>基本クロス 品番</label><input value="${esc(m.meta.base_cloth_hinban)}" oninput="krMeta('base_cloth_hinban',this.value)" placeholder="例：XR-410"></div>
+     <div class="hint" style="margin:8px 0 4px;">階ごとの間取り画像（スライド等で色付け済）を 📷 で取り込んでください。建具表と同じく階ごとに1ページ＝A3横で出力します。</div>`;
+  const planFloors=[...new Set([...Object.keys(m.meta.plan_images||{}), ...m.rooms.map(r=>r.floor||'').filter(Boolean)])];
+  if(!planFloors.length) planFloors.push('1階','2階');
+  planFloors.forEach(fl=>{
+    const img=(m.meta.plan_images||{})[fl]||'';
+    h+=`<div class="dcard" style="margin-bottom:6px;">
+        <div style="font-weight:bold;color:#3b4a5c;margin-bottom:4px;">${esc(fl)}　間取り図</div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          ${img?`<div class="dthumb" style="width:120px;height:80px;background:${swStyle(img,'contain')}"></div>`:'<span class="hint" style="margin:0;">未取り込み</span>'}
+          <label class="btn-sm" style="cursor:pointer;">📷 ${img?'別の画像に差し替え':'画像を選択'}
+            <input type="file" accept="image/*" style="display:none" onchange="krPlanImgPick('${esc(fl)}',this)"></label>
+          ${img?`<button class="btn-sm btn-del" onclick="krPlanImgClear('${esc(fl)}')">画像を消す</button>`:''}
+        </div>
+      </div>`;
+  });
+  h+=`</div></details>`;
+
+  // クロスエントリ一覧（階ごとにグループ化して表示）
+  const krSel=(opts,val,handler)=>{ let o=opts.slice(); if(val && !o.includes(val)) o.unshift(val);
+    return `<select onchange="${handler}"><option value=""${!val?' selected':''}>（未選択）</option>`
+      +o.map(x=>`<option value="${esc(x)}"${x===val?' selected':''}>${esc(x)}</option>`).join('')+`</select>`; };
+  h+=`<details class="card" open><summary><span class="area" style="background:#3b4a5c">クロス</span>部屋別エントリ（${m.rooms.length}件）</summary><div class="body">`;
+  h+=`<div class="hint">基本クロス（${esc(m.meta.base_cloth_hinban||'未設定')}）以外を採用する部屋・部位だけ登録します。室名／部位／スタイル／品番／画像を入力。</div>`;
+  m.rooms.forEach((r,i)=>{
+    h+=`<div class="dcard">
+       <div class="dhead">
+         <span class="dno">${esc(r.floor||'')}　${esc(r.name||'(室名未入力)')}　${esc(r.part||'')}${r.style?'　／　'+esc(r.style):''}</span>
+         <button class="btn-sm btn-del" onclick="krDelRoom(${i})">削除</button>
+       </div>
+       <div class="dgrid">
+         <div class="f"><label>階</label>${krSel(KR_OPTS.floor, r.floor||'1階', `krRoom(${i},'floor',this.value)`)}</div>
+         <div class="f"><label>室名</label>
+           <div style="display:flex;gap:4px;align-items:stretch;">
+             <input value="${esc(r.name||'')}" list="krRoom" oninput="krRoom(${i},'name',this.value)" placeholder="自由入力可" style="flex:1;min-width:0;">
+             <select onchange="if(this.value){krRoom(${i},'name',this.value);} this.selectedIndex=0;" style="flex:0 0 auto;padding:4px 4px;border:1px solid #ccc;border-radius:4px;font-size:12px;background:#fff;">
+               <option value="">▼一覧</option>
+               ${KR_OPTS.room.map(o=>`<option value="${esc(o)}">${esc(o)}</option>`).join('')}
+             </select>
+           </div>
+         </div>
+         <div class="f"><label>部位</label>${krSel(KR_OPTS.part, r.part||'壁', `krRoom(${i},'part',this.value)`)}</div>
+         <div class="f"><label>スタイル</label>${krSel(KR_OPTS.style, r.style||'', `krRoom(${i},'style',this.value)`)}</div>
+         <div class="f full"><label>品番（画像から選択）</label>${(KR_CATALOG[r.style]&&KR_CATALOG[r.style].length)
+            ? `<div class="cloth-thumb-grid">${KR_CATALOG[r.style].map(x=>{
+                 const info=getHaibanInfo(x.hinban);
+                 const status=info?info.status:'';
+                 const isHaiban=status==='discontinued';
+                 const badgeClass=isHaiban?'haiban':(status==='partial'?'partial':(status==='active'?'active':''));
+                 const badgeText=isHaiban?'廃番':(status==='partial'?'△':(status==='active'?'✓':''));
+                 const tipParts=[];
+                 if(info){
+                   tipParts.push(`${info.maker||''} ${info.series||''}`.trim());
+                   if(info.successor) tipParts.push(`後継：${info.successor}`);
+                   if(info.predecessor) tipParts.push(`旧：${info.predecessor}`);
+                 }
+                 const tip=tipParts.length?` title="${esc(tipParts.join(' / '))}"`:'';
+                 return `<div class="cloth-thumb${x.hinban===r.hinban?' selected':''}${isHaiban?' haiban':''}" onclick="krRoomCatalog(${i},'${esc(x.hinban)}')"${tip}>
+                   <div class="cloth-thumb-img" style="background:${swStyle(x.img,'cover','#fff')}"></div>
+                   <div class="cloth-thumb-hb">${esc(x.hinban)}</div>
+                   ${badgeText?`<span class="cloth-thumb-badge ${badgeClass}">${esc(badgeText)}</span>`:''}
+                 </div>`;
+               }).join('')}</div>`
+            : `<input value="${esc(r.hinban||'')}" oninput="krRoom(${i},'hinban',this.value)" placeholder="例：LB0030（スタイル選択でカタログから選べます）">`}</div>
+         <div class="f full"><label>クロス画像</label>
+           <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+             ${r.img?`<div class="dthumb" style="width:64px;height:64px;background:${swStyle(r.img,'cover')}"></div>`:'<span class="hint" style="margin:0;">未取り込み</span>'}
+             <label class="btn-sm" style="cursor:pointer;background:#888;">📷 ${r.img?'差し替え':'画像を選択'}<input type="file" accept="image/*" style="display:none" onchange="krRoomPick(${i},this)"></label>
+             ${r.img?`<button class="btn-sm btn-del" onclick="krRoomImgClear(${i})">画像を消す</button>`:''}
+           </div>
+         </div>
+       </div>
+     </div>`;
+  });
+  h+=`<div class="addrow">
+       <button class="btn-sm" onclick="krAddRoom('1階')">＋ 1階のクロスを追加</button>
+       <button class="btn-sm" onclick="krAddRoom('2階')" style="margin-left:6px;">＋ 2階のクロスを追加</button>
+     </div></div></details>`;
+  const dl=(id,arr)=>`<datalist id="${id}">${arr.map(o=>`<option value="${esc(o)}">`).join('')}</datalist>`;
+  h+=dl('krRoom',KR_OPTS.room);  // 部位・スタイルは strict select 化したため datalist 不要
+  document.getElementById('editor').innerHTML=h;
+}
+function krMeta(k,v){ KR.meta[k]=v; sync(); }
+/* クロスエントリの編集ハンドラ */
+function krRoom(i,k,v){
+  KR.rooms[i][k]=v;
+  // 階を変えたら並び替えるため再描画
+  if(k==='floor'){
+    KR.rooms.sort((a,b)=>(a.floor||'').localeCompare(b.floor||'',undefined,{numeric:true}));
+    renderEditor(); sync();
+    return;
+  }
+  // 室名（自由入力）はフォーカス保持のため再描画せず保存のみ＋dhead要約だけ部分更新
+  if(k==='name'){
+    krUpdateRoomHead(i);
+    sync();
+    return;
+  }
+  renderEditor(); sync();
+}
+/* クロス：該当 dcard の dhead 要約だけDOM更新（room/part/style変更時のフォーカス保持） */
+function krUpdateRoomHead(i){
+  const r = KR.rooms[i];
+  const card = [...document.querySelectorAll('#editor .dcard')].find(c=>c.innerHTML.includes(`krRoom(${i},'name'`));
+  if(!card) return;
+  const dno = card.querySelector('.dhead .dno');
+  if(dno){
+    dno.textContent = `${r.floor||''}　${r.name||'(室名未入力)'}　${r.part||''}${r.style?'　／　'+r.style:''}`;
+  }
+}
+function krRoomPick(i,input){
+  const f=input.files[0]; if(!f) return;
+  fileToDataURL(f,1400,durl=>{ KR.rooms[i].img=durl; renderEditor(); sync(); });
+  input.value='';
+}
+function krRoomImgClear(i){ KR.rooms[i].img=''; renderEditor(); sync(); }
+function krAddRoom(floor){
+  KR.rooms.push({floor:floor||'1階', name:"", part:"壁", style:"", hinban:"", img:""});
+  KR.rooms.sort((a,b)=>(a.floor||'').localeCompare(b.floor||'',undefined,{numeric:true}));
+  renderEditor(); sync();
+}
+function krDelRoom(i){ if(confirm('このクロスを削除しますか？')){ KR.rooms.splice(i,1); renderEditor(); sync(); } }
+/* 品番カタログから選択：品番＋紐づき画像を自動セット */
+function krRoomCatalog(i, hinban){
+  KR.rooms[i].hinban = hinban;
+  const cat = KR_CATALOG[KR.rooms[i].style] || [];
+  const found = cat.find(x=>x.hinban===hinban);
+  if(found && found.img) KR.rooms[i].img = found.img; // 画像がカタログに登録されていれば自動セット
+  renderEditor(); sync();
+}
+function krPlanImgPick(floor,input){
+  const f=input.files[0]; if(!f) return;
+  fileToDataURL(f,2400,durl=>{
+    if(!KR.meta.plan_images) KR.meta.plan_images={};
+    KR.meta.plan_images[floor]=durl;
+    renderEditor(); renderSheet(); sync();
+  });
+  input.value='';
+}
+function krPlanImgClear(floor){
+  if(KR.meta.plan_images) KR.meta.plan_images[floor]='';
+  renderEditor(); renderSheet(); sync();
+}
+function renderKurosuSheet(){
+  const p=DATA.project, m=KR;
+  let h=`<div class="sheet-head">
+      <div><div class="title">${esc(m.meta.title)}</div>
+        <div class="proj">${esc(p.name)}</div></div>
+      <div class="meta">${esc(m.meta.base_cloth_label)}：${esc(m.meta.base_cloth_hinban)}<br>決定日：${esc(p.decided_date)||'　　　年　　月　　日'}<br>作成者：${esc(p.author)}</div>
+    </div>`;
+
+  // クロスカードHTML生成（ヘッダーは室名のみ・帯に部位（壁/床/天井）を表示・画像はcontainで全体表示）
+  const cardHtml = r => {
+    return `<div class="kr-card">
+      <div class="kr-card-head">
+        <span class="room">${esc(r.name||'(室名未入力)')}</span>
+      </div>
+      ${r.part?`<div class="kr-card-style">${esc(r.part)}</div>`:''}
+      <div class="kr-card-img" style="background:${swStyle(r.img,'contain','#fff')}"></div>
+      <div class="kr-card-foot">${r.hinban?esc(r.hinban):SLASH_CELL}</div>
+    </div>`;
+  };
+
+  // 階ごとに A3横の1ページ：左に間取り図、右にクロスカード。下に基本クロス・注記。
+  const floors=[...new Set(m.rooms.map(r=>r.floor||''))].filter(Boolean);
+  if(!floors.length) floors.push('1階','2階'); // データ未入力でも間取りページは出す
+  floors.forEach((fl, fi)=>{
+    const list=m.rooms.filter(r=>(r.floor||'')===fl);
+    const planImg=(m.meta.plan_images||{})[fl]||'';
+    const subtitle = fl==='1階' ? (m.meta.subtitle_1f||'') : fl==='2階' ? (m.meta.subtitle_2f||'') : '';
+    h+=`<div class="kr-floor-page">
+      <div class="kr-floor-left">
+        <div class="kr-floor-plan">
+          <div class="ph"><span>${esc(fl)}　間取り図</span><span style="font-size:11px;font-weight:normal;">（スライドで色付け済の画像）</span></div>
+          <div class="pbody">${planImg?`<img src="${imgSrc(planImg)}" alt="${esc(fl)}間取り図">`:`<div class="empty">📐 ${esc(fl)} の間取り図は未取り込みです<br><span style="font-size:10px;">編集画面で 📷 から取り込んでください</span></div>`}</div>
+        </div>
+        <div class="kr-meta">
+          <div class="row"><div class="k">${esc(m.meta.base_cloth_label||'基本クロス')}</div><div class="v">${esc(m.meta.base_cloth_hinban||'')}</div></div>
+          ${subtitle?`<div class="row"><div class="k">タイトル</div><div class="v">${esc(subtitle)}</div></div>`:''}
+          ${m.meta.note?`<div class="note">${esc(m.meta.note)}</div>`:''}
+        </div>
+      </div>
+      <div class="kr-floor-col">
+        <div class="kr-floor-title">${esc(fl)}　壁・天井（クロス・タイル）・床CF仕上げ</div>
+        ${list.length
+          ? `<div class="kr-cards">${list.map(cardHtml).join('')}</div>`
+          : `<div class="empty" style="padding:20px;color:#999;text-align:center;font-size:12px;border:1px dashed #ccc;border-radius:4px;">この階には基本クロス以外のエントリがありません</div>`}
+      </div>
+    </div>`;
+  });
+
+  // フッター（会社情報）— 最終ページの末尾
+  h+=`<div class="foot" style="margin-top:18px;"><div>${esc(p.company)}</div><div>TEL ${esc(p.tel)}　／　FAX ${esc(p.fax)}</div></div>`;
+
+  document.getElementById('sheet').innerHTML=h;
+}
+
+/* ============================================================
+   照明図面：編集パネル＋印刷シート（Phase 1 最小骨組み）
+   ============================================================ */
+function renderLightingEditor(){
+  const m = LT;
+  let h = `<div class="card"><div class="body" style="font-size:12px;color:#666;">
+     物件情報（物件名・作成者・決定日）は「仕様一覧表」タブと共通で、照明図面のヘッダーにも使われます。</div></div>`;
+  h += `<details class="card" open><summary><span class="area" style="background:#3b4a5c">照明</span>図面情報</summary><div class="body">
+     <div class="field"><label>図面タイトル</label><input value="${esc(m.meta.title)}" oninput="ltMeta('title',this.value)"></div>
+     <div class="hint" style="margin:6px 0 0;">部屋ごとに照明器具を登録すると、印刷時は <b>商品（画像）ごとの商品カード＋集計表＋金額</b> として出力されます。</div>
+   </div></details>`;
+
+  // 照明器具エントリ一覧
+  const ltSel = (opts, val, handler)=>{ let o=opts.slice(); if(val && !o.includes(val)) o.unshift(val);
+    return `<select onchange="${handler}"><option value=""${!val?' selected':''}>（未選択）</option>`
+      +o.map(x=>`<option value="${esc(x)}"${x===val?' selected':''}>${esc(x)}</option>`).join('')+`</select>`; };
+
+  // 全エントリの総額合計と、お客様出し（×0.8）を編集サマリーに表示
+  const grandSum  = m.entries.reduce((s,e)=>s + (Number(e.price)||0) * (parseInt(e.qty)||0), 0);
+  const kakaku    = Math.round(grandSum * LT_KAKERITSU);
+  h += `<details class="card" open><summary><span class="area" style="background:#3b4a5c">照明</span>照明器具エントリ（${m.entries.length}件 ／ 総額 ${formatYen(grandSum)} ／ お客様出し ${formatYen(kakaku)}）</summary><div class="body">`;
+  h += `<div class="hint">項目は▼一覧から選ぶか自由入力。<b>総額＝単価×個数</b>を自動計算、<b>お客様出し＝総額合計×${LT_KAKERITSU}</b>。同じ画像のエントリは印刷時に1カードに集約されます。</div>`;
+  m.entries.forEach((e, i)=>{
+    const subtotal = (Number(e.price)||0) * (parseInt(e.qty)||0);
+    h += `<div class="dcard">
+       <div class="dhead">
+         <span class="dno">${esc(e.floor||'')}　${esc(e.room||'(室名未入力)')}　${esc(e.name||'-')}　×${esc(String(e.qty||1))}　${esc(formatYen(subtotal))}</span>
+         <button class="btn-sm btn-del" onclick="ltDel(${i})">削除</button>
+       </div>
+       <div class="dgrid">
+         <div class="f"><label>階</label>${ltSel(LT_OPTS.floor, e.floor||'1階', `ltSet(${i},'floor',this.value)`)}</div>
+         <div class="f"><label>室名</label>
+           <div style="display:flex;gap:4px;align-items:stretch;">
+             <input value="${esc(e.room||'')}" list="ltRoom" oninput="ltSet(${i},'room',this.value)" placeholder="自由入力可" style="flex:1;min-width:0;">
+             <select onchange="if(this.value){ltSet(${i},'room',this.value);} this.selectedIndex=0;" style="flex:0 0 auto;padding:4px 4px;border:1px solid #ccc;border-radius:4px;font-size:12px;background:#fff;">
+               <option value="">▼一覧</option>
+               ${LT_OPTS.room.map(o=>`<option value="${esc(o)}">${esc(o)}</option>`).join('')}
+             </select>
+           </div>
+         </div>
+         <div class="f"><label>項目</label>
+           <div style="display:flex;gap:4px;align-items:stretch;">
+             <input value="${esc(e.name||'')}" list="ltItem" oninput="ltSet(${i},'name',this.value)" placeholder="自由入力可" style="flex:1;min-width:0;">
+             <select onchange="if(this.value){ltSet(${i},'name',this.value);} this.selectedIndex=0;" style="flex:0 0 auto;padding:4px 4px;border:1px solid #ccc;border-radius:4px;font-size:12px;background:#fff;">
+               <option value="">▼一覧</option>
+               ${LT_OPTS.item.map(o=>`<option value="${esc(o)}">${esc(o)}</option>`).join('')}
+             </select>
+           </div>
+         </div>
+         <div class="f"><label>メーカー</label><input value="${esc(e.maker||'')}" oninput="ltSet(${i},'maker',this.value)" placeholder="例：パナソニック"></div>
+         <div class="f"><label>個数</label><input type="text" inputmode="numeric" value="${esc(String(e.qty||1))}" oninput="ltSet(${i},'qty',this.value)" placeholder="1"></div>
+         <div class="f"><label>単価（円）</label><input type="text" inputmode="numeric" value="${esc(String(e.price||0))}" oninput="ltSet(${i},'price',this.value)" placeholder="例：12000"></div>
+         <div class="f"><label>総額</label><input value="${esc(formatYen(subtotal))}" readonly style="background:#f8f8f5;color:#333;font-weight:bold;"></div>
+         <div class="f full"><label>備考</label><input value="${esc(e.remark||'')}" oninput="ltSet(${i},'remark',this.value)" placeholder="例：調光対応／壁スイッチ位置 等"></div>
+         <div class="f full"><label>照明画像</label>
+           <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+             ${e.img?`<div class="dthumb" style="width:64px;height:64px;background:${swStyle(e.img,'contain','#fff')}"></div>`:'<span class="hint" style="margin:0;">未取り込み</span>'}
+             <label class="btn-sm" style="cursor:pointer;background:#888;">📷 ${e.img?'差し替え':'画像を選択'}<input type="file" accept="image/*" style="display:none" onchange="ltPick(${i},this)"></label>
+             ${e.img?`<button class="btn-sm btn-del" onclick="ltClearImg(${i})">画像を消す</button>`:''}
+             ${e.img?`<button id="ltOcrBtn${i}" class="btn-sm" style="background:#a26a1f;" onclick="ltOcrPrice(${i})">📐 価格をAIで取得</button>`:''}
+           </div>
+         </div>
+       </div>
+     </div>`;
+  });
+  h += `<div class="addrow">
+       <button class="btn-sm" onclick="ltAdd('1階')">＋ 1階の照明を追加</button>
+       <button class="btn-sm" onclick="ltAdd('2階')" style="margin-left:6px;">＋ 2階の照明を追加</button>
+       ${m.entries.some(e=>e.img)?`<button id="ltOcrAllBtn" class="btn-sm" style="background:#a26a1f;margin-left:14px;" onclick="ltOcrPriceAll()">📐 全エントリの価格をAIで一括取得</button>`:''}
+     </div></div></details>`;
+  // datalist
+  const dl=(id,arr)=>`<datalist id="${id}">${arr.map(o=>`<option value="${esc(o)}">`).join('')}</datalist>`;
+  h += dl('ltRoom', LT_OPTS.room) + dl('ltItem', LT_OPTS.item);
+  document.getElementById('editor').innerHTML = h;
+}
+function ltMeta(k,v){ LT.meta[k]=v; sync(); }
+/* 照明エントリの編集ハンドラ */
+/* 全角数字→半角・カンマ/円記号など除去して整数化（IME ON対応） */
+function parseJpInt(v){
+  if(v==null) return 0;
+  const s = String(v)
+    .replace(/[０-９]/g, c=>String.fromCharCode(c.charCodeAt(0)-0xFEE0))  // ０-９→0-9
+    .replace(/[,\s¥￥円]/g, '');
+  const n = parseInt(s, 10);
+  return isNaN(n) ? 0 : n;
+}
+function ltSet(i, k, v){
+  if(k==='qty')        { LT.entries[i].qty   = Math.max(1, parseJpInt(v)||1); }
+  else if(k==='price') { LT.entries[i].price = Math.max(0, parseJpInt(v)); }
+  else                 { LT.entries[i][k]    = v; }
+
+  if(k==='qty' || k==='price'){
+    // 入力中のフォーカスを保持するため、全体再描画せず該当セルだけDOM更新
+    ltUpdateNumericCells(i);
+    sync();  // 印刷側＋autosave
+    return;
+  }
+  // 自由入力テキスト（室名・メーカー・備考）はフォーカス保持のため再描画せず保存のみ
+  // dheadの要約だけは部分更新して見た目が追従するように
+  if(k==='room' || k==='maker' || k==='remark'){
+    ltUpdateNumericCells(i);  // dhead要約も併せて更新（内部で dhead を書き換える）
+    sync();
+    return;
+  }
+  // 項目（name）変更時：カタログにあれば対応画像を自動セット。
+  // ただし📷で取り込んだdata:URIは尊重して上書きしない。
+  if(k==='name'){
+    const cur = LT.entries[i].img || '';
+    const isManual = /^data:/.test(cur);     // 手動取り込み済はそのまま
+    if(!isManual){
+      const catImg = LT_ITEM_IMG[v];
+      if(catImg){
+        LT.entries[i].img = catImg;
+      } else if(cur && cur.startsWith('照明/')){
+        // 自由入力に変わった＆現在の画像は前回の自動セット → クリア
+        LT.entries[i].img = '';
+      }
+    }
+  }
+  // 階の変更時は並び替え
+  if(k==='floor') LT.entries.sort((a,b)=>(a.floor||'').localeCompare(b.floor||'',undefined,{numeric:true}));
+  renderEditor(); sync();
+}
+/* 該当エントリの「総額」セル・dhead要約・上部サマリー（総額/お客様出し）だけを更新 */
+function ltUpdateNumericCells(i){
+  const e = LT.entries[i];
+  const subtotal = (Number(e.price)||0) * (parseInt(e.qty)||0);
+  // 該当エントリの dcard を特定（oninput属性に ltSet(i,'price', が含まれるカード）
+  const targetCard = [...document.querySelectorAll('#editor .dcard')].find(c=>c.innerHTML.includes(`ltSet(${i},'price'`));
+  if(targetCard){
+    // 総額 input
+    const totalInput = [...targetCard.querySelectorAll('input')].find(el=>{
+      const lab = el.closest('.f')?.querySelector('label');
+      return lab && lab.textContent.trim()==='総額';
+    });
+    if(totalInput) totalInput.value = formatYen(subtotal);
+    // dhead 要約
+    const dno = targetCard.querySelector('.dno');
+    if(dno) dno.textContent = `${e.floor||''}　${e.room||'(室名未入力)'}　${e.name||'-'}　×${e.qty||1}　${formatYen(subtotal)}`;
+  }
+  // 上部サマリー
+  const grandSum = LT.entries.reduce((s,e2)=>s + (Number(e2.price)||0) * (parseInt(e2.qty)||0), 0);
+  const kakaku   = Math.round(grandSum * LT_KAKERITSU);
+  const lightSummary = [...document.querySelectorAll('#editor details.card summary')].find(s=>s.textContent.includes('照明器具エントリ'));
+  if(lightSummary){
+    lightSummary.innerHTML = `<span class="area" style="background:#3b4a5c">照明</span>照明器具エントリ（${LT.entries.length}件 ／ 総額 ${formatYen(grandSum)} ／ お客様出し ${formatYen(kakaku)}）`;
+  }
+}
+function ltPick(i, input){
+  const f=input.files[0]; if(!f) return;
+  fileToDataURL(f, 1400, durl=>{ LT.entries[i].img = durl; renderEditor(); sync(); });
+  input.value='';
+}
+function ltClearImg(i){ LT.entries[i].img=''; renderEditor(); sync(); }
+/* 照明画像URL→Claude VisionへOCRリクエスト用に data:URI 化
+   ・data:URIならそのまま
+   ・相対パス／HTTPなら <img>+canvas で base64 化（file:// でも動く） */
+function ltImgToDataUrl(src){
+  return new Promise((resolve, reject)=>{
+    if(!src){ reject(new Error('画像が未設定です')); return; }
+    if(/^data:/.test(src)){ resolve(src); return; }
+    const img = new Image();
+    img.onload = ()=>{
+      try{
+        const cv = document.createElement('canvas');
+        cv.width  = img.naturalWidth || 800;
+        cv.height = img.naturalHeight || 600;
+        cv.getContext('2d').drawImage(img, 0, 0);
+        const durl = cv.toDataURL('image/jpeg', 0.85);
+        resolve(durl);
+      } catch(e){
+        const err = new Error('画像のbase64化に失敗: ' + (e.message||e));
+        err.imgErr = true;
+        reject(err);
+      }
+    };
+    img.onerror = ()=>{
+      const err = new Error(`画像が読み込めません（パス・拡張子を確認）：${src}`);
+      err.imgErr = true;
+      reject(err);
+    };
+    img.src = src;
+  });
+}
+const LT_OCR_API_URL = 'http://127.0.0.1:8788/api/ocr-lighting';
+/* 画像ソースに応じて適切なペイロードを作る：
+   - data:URI → {image: ...}
+   - 相対パス（照明/xxx.jpg等）→ {imageFile: ...} でサーバー側読み込みに任せる（CORS回避） */
+async function ltOcrPriceCore(src){
+  const payload = /^data:/.test(src) ? {image: src} : {imageFile: src};
+  let res;
+  try{ res = await fetch(LT_OCR_API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); }
+  catch(e){ const err = new Error('AIサーバーに接続できません'); err.noServer = true; throw err; }
+  if(!res.ok){ let msg='サーバーエラー '+res.status; try{const j=await res.json(); if(j.error) msg=j.error;}catch(e){} throw new Error(msg); }
+  return await res.json();
+}
+/* 個別エントリの価格をAIで取得 */
+async function ltOcrPrice(i){
+  const e = LT.entries[i];
+  if(!e.img){ alert('まず照明画像を取り込んでください。'); return; }
+  const btn = document.getElementById('ltOcrBtn'+i);
+  const origText = btn ? btn.textContent : '';
+  if(btn){ btn.disabled = true; btn.textContent = '⏳ AI読み取り中…'; }
+  try{
+    const out = await ltOcrPriceCore(e.img);
+    if(out && typeof out.price === 'number' && out.price > 0){
+      LT.entries[i].price = out.price;
+      ltUpdateNumericCells(i);
+      sync();
+      alert(`AI読み取り完了：単価 ¥${out.price.toLocaleString('ja-JP')}${out.note?'（'+out.note+'）':''}${out.hinban?'　／　品番 '+out.hinban:''}`);
+    } else {
+      alert('価格を読み取れませんでした。画像に「希望小売価格」が明記されていない可能性があります。');
+    }
+  } catch(err){
+    if(err.noServer){
+      alert('⚠ AIサーバーに接続できません。\n\n「OCR起動.bat」をダブルクリックして起動し（黒い画面が出たままにする）、もう一度押してください。');
+    } else if(err.imgErr){
+      alert('⚠ 画像を読み込めませんでした：\n' + err.message + '\n\nファイル名の一致を確認するか、📷で再取り込みしてください。');
+    } else {
+      alert('AI読み取りに失敗：' + (err.message||err));
+    }
+  } finally {
+    if(btn){ btn.disabled = false; btn.textContent = origText || '📐 価格をAIで取得'; }
+  }
+}
+/* 全エントリの価格を順次AIで取得（既に価格入りはスキップ） */
+async function ltOcrPriceAll(){
+  const targets = LT.entries.map((e,i)=>({e,i})).filter(x=>x.e.img && (!x.e.price || x.e.price===0));
+  if(!targets.length){ alert('対象エントリがありません（画像あり＋単価未入力のものが対象）。'); return; }
+  if(!confirm(`画像から価格を一括取得します（${targets.length}件）。AIサーバーが起動している必要があります。続行しますか？`)) return;
+  const btn = document.getElementById('ltOcrAllBtn');
+  if(btn){ btn.disabled = true; }
+  let ok=0, fail=0, noServer=false;
+  for(const {e,i} of targets){
+    if(btn) btn.textContent = `⏳ AI読み取り中… (${ok+fail+1}/${targets.length})`;
+    try{
+      const out = await ltOcrPriceCore(e.img);
+      if(out && typeof out.price === 'number' && out.price > 0){
+        LT.entries[i].price = out.price;
+        ltUpdateNumericCells(i);
+        ok++;
+      } else {
+        fail++;
+      }
+    } catch(err){
+      if(err.noServer){ noServer = true; break; }
+      fail++;
+    }
+  }
+  sync();
+  if(btn){ btn.disabled = false; btn.textContent = '📐 全エントリの価格をAIで一括取得'; }
+  if(noServer){
+    alert('⚠ AIサーバーに接続できません。\n「OCR起動.bat」をダブルクリックして起動してください。');
+  } else {
+    alert(`一括取得完了：${ok}件取得${fail?`／${fail}件失敗`:''}`);
+  }
+  renderEditor();
+}
+function ltAdd(floor){
+  LT.entries.push({floor:floor||'1階', room:"", maker:"", name:"", qty:1, price:0, img:"", remark:""});
+  LT.entries.sort((a,b)=>(a.floor||'').localeCompare(b.floor||'',undefined,{numeric:true}));
+  renderEditor(); sync();
+}
+function ltDel(i){ if(confirm('この照明エントリを削除しますか？')){ LT.entries.splice(i,1); renderEditor(); sync(); } }
+function renderLightingSheet(){
+  const p=DATA.project, m=LT;
+  let h = `<div class="sheet-head">
+      <div><div class="title">${esc(m.meta.title)}</div>
+        <div class="proj">${esc(p.name)}</div></div>
+      <div class="meta">決定日：${esc(p.decided_date)||'　　　年　　月　　日'}<br>作成者：${esc(p.author)}</div>
+    </div>`;
+
+  /* エントリーごとに1カード（同じ商品でもまとめず、行ごとに別カード）。
+     並びは編集画面の表示順をそのまま使う（編集側で 階→室名 でソート済み）。 */
+  const entries = Array.isArray(m.entries) ? m.entries : [];
+  const grandQty   = entries.reduce((s,e)=>s + (parseInt(e.qty)||0), 0);
+  const grandTotal = entries.reduce((s,e)=>s + (parseInt(e.qty)||0) * (Number(e.price)||0), 0);
+
+  // エントリーカード（1行＝1カード）
+  const cardHtml = e => {
+    const qty = parseInt(e.qty)||0;
+    const subtotal = qty * (Number(e.price)||0);
+    const customerPayItem = Math.round(subtotal * LT_KAKERITSU);
+    const place = `${e.floor?e.floor+' ':''}${e.room||'-'}`;
+    return `<div class="lt-card">
+      <div class="lt-card-head">
+        <span class="room">${esc(e.name||'(項目未入力)')}</span>
+        <span class="qty">${esc(place)} ×${qty}</span>
+      </div>
+      <div class="lt-card-img" style="background:${swStyle(e.img,'contain','#fff')}"></div>
+      <div class="lt-card-body">
+        ${e.maker?`<div class="meta">${esc(e.maker)}</div>`:''}
+        <div class="meta" style="color:#222;font-weight:bold;">単価 ${esc(formatYen(e.price))}　／　総額 ${esc(formatYen(subtotal))}</div>
+        <div class="meta" style="color:#a26a1f;font-weight:bold;background:#fffaee;border-radius:3px;padding:2px 4px;">お客様出し ${esc(formatYen(customerPayItem))}（×${LT_KAKERITSU}）</div>
+        ${e.remark?`<div class="meta" style="color:#b0734a;">※ ${esc(e.remark)}</div>`:''}
+      </div>
+    </div>`;
+  };
+
+  if(entries.length){
+    h += `<div class="lt-floor-title">照明器具一覧（${entries.length}項目／合計${grandQty}個）</div>`;
+    h += `<div class="lt-cards">${entries.map(cardHtml).join('')}</div>`;
+    // お客様出し（総額 × 0.8）を大きく表示
+    const customerPay = Math.round(grandTotal * LT_KAKERITSU);
+    h += `<div class="lt-grand">
+      <div>
+        <div class="lt-grand-label">総額（照明器具 合計）</div>
+        <div class="lt-grand-yen" style="font-size:16px;color:#555;">${formatYen(grandTotal)}</div>
+      </div>
+      <div style="text-align:right;">
+        <div class="lt-grand-label">お客様出し（総額 × ${LT_KAKERITSU}）</div>
+        <div class="lt-grand-yen">${formatYen(customerPay)}</div>
+      </div>
+    </div>`;
+  } else {
+    h += `<div class="empty" style="padding:30px;color:#999;text-align:center;font-size:13px;border:1px dashed #ccc;border-radius:4px;margin:20px 0;">照明エントリが未登録です。編集画面で「＋ 照明を追加」してください。</div>`;
+  }
+
+  // フッター
+  h += `<div class="note" style="margin-top:10px;">${esc(m.meta.note||'')}</div>
+        <div class="foot" style="margin-top:8px;"><div>${esc(p.company)}</div><div>TEL ${esc(p.tel)}　／　FAX ${esc(p.fax)}</div></div>`;
+
+  document.getElementById('sheet').innerHTML = h;
+}
+
+/* ============================================================
+   配線数量表：編集パネル＋印刷シート（Phase 1：ヘッダー＋坪数別自動）
+   ============================================================ */
+function renderWiringEditor(){
+  const m = WR;
+  const teika = wrTeika();
+  const mochibun = wrMochibun();
+  const std = wrStandardForTsubo(m.tsubo);
+  const lighting = std ? std.lighting : '-';
+  const outlet   = std ? std.outlet   : '-';
+  const baseOpts = WR_OPTS.basePrices.map(p=>`<option value="${p}"${p===m.base_price?' selected':''}>${formatYen(p)}</option>`).join('');
+
+  let h = `<div class="card"><div class="body" style="font-size:12px;color:#666;">
+     物件情報（物件名・施工管理・担当・作成日）は「仕様一覧表」タブと共通で、配線数量表のヘッダーにも使われます。</div></div>`;
+
+  h += `<details class="card" open><summary><span class="area" style="background:#3b4a5c">配線</span>基本情報</summary><div class="body">
+     <div class="field"><label>図面タイトル</label><input value="${esc(m.meta.title)}" oninput="wrMeta('title',this.value)"></div>
+     <div class="field"><label>坪数</label><input type="text" inputmode="decimal" value="${esc(String(m.tsubo||''))}" oninput="wrSet('tsubo',this.value)" placeholder="例：29.32" style="max-width:160px;"><span class="hint" style="margin:0 0 0 8px;">坪</span></div>
+     <div class="field"><label>基本金額</label>
+       <select onchange="wrSet('base_price',this.value)" style="max-width:200px;">${baseOpts}</select>
+       <span class="hint" style="margin:0 0 0 8px;">坪×基本金額で定価</span></div>
+
+     <div style="margin-top:12px;padding:10px 12px;border:1px solid #c8cfd6;border-radius:6px;background:#f4f7fa;">
+       <div style="display:grid;grid-template-columns:120px 1fr;gap:8px 12px;font-size:13px;align-items:center;">
+         <div style="color:#555;">坪数</div>          <div><b>${esc(String(m.tsubo||0))}</b> 坪</div>
+         <div style="color:#555;">基本金額</div>      <div><b>${formatYen(m.base_price)}</b> ／ 坪</div>
+         <div style="color:#555;">定価</div>          <div style="color:#1a4a7a;font-weight:bold;font-size:15px;">${formatYen(teika)} <span style="font-size:11px;color:#666;">（坪×基本金額）</span></div>
+         <div style="color:#555;">持ち分</div>        <div style="color:#a26a1f;font-weight:bold;font-size:15px;">${formatYen(mochibun)} <span style="font-size:11px;color:#666;">（定価×0.8）</span></div>
+       </div>
+     </div>
+
+     <div style="margin-top:12px;padding:10px 12px;border:1px solid #c8cfd6;border-radius:6px;background:#fffaee;">
+       <div style="font-weight:bold;color:#a26a1f;margin-bottom:6px;">坪数による標準個数（自動）</div>
+       <div style="display:grid;grid-template-columns:120px 1fr;gap:6px 12px;font-size:13px;">
+         <div style="color:#555;">電灯数</div>        <div><b>${esc(String(lighting))}</b> 個</div>
+         <div style="color:#555;">コンセント</div>    <div><b>${esc(String(outlet))}</b> 個</div>
+       </div>
+       ${std ? '' : `<div class="hint" style="margin:6px 0 0;color:#c0392b;">⚠ 坪数が20坪未満です。標準個数の表に該当範囲がありません。</div>`}
+     </div>
+
+     <div class="hint" style="margin-top:8px;font-size:11px;">${esc(m.meta.note||'')}</div>
+   </div></details>`;
+
+  // 集計部（照明データ＋配線数量から自動）
+  const sum = wrSummary();
+  h += `<details class="card" open><summary><span class="area" style="background:#a26a1f">集計</span>集計部（照明データ＋配線から自動）</summary><div class="body">
+     <div style="display:grid;grid-template-columns:280px 1fr;gap:8px 12px;font-size:13px;align-items:center;">
+       <div style="color:#555;">① お客様だし金額合計（税抜）</div>
+       <div style="color:#a26a1f;font-weight:bold;font-size:15px;">${formatYen(sum.okyakuTotal)}<span style="font-size:11px;color:#666;margin-left:8px;">＝照明 総額 × 0.8</span></div>
+       <div style="color:#555;">照明器具代金定価合計（税抜）</div>
+       <div style="color:#1a4a7a;font-weight:bold;font-size:15px;">${formatYen(sum.teikaTotal)}<span style="font-size:11px;color:#666;margin-left:8px;">＝照明 単価×個数 の合計</span></div>
+       <div style="color:#555;">差額（お客様だし金額合計 − 持ち分）</div>
+       <div style="color:${sum.diff>=0?'#c0392b':'#1a7a3a'};font-weight:bold;font-size:15px;">${formatYen(Math.abs(sum.diff))}${sum.diff>0?' （お客様だし超過）':(sum.diff<0?' （持ち分内で収まる）':'')}<span style="font-size:11px;color:#666;margin-left:8px;">持ち分：${formatYen(wrMochibun())}</span></div>
+       <div style="color:#555;">計上商品個数合計</div>
+       <div style="font-weight:bold;font-size:15px;">${sum.qtyTotal} 個</div>
+       <div style="color:#555;">② 基本数量 追加表 及び 追加配線等数量表<br>ご請求代金合計（税抜）</div>
+       <div style="color:#1a4a7a;font-weight:bold;font-size:15px;"><span id="wr-sum-wiring">${formatYen(sum.wiringTotal)}</span><span style="font-size:11px;color:#666;margin-left:8px;">＝基本数量追加表＋追加配線等数量表 の合計</span></div>
+       <div style="color:#555;background:#fff7e0;padding:6px 10px;border-radius:4px;">③ ①＋② 追加電気工事等合計（税抜）</div>
+       <div style="color:#a26a1f;font-weight:bold;font-size:17px;background:#fff7e0;padding:6px 10px;border-radius:4px;"><span id="wr-sum-grand">${formatYen(sum.grandTotal)}</span></div>
+     </div>
+     <div class="hint" style="margin-top:8px;">この集計は <b>照明図面タブ</b> と下の <b>基本数量 追加表</b> の入力内容から自動計算されます。</div>
+   </div></details>`;
+
+  // 基本数量 追加表
+  h += `<details class="card" open><summary><span class="area" style="background:#3b4a5c">数量</span>基本数量 追加表</summary><div class="body">`;
+  h += `<div class="hint">基本数量・工事代金は固定／坪数連動（電灯数・2口コンセントは坪数による標準値）。<b>現状数量</b>だけ入力すれば、追加個数と総額が自動計算されます。</div>`;
+  h += `<table style="width:100%;border-collapse:collapse;font-size:12px;margin-top:8px;">
+      <thead>
+        <tr style="background:#eef2f6;">
+          <th rowspan="2" style="border:1px solid #888;padding:5px 6px;">内容</th>
+          <th rowspan="2" style="border:1px solid #888;padding:5px 6px;">備考</th>
+          <th rowspan="2" style="border:1px solid #888;padding:5px 6px;width:64px;">基本数量</th>
+          <th colspan="4" style="border:1px solid #888;padding:5px 6px;background:#fffaee;color:#a26a1f;">計算表 ※こちらに入力</th>
+          <th rowspan="2" style="border:1px solid #888;padding:5px 6px;width:96px;">工事代金/1ヶ所</th>
+          <th rowspan="2" style="border:1px solid #888;padding:5px 6px;width:72px;">追加個数<br><span style="font-size:9px;font-weight:normal;color:#666;">（自動）</span></th>
+          <th rowspan="2" style="border:1px solid #888;padding:5px 6px;width:108px;">総額<br><span style="font-size:9px;font-weight:normal;color:#666;">（自動）</span></th>
+        </tr>
+        <tr style="background:#fff7e0;">
+          <th style="border:1px solid #888;padding:4px 4px;width:54px;">1F</th>
+          <th style="border:1px solid #888;padding:4px 4px;width:54px;">2F</th>
+          <th style="border:1px solid #888;padding:4px 4px;width:60px;">その他</th>
+          <th style="border:1px solid #888;padding:4px 4px;width:60px;background:#fff;">合計</th>
+        </tr>
+      </thead>
+      <tbody>`;
+  m.items.forEach((it,i)=>{
+    const base = wrItemBase(it);
+    const add  = wrItemAdditional(it);
+    const sub  = wrItemSubtotal(it);
+    const skip = it.calc==='skip';
+    const total = (Number(it.floor1)||0) + (Number(it.floor2)||0) + (Number(it.other)||0);
+    const inp = (field, val)=>`<input type="text" inputmode="numeric" value="${esc(String(val||0))}" oninput="wrItemSetFloor(${i},'${field}',this.value,'items')" style="width:46px;text-align:right;padding:3px 4px;font-size:12px;border:1px solid #ccc;border-radius:3px;">`;
+    const placeInp = `<input type="text" value="${esc(it.place||'')}" oninput="wrItemSetPlace(${i},this.value,'items')" placeholder="場所/室名" style="width:100%;margin-top:4px;padding:2px 5px;font-size:11px;border:1px solid #d4dae0;border-radius:3px;background:#fcfcfa;">`;
+    h += `<tr>
+        <td style="border:1px solid #888;padding:5px 6px;"><div style="font-weight:bold;">${esc(it.name)}</div>${placeInp}</td>
+        <td style="border:1px solid #888;padding:5px 6px;color:#666;font-size:11px;">${esc(it.note||'-')}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:center;">${skip?'-':base}${it.fromTsubo?'<br><span style="font-size:9px;color:#888;">坪数連動</span>':''}</td>
+        <td style="border:1px solid #888;padding:3px 4px;text-align:center;">${inp('floor1', it.floor1)}</td>
+        <td style="border:1px solid #888;padding:3px 4px;text-align:center;">${inp('floor2', it.floor2)}</td>
+        <td style="border:1px solid #888;padding:3px 4px;text-align:center;">${inp('other',  it.other)}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:center;font-weight:bold;background:#f8f8f5;">${total}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:right;">${skip?'-':formatYen(it.unit)}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:center;font-weight:bold;color:${(add||0)>0?'#a26a1f':'#999'};">${skip?'-':add}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:right;font-weight:bold;color:${(sub||0)>0?'#1a4a7a':'#999'};">${skip?'-':formatYen(sub)}</td>
+      </tr>`;
+  });
+  // 合計行（編集UIは10列構成）
+  const itemSubtotalSum = m.items.reduce((s,it)=>s + (wrItemSubtotal(it)||0), 0);
+  h += `<tr data-wr-grand="items" style="background:#fff7e0;font-weight:bold;">
+       <td colspan="9" style="border:1px solid #888;padding:6px 8px;text-align:right;">合計</td>
+       <td style="border:1px solid #888;padding:6px 8px;text-align:right;color:#1a4a7a;">${formatYen(itemSubtotalSum)}</td>
+     </tr>`;
+  h += `</tbody></table>`;
+  h += `<div class="hint" style="margin-top:8px;font-size:11px;">${esc(m.meta.note||'')}</div>`;
+  h += `</div></details>`;
+
+  // 追加配線等 数量表（スイッチ配線／各種コンセント追加／電話ネット関係）
+  h += `<details class="card" open><summary><span class="area" style="background:#3b4a5c">追加</span>追加配線等 数量表</summary><div class="body">`;
+  h += `<div class="hint">スイッチ配線・各種コンセント追加・電話ネット関係の追加分。<b>現状数量</b>を1F/2F/その他に入れると、追加個数と総額が自動計算されます。</div>`;
+  h += `<table style="width:100%;border-collapse:collapse;font-size:12px;margin-top:8px;">
+      <thead>
+        <tr style="background:#eef2f6;">
+          <th rowspan="2" style="border:1px solid #888;padding:5px 6px;">内容</th>
+          <th rowspan="2" style="border:1px solid #888;padding:5px 6px;">備考</th>
+          <th rowspan="2" style="border:1px solid #888;padding:5px 6px;width:64px;">基本数量</th>
+          <th colspan="4" style="border:1px solid #888;padding:5px 6px;background:#fffaee;color:#a26a1f;">計算表 ※こちらに入力</th>
+          <th rowspan="2" style="border:1px solid #888;padding:5px 6px;width:96px;">工事代金/1ヶ所</th>
+          <th rowspan="2" style="border:1px solid #888;padding:5px 6px;width:72px;">追加個数<br><span style="font-size:9px;font-weight:normal;color:#666;">（自動）</span></th>
+          <th rowspan="2" style="border:1px solid #888;padding:5px 6px;width:108px;">総額<br><span style="font-size:9px;font-weight:normal;color:#666;">（自動）</span></th>
+        </tr>
+        <tr style="background:#fff7e0;">
+          <th style="border:1px solid #888;padding:4px 4px;width:54px;">1F</th>
+          <th style="border:1px solid #888;padding:4px 4px;width:54px;">2F</th>
+          <th style="border:1px solid #888;padding:4px 4px;width:60px;">その他</th>
+          <th style="border:1px solid #888;padding:4px 4px;width:60px;background:#fff;">合計</th>
+        </tr>
+      </thead>
+      <tbody>`;
+  let lastCat = null;
+  (m.extraItems||[]).forEach((it,i)=>{
+    if(it.category !== lastCat){
+      h += `<tr style="background:#e8eef5;"><td colspan="10" style="border:1px solid #888;padding:5px 8px;font-weight:bold;color:#1a4a7a;font-size:11px;">${esc(WR_CATEGORY_LABEL[it.category]||'')}</td></tr>`;
+      lastCat = it.category;
+    }
+    const base = wrItemBase(it);
+    const add  = wrItemAdditional(it);
+    const sub  = wrItemSubtotal(it);
+    const skip = it.calc==='skip';
+    const total = (Number(it.floor1)||0) + (Number(it.floor2)||0) + (Number(it.other)||0);
+    const inpE = (field, val)=>`<input type="text" inputmode="numeric" value="${esc(String(val||0))}" oninput="wrItemSetFloor(${i},'${field}',this.value,'extraItems')" style="width:46px;text-align:right;padding:3px 4px;font-size:12px;border:1px solid #ccc;border-radius:3px;">`;
+    const placeInpE = `<input type="text" value="${esc(it.place||'')}" oninput="wrItemSetPlace(${i},this.value,'extraItems')" placeholder="場所/室名（例：階段・玄関）" style="width:100%;margin-top:4px;padding:2px 5px;font-size:11px;border:1px solid #d4dae0;border-radius:3px;background:#fcfcfa;">`;
+    h += `<tr>
+        <td style="border:1px solid #888;padding:5px 6px;"><div style="font-weight:bold;">${esc(it.name)}</div>${placeInpE}</td>
+        <td style="border:1px solid #888;padding:5px 6px;color:#666;font-size:11px;">${esc(it.note||'-')}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:center;">${skip?'-':base}</td>
+        <td style="border:1px solid #888;padding:3px 4px;text-align:center;">${inpE('floor1', it.floor1)}</td>
+        <td style="border:1px solid #888;padding:3px 4px;text-align:center;">${inpE('floor2', it.floor2)}</td>
+        <td style="border:1px solid #888;padding:3px 4px;text-align:center;">${inpE('other',  it.other)}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:center;font-weight:bold;background:#f8f8f5;">${total}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:right;">${skip?'-':formatYen(it.unit)}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:center;font-weight:bold;color:${(add||0)>0?'#a26a1f':'#999'};">${skip?'-':add}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:right;font-weight:bold;color:${(sub||0)>0?'#1a4a7a':'#999'};">${skip?'-':formatYen(sub)}</td>
+      </tr>`;
+  });
+  const extraSubtotalSum = (m.extraItems||[]).reduce((s,it)=>s + (wrItemSubtotal(it)||0), 0);
+  h += `<tr data-wr-grand="extra" style="background:#fff7e0;font-weight:bold;">
+       <td colspan="9" style="border:1px solid #888;padding:6px 8px;text-align:right;">合計</td>
+       <td style="border:1px solid #888;padding:6px 8px;text-align:right;color:#1a4a7a;">${formatYen(extraSubtotalSum)}</td>
+     </tr>`;
+  h += `</tbody></table>`;
+  h += `<div class="hint" style="margin-top:8px;font-size:11px;color:#999;">※工事代金/1ヶ所は仮の単価です。実際の単価でコード側の WIRING_MASTER.extraItems を更新してください。</div>`;
+  h += `</div></details>`;
+
+  // 備考欄
+  h += `<details class="card" open><summary><span class="area" style="background:#6b7a8c">備考</span>備考欄</summary><div class="body">
+     <textarea oninput="wrSet('memo',this.value)" placeholder="自由記入欄。印刷シートの下部に表示されます。" style="width:100%;min-height:80px;padding:8px 10px;font-size:13px;border:1px solid #ccc;border-radius:4px;font-family:inherit;resize:vertical;">${esc(m.memo||'')}</textarea>
+   </div></details>`;
+
+  document.getElementById('editor').innerHTML = h;
+}
+/* 基本数量追加表の current（現状数量）を更新 ※後方互換のため残す */
+function wrItemSet(i, v){
+  const s = String(v||'').replace(/[０-９]/g, c=>String.fromCharCode(c.charCodeAt(0)-0xFEE0)).replace(/[,\s]/g,'');
+  WR.items[i].current = Math.max(0, parseInt(s)||0);
+  renderEditor(); sync();
+}
+/* 計算表：1F/2F/その他 の各セルを更新 → current（現状数量）は自動で合計に
+   ※入力中のフォーカスを保持するため、全体再描画せず該当セルだけDOM更新
+   group: 'items'(既定) or 'extraItems' */
+function wrItemSetFloor(i, field, v, group){
+  const grp = (group==='extraItems') ? 'extraItems' : 'items';
+  const s = String(v||'').replace(/[０-９]/g, c=>String.fromCharCode(c.charCodeAt(0)-0xFEE0)).replace(/[,\s]/g,'');
+  const n = Math.max(0, parseInt(s)||0);
+  if(field==='floor1' || field==='floor2' || field==='other'){
+    WR[grp][i][field] = n;
+    WR[grp][i].current = (Number(WR[grp][i].floor1)||0) + (Number(WR[grp][i].floor2)||0) + (Number(WR[grp][i].other)||0);
+  }
+  wrUpdateItemRow(i, grp);
+  wrUpdateGrandTotalRow();
+  autosave();  // 印刷側は次のレンダリングで反映（renderSheet呼ばないことでフォーカス確実保持）
+}
+/* 場所/室名の更新：input のフォーカス保持のため再描画せず保存のみ */
+function wrItemSetPlace(i, v, group){
+  const grp = (group==='extraItems') ? 'extraItems' : 'items';
+  WR[grp][i].place = String(v||'');
+  autosave();
+}
+/* 該当itemの「合計」「追加個数」「総額」セルを直接更新 */
+function wrUpdateItemRow(i, group){
+  const grp = (group==='extraItems') ? 'extraItems' : 'items';
+  const it = WR[grp][i];
+  const total = (Number(it.floor1)||0) + (Number(it.floor2)||0) + (Number(it.other)||0);
+  const add   = wrItemAdditional(it);
+  const sub   = wrItemSubtotal(it);
+  const skip  = it.calc==='skip';
+  // 該当行を innerHTML から検索（呼び出しシグネチャでマッチ）
+  const sig = grp==='items' ? `wrItemSetFloor(${i},` : `wrItemSetFloor(${i},`;
+  const sigGroup = grp==='items' ? `,'items')` : `,'extraItems')`;
+  const tr = [...document.querySelectorAll('#editor tr')].find(t=>t.innerHTML.includes(sig) && t.innerHTML.includes(sigGroup));
+  if(!tr) return;
+  const tds = tr.querySelectorAll('td');
+  // 列構成 0:内容 1:備考 2:基本 3:1F 4:2F 5:その他 6:合計 7:工事代金 8:追加 9:総額
+  if(tds[6]) tds[6].textContent = String(total);
+  if(tds[8]) tds[8].innerHTML = skip ? '-' : `<span style="font-weight:bold;color:${(add||0)>0?'#a26a1f':'#999'};">${add}</span>`;
+  if(tds[9]) tds[9].innerHTML = skip ? '-' : `<span style="font-weight:bold;color:${(sub||0)>0?'#1a4a7a':'#999'};">${formatYen(sub)}</span>`;
+}
+/* テーブル末尾の総合計行＋集計部の②③もリアルタイム更新 */
+function wrUpdateGrandTotalRow(){
+  const itemsSub = WR.items.reduce((s,it)=>s + (wrItemSubtotal(it)||0), 0);
+  const extraSub = (WR.extraItems||[]).reduce((s,it)=>s + (wrItemSubtotal(it)||0), 0);
+  // 基本数量追加表 末尾の合計行
+  const itemsGrandTr = document.querySelector('#editor tr[data-wr-grand="items"]');
+  if(itemsGrandTr){
+    const tds = itemsGrandTr.querySelectorAll('td');
+    if(tds.length>=2) tds[1].textContent = formatYen(itemsSub);
+  }
+  // 追加配線等数量表 末尾の合計行
+  const extraGrandTr = document.querySelector('#editor tr[data-wr-grand="extra"]');
+  if(extraGrandTr){
+    const tds = extraGrandTr.querySelectorAll('td');
+    if(tds.length>=2) tds[1].textContent = formatYen(extraSub);
+  }
+  // 集計部の ②（配線合計）と ③（①+② 追加電気工事等合計）も更新
+  const s = wrSummary();
+  const wel = document.getElementById('wr-sum-wiring');
+  const gel = document.getElementById('wr-sum-grand');
+  if(wel) wel.textContent = formatYen(s.wiringTotal);
+  if(gel) gel.textContent = formatYen(s.grandTotal);
+}
+function wrMeta(k,v){ WR.meta[k]=v; sync(); }
+function wrSet(k,v){
+  if(k==='tsubo'){
+    // 全角数字→半角、カンマ・空白除去、小数許可
+    const s = String(v||'')
+      .replace(/[０-９．]/g, c=>String.fromCharCode(c.charCodeAt(0)-0xFEE0))
+      .replace(/[,\s]/g,'');
+    WR.tsubo = parseFloat(s) || 0;
+  } else if(k==='base_price'){
+    WR.base_price = parseInt(v)||8000;
+  } else if(k==='memo'){
+    // textareaのフォーカス保持のため再描画せず保存のみ。印刷側は次のレンダリング時に反映
+    WR.memo = String(v||'');
+    autosave();
+    return;
+  } else {
+    WR[k] = v;
+  }
+  renderEditor(); renderSheet(); autosave();
+}
+
+function renderWiringSheet(){
+  const p = DATA.project, m = WR;
+  const teika = wrTeika();
+  const mochibun = wrMochibun();
+  const std = wrStandardForTsubo(m.tsubo);
+  const lighting = std ? std.lighting : '-';
+  const outlet   = std ? std.outlet   : '-';
+
+  let h = `<div class="sheet-head">
+      <div><div class="title">${esc(m.meta.title)}</div>
+        <div class="proj">${esc(p.name)}</div></div>
+      <div class="meta">決定日：${esc(p.decided_date)||'　　　年　　月　　日'}<br>作成者：${esc(p.author)}</div>
+    </div>`;
+
+  h += `<table style="width:100%;border-collapse:collapse;font-size:13px;margin-top:10px;">
+      <thead>
+        <tr>
+          <th style="border:1px solid #888;background:#eef2f6;padding:6px 10px;width:18%;">坪数</th>
+          <th style="border:1px solid #888;background:#eef2f6;padding:6px 10px;width:18%;">基本金額</th>
+          <th style="border:1px solid #888;background:#eef2f6;padding:6px 10px;width:32%;">定価<br><span style="font-size:10px;font-weight:normal;color:#666;">（坪 × 基本金額）</span></th>
+          <th style="border:1px solid #888;background:#eef2f6;padding:6px 10px;width:32%;">持ち分<br><span style="font-size:10px;font-weight:normal;color:#666;">（定価 × 0.8）</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="text-align:center;">
+          <td style="border:1px solid #888;padding:8px 10px;">${esc(String(m.tsubo||0))} 坪</td>
+          <td style="border:1px solid #888;padding:8px 10px;">${formatYen(m.base_price)}</td>
+          <td style="border:1px solid #888;padding:8px 10px;font-weight:bold;color:#1a4a7a;font-size:15px;">${formatYen(teika)}</td>
+          <td style="border:1px solid #888;padding:8px 10px;font-weight:bold;color:#a26a1f;font-size:15px;">${formatYen(mochibun)}</td>
+        </tr>
+      </tbody>
+    </table>`;
+
+  // 集計部（照明＋配線連動）
+  const sum = wrSummary();
+  h += `<table style="width:100%;border-collapse:collapse;font-size:13px;margin-top:14px;">
+      <tbody>
+        <tr>
+          <td style="border:1px solid #888;background:#eef2f6;padding:6px 12px;width:55%;">① お客様だし金額合計（税抜）</td>
+          <td style="border:1px solid #888;padding:6px 12px;text-align:right;font-weight:bold;color:#a26a1f;font-size:14px;">${formatYen(sum.okyakuTotal)}</td>
+        </tr>
+        <tr>
+          <td style="border:1px solid #888;background:#eef2f6;padding:6px 12px;">照明器具代金定価合計（税抜）</td>
+          <td style="border:1px solid #888;padding:6px 12px;text-align:right;font-weight:bold;color:#1a4a7a;font-size:14px;">${formatYen(sum.teikaTotal)}</td>
+        </tr>
+        <tr>
+          <td style="border:1px solid #888;background:#eef2f6;padding:6px 12px;">差額（お客様だし金額合計 − 持ち分）</td>
+          <td style="border:1px solid #888;padding:6px 12px;text-align:right;font-weight:bold;color:${sum.diff>=0?'#c0392b':'#1a7a3a'};font-size:14px;">${formatYen(Math.abs(sum.diff))}${sum.diff>0?' （お客様だし超過）':(sum.diff<0?' （持ち分内で収まる）':'')}</td>
+        </tr>
+        <tr>
+          <td style="border:1px solid #888;background:#eef2f6;padding:6px 12px;">計上商品個数合計</td>
+          <td style="border:1px solid #888;padding:6px 12px;text-align:right;font-weight:bold;font-size:14px;">${sum.qtyTotal} 個</td>
+        </tr>
+        <tr>
+          <td style="border:1px solid #888;background:#eef2f6;padding:6px 12px;">② 基本数量 追加表 及び 追加配線等数量表 ご請求代金合計（税抜）</td>
+          <td style="border:1px solid #888;padding:6px 12px;text-align:right;font-weight:bold;color:#1a4a7a;font-size:14px;">${formatYen(sum.wiringTotal)}</td>
+        </tr>
+        <tr style="background:#fff7e0;">
+          <td style="border:2px solid #a26a1f;padding:8px 12px;font-weight:bold;">③ ①＋② 追加電気工事等合計（税抜）</td>
+          <td style="border:2px solid #a26a1f;padding:8px 12px;text-align:right;font-weight:bold;color:#a26a1f;font-size:17px;">${formatYen(sum.grandTotal)}</td>
+        </tr>
+      </tbody>
+    </table>`;
+
+  // 基本数量 追加表
+  h += `<div style="background:#3b4a5c;color:#fff;padding:4px 12px;font-weight:bold;font-size:14px;border-radius:3px;margin:16px 0 6px;">基本数量 追加表</div>`;
+  h += `<table style="width:100%;border-collapse:collapse;font-size:12px;">
+      <thead>
+        <tr style="background:#eef2f6;">
+          <th style="border:1px solid #888;padding:5px 6px;">内容</th>
+          <th style="border:1px solid #888;padding:5px 6px;">備考</th>
+          <th style="border:1px solid #888;padding:5px 6px;width:68px;">基本数量</th>
+          <th style="border:1px solid #888;padding:5px 6px;width:68px;">現状数量</th>
+          <th style="border:1px solid #888;padding:5px 6px;width:96px;">工事代金/1ヶ所</th>
+          <th style="border:1px solid #888;padding:5px 6px;width:68px;">追加個数</th>
+          <th style="border:1px solid #888;padding:5px 6px;width:108px;">総額</th>
+        </tr>
+      </thead>
+      <tbody>`;
+  m.items.forEach(it=>{
+    const base = wrItemBase(it);
+    const add  = wrItemAdditional(it);
+    const sub  = wrItemSubtotal(it);
+    const skip = it.calc==='skip';
+    const placeCell = (it.place||'').trim() ? `<div style="font-size:10px;color:#1a4a7a;margin-top:2px;">📍 ${esc(it.place)}</div>` : '';
+    h += `<tr>
+        <td style="border:1px solid #888;padding:5px 6px;"><div style="font-weight:bold;">${esc(it.name)}</div>${placeCell}</td>
+        <td style="border:1px solid #888;padding:5px 6px;color:#666;font-size:11px;">${esc(it.note||'-')}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:center;">${skip?'-':base}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:center;">${it.current||0}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:right;">${skip?'-':formatYen(it.unit)}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:center;font-weight:bold;color:${(add||0)>0?'#a26a1f':'#222'};">${skip?'-':add}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:right;font-weight:bold;color:${(sub||0)>0?'#1a4a7a':'#222'};">${skip?'-':formatYen(sub)}</td>
+      </tr>`;
+  });
+  const subSum = m.items.reduce((s,it)=>s + (wrItemSubtotal(it)||0), 0);
+  h += `<tr style="background:#fff7e0;font-weight:bold;">
+       <td colspan="6" style="border:1px solid #888;padding:6px 8px;text-align:right;">合計</td>
+       <td style="border:1px solid #888;padding:6px 8px;text-align:right;color:#1a4a7a;font-size:14px;">${formatYen(subSum)}</td>
+     </tr>`;
+  h += `</tbody></table>`;
+
+  // 追加配線等 数量表
+  h += `<div style="background:#3b4a5c;color:#fff;padding:4px 12px;font-weight:bold;font-size:14px;border-radius:3px;margin:14px 0 6px;">追加配線等 数量表</div>`;
+  h += `<table style="width:100%;border-collapse:collapse;font-size:12px;">
+      <thead>
+        <tr style="background:#eef2f6;">
+          <th style="border:1px solid #888;padding:5px 6px;">内容</th>
+          <th style="border:1px solid #888;padding:5px 6px;">備考</th>
+          <th style="border:1px solid #888;padding:5px 6px;width:68px;">基本数量</th>
+          <th style="border:1px solid #888;padding:5px 6px;width:68px;">現状数量</th>
+          <th style="border:1px solid #888;padding:5px 6px;width:96px;">工事代金/1ヶ所</th>
+          <th style="border:1px solid #888;padding:5px 6px;width:68px;">追加個数</th>
+          <th style="border:1px solid #888;padding:5px 6px;width:108px;">総額</th>
+        </tr>
+      </thead>
+      <tbody>`;
+  let lastCatSheet = null;
+  (m.extraItems||[]).forEach(it=>{
+    if(it.category !== lastCatSheet){
+      h += `<tr style="background:#e8eef5;"><td colspan="7" style="border:1px solid #888;padding:4px 8px;font-weight:bold;color:#1a4a7a;font-size:11px;">${esc(WR_CATEGORY_LABEL[it.category]||'')}</td></tr>`;
+      lastCatSheet = it.category;
+    }
+    const base = wrItemBase(it);
+    const add  = wrItemAdditional(it);
+    const sub  = wrItemSubtotal(it);
+    const skip = it.calc==='skip';
+    const placeCellE = (it.place||'').trim() ? `<div style="font-size:10px;color:#1a4a7a;margin-top:2px;">📍 ${esc(it.place)}</div>` : '';
+    h += `<tr>
+        <td style="border:1px solid #888;padding:5px 6px;"><div style="font-weight:bold;">${esc(it.name)}</div>${placeCellE}</td>
+        <td style="border:1px solid #888;padding:5px 6px;color:#666;font-size:11px;">${esc(it.note||'-')}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:center;">${skip?'-':base}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:center;">${it.current||0}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:right;">${skip?'-':formatYen(it.unit)}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:center;font-weight:bold;color:${(add||0)>0?'#a26a1f':'#222'};">${skip?'-':add}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:right;font-weight:bold;color:${(sub||0)>0?'#1a4a7a':'#222'};">${skip?'-':formatYen(sub)}</td>
+      </tr>`;
+  });
+  const extraSum = (m.extraItems||[]).reduce((s,it)=>s + (wrItemSubtotal(it)||0), 0);
+  h += `<tr style="background:#fff7e0;font-weight:bold;">
+       <td colspan="6" style="border:1px solid #888;padding:6px 8px;text-align:right;">合計</td>
+       <td style="border:1px solid #888;padding:6px 8px;text-align:right;color:#1a4a7a;font-size:14px;">${formatYen(extraSum)}</td>
+     </tr>`;
+  h += `</tbody></table>`;
+
+  // 備考欄（自由記入）
+  if((m.memo||'').trim()){
+    h += `<div style="background:#6b7a8c;color:#fff;padding:4px 12px;font-weight:bold;font-size:14px;border-radius:3px;margin:14px 0 6px;">備考</div>`;
+    h += `<div style="border:1px solid #888;padding:8px 12px;font-size:12px;white-space:pre-wrap;line-height:1.6;">${esc(m.memo)}</div>`;
+  }
+
+  h += `<div class="note" style="margin-top:10px;">${esc(m.meta.note||'')}</div>
+        <div class="foot" style="margin-top:8px;"><div>${esc(p.company)}</div><div>TEL ${esc(p.tel)}　／　FAX ${esc(p.fax)}</div></div>`;
+
+  document.getElementById('sheet').innerHTML = h;
+}
+
+/* 書類切り替え（仕様一覧表 ⇔ 建具表 ⇔ クロス図面 ⇔ 照明図面 ⇔ 配線数量表） */
+function switchDoc(d){
+  DOC=d;
+  document.getElementById('docSpec').classList.toggle('active',d==='spec');
+  document.getElementById('docTategu').classList.toggle('active',d==='tategu');
+  document.getElementById('docKurosu').classList.toggle('active',d==='kurosu');
+  document.getElementById('docLighting').classList.toggle('active',d==='lighting');
+  document.getElementById('docWiring').classList.toggle('active',d==='wiring');
+  document.getElementById('h1title').textContent =
+    d==='tategu'   ? '🚪 建具・床図面メーカー' :
+    d==='kurosu'   ? '🎨 クロス図面メーカー' :
+    d==='lighting' ? '💡 照明図面メーカー' :
+    d==='wiring'   ? '⚡ 配線数量表メーカー' :
+                     '📋 外部・内部仕様一覧表メーカー';
+  // 建具表・クロス図面・照明図面・配線数量表は A3横ベースで広めのプレビュー幅を使う
+  document.getElementById('sheet').classList.toggle('tg-mode', d==='tategu' || d==='kurosu' || d==='lighting' || d==='wiring');
+  renderEditor(); renderSheet(); window.scrollTo(0,0);
+}
+
+/* 保存・読込（1物件＝仕様一覧表＋建具表をまとめて1ファイル） */
+function saveJson(){
+  const out={ _type:"naigaisou", spec:DATA, tategu:TG, kurosu:KR, lighting:LT, wiring:WR };
+  const blob = new Blob([JSON.stringify(out,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=(DATA.project.name||'仕様書').replace(/[\\/:*?"<>|]/g,'_')+'.json';
+  a.click();
+}
+function loadJson(ev){
+  const f=ev.target.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{ try{
+    const obj=JSON.parse(r.result);
+    if(obj && obj._type==='naigaisou'){
+      DATA=mergeWithMaster(obj.spec);
+      TG=normalizeTG(obj.tategu);
+      KR=normalizeKR(obj.kurosu);   // 旧ファイル（kurosu無し）はマスタから初期化
+      LT=normalizeLT(obj.lighting); // 旧ファイル（lighting無し）はマスタから初期化
+      WR=normalizeWR(obj.wiring);   // 旧ファイル（wiring無し）はマスタから初期化
+    }
+    else { DATA=mergeWithMaster(obj); } // 旧形式（仕様一覧表のみ）
+    renderEditor(); renderSheet(); autosave(); alert('読み込みました');
+  }catch(e){ alert('読み込めませんでした：'+e); } };
+  r.readAsText(f); ev.target.value='';
+}
+function resetProject(){
+  DATA=JSON.parse(JSON.stringify(MASTER));
+  TG=JSON.parse(JSON.stringify(TATEGU_MASTER));
+  KR=JSON.parse(JSON.stringify(KUROSU_MASTER));
+  LT=JSON.parse(JSON.stringify(LIGHTING_MASTER));
+  WR=JSON.parse(JSON.stringify(WIRING_MASTER));
+  renderEditor(); renderSheet(); autosave();
+}
+
+/* 廃番DB（同フォルダ 廃番DB.json）を起動時に読み込み。失敗してもアプリは動作。 */
+let HAIBAN_DB = { products:{}, updated:"" };
+function normalizeHinban(code){ return String(code||'').replace(/_/g,'-'); }
+function getHaibanInfo(code){ return HAIBAN_DB.products[normalizeHinban(code)] || null; }
+function loadHaibanDb(){
+  return fetch('廃番DB.json').then(r=>r.ok?r.json():null).then(j=>{
+    if(j && j.products){ HAIBAN_DB = j; console.log(`廃番DB読込：${Object.keys(j.products).length}品番（${j.updated}）`); }
+  }).catch(e=>{ console.warn('廃番DB読込スキップ（ファイルなし or 起動条件）:', e); });
+}
+
+/* 起動 */
+loadLocal();
+document.getElementById('sheet').classList.toggle('tg-mode', DOC==='tategu' || DOC==='kurosu' || DOC==='lighting' || DOC==='wiring'); // 初期表示にも幅切替を反映
+renderEditor();
+renderSheet();
+showTab('edit');
+loadHaibanDb().then(()=>{ if(DOC==='kurosu') renderEditor(); }); // DB読込後にクロスタブを再描画してバッジ反映
+window.addEventListener('resize',()=>showTab(document.getElementById('tabEdit').classList.contains('active')?'edit':'view'));
+</script>
+</body>
+</html>
