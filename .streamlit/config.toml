@@ -4,8 +4,9 @@
 [server]
 # ローカル開発時のポート（デフォルト 8501）
 port = 8501
-# ブラウザ自動起動をオン
-headless = false
+# Streamlit Cloud では必ず true。ローカルでブラウザ自動起動したいときは
+# `streamlit run streamlit_app.py --server.headless=false` のようにCLIで上書き
+headless = true
 
 [browser]
 # 使用統計の送信を無効化
