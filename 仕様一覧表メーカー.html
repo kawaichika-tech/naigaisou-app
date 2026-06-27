@@ -297,28 +297,31 @@
     #sheet:not(.tg-mode) .sign{margin-top:5mm;padding-top:4mm;}
     #sheet:not(.tg-mode) .sign .box{min-height:18mm;padding:4px 8px;font-size:11px;}
     /* === 建具表（tg-mode）：A3 横1ページに6カード（2列×3行）が収まるよう縮小 === */
-    #sheet.tg-mode .tg-floor-page{gap:4mm!important;margin-top:6mm!important;}
-    #sheet.tg-mode .tg-cards{gap:4px!important;margin:2px 0 4px!important;}
+    #sheet.tg-mode .tg-floor-page{gap:4mm!important;margin-top:4mm!important;}
+    #sheet.tg-mode .tg-cards{gap:3px!important;margin:2px 0 4px!important;}
     #sheet.tg-mode .tg-card-head{font-size:10px!important;}
     #sheet.tg-mode .tg-card-head .no{padding:2px 6px;min-width:54px;}
     #sheet.tg-mode .tg-card-head .room{padding:2px 6px;}
-    #sheet.tg-mode .tg-card-img-wrap{width:72px;padding:2px;}
-    #sheet.tg-mode .tg-card-img{width:66px;height:66px;}
+    #sheet.tg-mode .tg-card-img-wrap{width:66px;padding:2px;}
+    #sheet.tg-mode .tg-card-img{width:60px;height:60px;}
     #sheet.tg-mode .tg-card-attrs .row{font-size:9px;}
     #sheet.tg-mode .tg-card-attrs .note{padding:2px 5px;font-size:8.5px;}
-    #sheet.tg-mode .tg-card .row .k{width:78px;padding:2px 4px;font-size:9px;}
+    #sheet.tg-mode .tg-card .row .k{width:72px;padding:2px 4px;font-size:9px;}
     #sheet.tg-mode .tg-card .row .v{padding:2px 5px;font-size:9.5px;}
-    #sheet.tg-mode .tg-card .row .v .acc-img{width:22px;height:22px;}
+    #sheet.tg-mode .tg-card .row .v .acc-img{width:20px;height:20px;}
     #sheet.tg-mode .tg-card-spec .row{font-size:9px;}
-    #sheet.tg-mode .tg-floor-title{font-size:11px!important;margin-bottom:3px!important;}
-    #sheet.tg-mode .tg-floor-left .sec-h{font-size:11px!important;padding:2px 8px!important;}
-    #sheet.tg-mode .tg-floor-left .sec-b{padding:3px 8px!important;}
-    #sheet.tg-mode .tg-floor-left .kv{font-size:10px!important;padding:1.5px 0!important;}
-    #sheet.tg-mode .tg-floor-left .kv .k{width:100px!important;}
-    #sheet.tg-mode .tg-floor-plan{height:auto!important;max-height:70mm;}
-    #sheet.tg-mode .tg-floor-plan .ph{padding:2px 8px;font-size:11px;}
+    #sheet.tg-mode .tg-floor-title{font-size:11px!important;margin-bottom:2px!important;}
+    /* 左カラム（仕様/床）をさらにコンパクトに */
+    #sheet.tg-mode .tg-floor-left{gap:3mm!important;}
+    #sheet.tg-mode .tg-floor-left .sec-h{font-size:10.5px!important;padding:1.5px 6px!important;}
+    #sheet.tg-mode .tg-floor-left .sec-b{padding:2px 6px!important;}
+    #sheet.tg-mode .tg-floor-left .kv{font-size:9.5px!important;padding:1px 0!important;}
+    #sheet.tg-mode .tg-floor-left .kv .k{width:88px!important;}
+    /* 間取り図をさらにコンパクトに */
+    #sheet.tg-mode .tg-floor-plan{height:auto!important;max-height:55mm;}
+    #sheet.tg-mode .tg-floor-plan .ph{padding:2px 8px;font-size:10.5px;}
     #sheet.tg-mode .tg-floor-plan .pbody{padding:1mm;}
-    #sheet.tg-mode .tg-floor-plan .pbody img{max-height:62mm;}
+    #sheet.tg-mode .tg-floor-plan .pbody img{max-height:48mm;}
     /* 照明カードは A3 横で 8列×4行 = 32個 入るように小さく整える */
     #sheet .lt-cards{grid-template-columns:repeat(8, 1fr)!important;gap:2mm!important;}
     #sheet .lt-card{height:54mm;overflow:hidden;border-radius:2px;}
