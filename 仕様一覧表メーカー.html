@@ -699,6 +699,8 @@ function setPresent(si,val){ DATA.sections[si].present=val; renderEditor(); sync
    プレビュー（印刷シート）描画
    ============================================================ */
 function renderSpecSheet(){
+  // 区域（防火）→ 玄関ドア種別の自動同期（ロード時の保存値にも対応）
+  applyDoorFireSpec();
   const p = DATA.project;
   let h = `<div class="sheet-head">
       <div>
@@ -1172,7 +1174,19 @@ function setReg(key,val){
   if(key==='on'||key==='allowN') DATA.project.reg[key]=val;
   else if(stringKeys.includes(key)) DATA.project.reg[key]=val;
   else DATA.project.reg[key]=parseFloat(val)||0;
+  // 指定区域（防火）変更で 玄関ドア種別を自動切替：防火/準防火 → ジエスタ2 防火戸
+  if(key==='designatedZone') applyDoorFireSpec();
   renderEditor(); sync();
+}
+/* 指定区域（防火地域・準防火地域）に応じて玄関ドアの「商品名・種類」を自動セット。
+   防火/準防火 → 「開き戸　ジエスタ2　防火戸」、それ以外 → 「開き戸　ジエスタ2」 */
+function applyDoorFireSpec(){
+  const doorSec = DATA.sections.find(s=>s.id==='door');
+  if(!doorSec) return;
+  const dz = (DATA.project.reg||{}).designatedZone || '';
+  const isFire = (dz==='防火地域' || dz==='準防火地域');
+  const target = doorSec.common.find(c=>c.k==='商品名・種類');
+  if(target) target.v = isFire ? '開き戸　ジエスタ2　防火戸' : '開き戸　ジエスタ2';
 }
 
 /* 区域・地区選択カード（新方式） */
