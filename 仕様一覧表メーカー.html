@@ -3497,8 +3497,8 @@ function renderHarimakeEditor(){
      </div>
    </div></details>`;
 
-  // 貼り分け（メモ・テキスト＋画像）。外壁メインの直下に置く
-  h += `<details class="card" open><summary><span class="area" style="background:#a26a1f">貼分</span>貼り分け</summary><div class="body">
+  // 貼り分け（メモ・テキスト＋画像）。外壁メインの直下に置く・ラベルはピンク
+  h += `<details class="card" open><summary><span class="area" style="background:#d63d83">貼分</span>貼り分け</summary><div class="body">
      <textarea oninput="hkSetNote(this.value)" placeholder="例：南面＝QWラントダークグレー／東面＝QWセレノブラウニーブラック など、貼り分けの内訳を自由記入" style="width:100%;min-height:80px;padding:8px 10px;font-size:13px;border:1px solid #ccc;border-radius:4px;font-family:inherit;resize:vertical;">${esc(m.note||'')}</textarea>
      <div style="margin-top:10px;">
        <div style="font-size:12px;color:#555;font-weight:bold;margin-bottom:4px;">参考画像（任意・複数枚OK）</div>
@@ -3649,19 +3649,19 @@ function renderHarimakeSheet(){
       <div class="meta">決定日：${esc(p.decided_date)||'　　　年　　月　　日'}<br>作成者：${esc(p.author)}</div>
     </div>`;
 
-  // 外壁メイン（カラー名／品番／メーカー すべて太字 14px に揃える）
-  h += `<div style="margin-top:6px;border:1px solid #888;border-radius:4px;padding:6px 10px;display:grid;grid-template-columns:80px 70px 1fr;gap:6px 12px;font-size:12px;align-items:center;background:#f6f8fa;">
+  // 外壁メイン（カラー名／品番／メーカー すべて太字 14px・画像は 50x50 正方形 contain）
+  h += `<div style="margin-top:6px;border:1px solid #888;border-radius:4px;padding:6px 10px;display:grid;grid-template-columns:80px 50px 1fr;gap:6px 12px;font-size:12px;align-items:center;background:#f6f8fa;">
       <div style="color:#555;font-weight:bold;">🏠 外壁メイン</div>
-      <div style="height:42px;border-radius:3px;border:1px solid #00000022;background:${swStyle(mi.sw,'cover')};"></div>
+      <div style="width:50px;height:50px;border-radius:3px;border:1px solid #00000022;background:${swStyle(mi.sw,'contain','#fff')};"></div>
       <div style="font-size:14px;font-weight:bold;">${esc(mi.mainText||'(未決定)')}${mi.maker?`　／　${esc(mi.maker)}`:''}</div>
     </div>`;
 
-  // 貼り分け（参考画像＋メモ）— 外壁メインと同じく『画像 → 商品名（テキスト）』の横並び
+  // 貼り分け（参考画像＋メモ）— 外壁メインと同じく『画像 → 商品名（テキスト）』の横並び・背景はピンク系
   const hasNote = (m.note||'').trim();
   const noteImgs = Array.isArray(m.note_imgs) ? m.note_imgs : [];
   if(hasNote || noteImgs.length){
-    h += `<div style="margin-top:4mm;border:1px solid #888;border-radius:4px;padding:6px 10px;background:#fffdf6;">
-        <div style="font-weight:bold;color:#a26a1f;font-size:13px;margin-bottom:4px;">貼り分け</div>
+    h += `<div style="margin-top:4mm;border:1px solid #d63d83;border-radius:4px;padding:6px 10px;background:#ffe9ef;">
+        <div style="font-weight:bold;color:#d63d83;font-size:13px;margin-bottom:4px;">貼り分け</div>
         <div style="display:grid;grid-template-columns:auto 1fr;gap:8px 12px;align-items:center;font-size:14px;">`;
     // 左：参考画像（真四角・画像全体が見える contain 表示）
     if(noteImgs.length){
