@@ -296,20 +296,20 @@
     #sheet:not(.tg-mode) .undecided{font-size:11.5px;margin-top:4px;}
     #sheet:not(.tg-mode) .sign{margin-top:5mm;padding-top:4mm;}
     #sheet:not(.tg-mode) .sign .box{min-height:18mm;padding:4px 8px;font-size:11px;}
-    /* === 建具表（tg-mode）：A3 横1ページに6カード（2列×3行）が収まるよう縮小 === */
+    /* === 建具表（tg-mode）：A3 横1ページに6カード（3列×2行）が収まるよう縮小 === */
     #sheet.tg-mode .tg-floor-page{gap:4mm!important;margin-top:4mm!important;}
-    #sheet.tg-mode .tg-cards{gap:3px!important;margin:2px 0 4px!important;}
-    #sheet.tg-mode .tg-card-head{font-size:10px!important;}
-    #sheet.tg-mode .tg-card-head .no{padding:2px 6px;min-width:54px;}
-    #sheet.tg-mode .tg-card-head .room{padding:2px 6px;}
-    #sheet.tg-mode .tg-card-img-wrap{width:66px;padding:2px;}
-    #sheet.tg-mode .tg-card-img{width:60px;height:60px;}
-    #sheet.tg-mode .tg-card-attrs .row{font-size:9px;}
-    #sheet.tg-mode .tg-card-attrs .note{padding:2px 5px;font-size:8.5px;}
-    #sheet.tg-mode .tg-card .row .k{width:72px;padding:2px 4px;font-size:9px;}
-    #sheet.tg-mode .tg-card .row .v{padding:2px 5px;font-size:9.5px;}
-    #sheet.tg-mode .tg-card .row .v .acc-img{width:20px;height:20px;}
-    #sheet.tg-mode .tg-card-spec .row{font-size:9px;}
+    #sheet.tg-mode .tg-cards{grid-template-columns:repeat(3,1fr)!important;gap:3px!important;margin:2px 0 4px!important;}
+    #sheet.tg-mode .tg-card-head{font-size:9.5px!important;}
+    #sheet.tg-mode .tg-card-head .no{padding:2px 5px;min-width:46px;}
+    #sheet.tg-mode .tg-card-head .room{padding:2px 5px;}
+    #sheet.tg-mode .tg-card-img-wrap{width:54px;padding:2px;}
+    #sheet.tg-mode .tg-card-img{width:48px;height:48px;}
+    #sheet.tg-mode .tg-card-attrs .row{font-size:8.5px;}
+    #sheet.tg-mode .tg-card-attrs .note{padding:2px 4px;font-size:8px;}
+    #sheet.tg-mode .tg-card .row .k{width:60px;padding:2px 3px;font-size:8.5px;}
+    #sheet.tg-mode .tg-card .row .v{padding:2px 4px;font-size:9px;}
+    #sheet.tg-mode .tg-card .row .v .acc-img{width:18px;height:18px;}
+    #sheet.tg-mode .tg-card-spec .row{font-size:8.5px;}
     #sheet.tg-mode .tg-floor-title{font-size:11px!important;margin-bottom:2px!important;}
     /* 左カラム（仕様/床）をさらにコンパクトに */
     #sheet.tg-mode .tg-floor-left{gap:3mm!important;}
