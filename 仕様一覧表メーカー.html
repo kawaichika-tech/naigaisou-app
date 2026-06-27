@@ -3699,10 +3699,10 @@ function renderHarimakeSheet(){
   const elevs = m.elevations || [];
   // 平面：1階2階で約120mm、3階以上なら圧縮
   const planH = plans.length <= 2 ? 60 : Math.max(40, Math.floor(130 / plans.length));
-  // 立面：4方向以下=2列、5以上=3列。1段なら大きく、2段ならやや大きめに。
+  // 立面：実物の立面図は横長（高さ:幅 ≒ 1:3）なので枠を低めにして contain の上下余白を削減
   const elevCols = elevs.length <= 4 ? 2 : 3;
   const elevRows = Math.ceil(elevs.length / elevCols);
-  const elevH = elevRows === 1 ? 95 : (elevRows === 2 ? 75 : Math.max(45, Math.floor(150 / elevRows)));
+  const elevH = elevRows === 1 ? 65 : (elevRows === 2 ? 45 : Math.max(30, Math.floor(100 / elevRows)));
 
   h += `<div style="display:grid;grid-template-columns:1fr 2fr;gap:5mm;margin-top:4mm;align-items:start;">`;
 
