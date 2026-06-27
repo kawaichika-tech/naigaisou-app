@@ -3306,23 +3306,46 @@ function renderWiringSheet(){
 
 /* ============================================================
    貼り分け図面モジュール（6タブ目）
-   階別の「平面図画像」「立面図画像」を取り込み、外壁メインは仕様一覧表から
-   自動連動、貼り分け部分はテキストメモで記入。
+   外壁メイン（仕様一覧表から自動連動）＋ 貼り分け使う外壁の追加リスト（手動）
+   平面図（複数階の画像を横並び）＋ 立面図（複数階の画像を横並び）
+   ＋ 共通の貼り分けメモ
    ============================================================ */
 const HARIMAKE_MASTER = {
   meta:{ title:"外壁貼り分け図面" },
-  floors:[
-    {floor:"1階", plan_img:"", elev_img:"", note:""},
-    {floor:"2階", plan_img:"", elev_img:"", note:""}
-  ]
+  // 貼り分けで使う追加外壁（メイン以外）。手動で何個でも追加できる
+  sub_walls:[],   // 例：[{nm:"QWラントダークグレー", hinban:"EW7533H"}, ...]
+  // 平面図（階別画像）
+  plans:[
+    {label:"1階", img:""},
+    {label:"2階", img:""}
+  ],
+  // 立面図（階別画像）
+  elevations:[
+    {label:"1階", img:""},
+    {label:"2階", img:""}
+  ],
+  // 全体の貼り分けメモ
+  note:""
 };
 function normalizeHK(h){
   const base = JSON.parse(JSON.stringify(HARIMAKE_MASTER));
   if(!h || typeof h!=='object') return base;
   if(!h.meta) h.meta = base.meta;
   if(h.meta.title==null) h.meta.title=base.meta.title;
-  if(!Array.isArray(h.floors) || h.floors.length===0) h.floors = base.floors;
-  h.floors = h.floors.map(f=>Object.assign({floor:"", plan_img:"", elev_img:"", note:""}, f));
+  // 旧フォーマット（floors: [{floor, plan_img, elev_img, note}]）からの自動移行
+  if(Array.isArray(h.floors) && h.floors.length){
+    h.plans      = h.floors.map(f=>({label:f.floor||'', img:f.plan_img||''}));
+    h.elevations = h.floors.map(f=>({label:f.floor||'', img:f.elev_img||''}));
+    h.note       = h.floors.map(f=>f.note||'').filter(Boolean).join('\n');
+    delete h.floors;
+  }
+  if(!Array.isArray(h.sub_walls))  h.sub_walls  = [];
+  if(!Array.isArray(h.plans) || h.plans.length===0)           h.plans      = JSON.parse(JSON.stringify(base.plans));
+  if(!Array.isArray(h.elevations) || h.elevations.length===0) h.elevations = JSON.parse(JSON.stringify(base.elevations));
+  h.sub_walls  = h.sub_walls.map(w=>Object.assign({nm:"", hinban:""}, w));
+  h.plans      = h.plans.map(p=>Object.assign({label:"", img:""}, p));
+  h.elevations = h.elevations.map(e=>Object.assign({label:"", img:""}, e));
+  if(typeof h.note !== 'string') h.note = '';
   return h;
 }
 /* 仕様一覧表の外壁セクションから「メイン情報」を抽出 */
@@ -3339,134 +3362,205 @@ function getSidingMainInfo(){
     maker: makerC ? makerC.v : ""
   };
 }
+/* 外壁の全候補（仕様一覧表に登録済み）を datalist 用に取得 */
+function getSidingVariants(){
+  const sec = DATA.sections.find(s=>s.id==='siding');
+  return sec ? sec.variants : [];
+}
 /* 編集パネル */
 function renderHarimakeEditor(){
   const m = HK;
   const mi = getSidingMainInfo();
+  const variants = getSidingVariants();
+
   let h = `<div class="card"><div class="body" style="font-size:12px;color:#666;">
      物件情報（物件名・作成者・決定日）は「仕様一覧表」タブと共通です。<br>
-     外壁メインは「仕様一覧表」で選択中の外壁を自動表示。貼り分け部分は各階の「メモ」に記入してください。</div></div>`;
+     外壁メインは「仕様一覧表」から自動連動。貼り分けで使う外壁は下のリストに手動で追加してください。</div></div>`;
 
+  // 基本情報＋外壁メイン
   h += `<details class="card" open><summary><span class="area" style="background:#3b4a5c">貼分</span>基本情報</summary><div class="body">
      <div class="field"><label>図面タイトル</label><input value="${esc(m.meta.title)}" oninput="hkMeta('title',this.value)"></div>
      <div style="margin-top:8px;padding:10px 12px;border:1px solid #c8cfd6;border-radius:6px;background:#f4f7fa;">
-       <div style="font-weight:bold;color:#1a4a7a;margin-bottom:6px;">外壁メイン（仕様一覧表から自動）</div>
-       <div style="display:grid;grid-template-columns:90px 60px 1fr;gap:8px 12px;font-size:13px;align-items:center;">
+       <div style="font-weight:bold;color:#1a4a7a;margin-bottom:6px;">🏠 外壁メイン（仕様一覧表から自動）</div>
+       <div style="display:grid;grid-template-columns:80px 60px 1fr;gap:8px 12px;font-size:13px;align-items:center;">
          <div style="color:#555;">商品</div>
          <div style="height:38px;border-radius:4px;border:1px solid #00000022;background:${swStyle(mi.sw,'cover')};"></div>
          <div><b>${esc(mi.nm||'(未決定)')}</b>${mi.hinban?` <span style="color:#666;">／ ${esc(mi.hinban)}</span>`:''}${mi.munsell?` <span style="color:#888;font-size:11px;">（${esc(mi.munsell)}）</span>`:''}</div>
-         <div style="color:#555;">メーカー</div>
-         <div></div>
-         <div>${esc(mi.maker||'-')}</div>
+         <div style="color:#555;">メーカー</div><div></div><div>${esc(mi.maker||'-')}</div>
        </div>
-       <div class="hint" style="margin-top:6px;font-size:11px;">※仕様一覧表タブで外壁を変更すると、ここも自動で更新されます。</div>
+       <div class="hint" style="margin-top:6px;font-size:11px;">※仕様一覧表タブで外壁を変更すると、ここも自動更新されます。</div>
      </div>
    </div></details>`;
 
-  m.floors.forEach((f,i)=>{
-    h += `<details class="card" open><summary><span class="area" style="background:#5a8a3c">${esc(f.floor||'階')}</span>${esc(f.floor||'階')}の貼り分け図面</summary><div class="body">
-       <div class="field"><label>階名</label><input value="${esc(f.floor||'')}" oninput="hkSetFloor(${i},'floor',this.value)" placeholder="例：1階／2階／屋根伏図 等" style="max-width:200px;"></div>
-       <div class="field" style="align-items:flex-start;"><label>平面図画像</label>
-         <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
-           ${f.plan_img ? `<div style="width:100%;max-width:520px;height:160px;background:${swStyle(f.plan_img,'contain','#fff')};border:1px solid #ccc;border-radius:4px;"></div>` : '<span class="hint" style="margin:0;">未取り込み</span>'}
-           <div style="display:flex;gap:6px;">
-             <label class="btn-sm" style="cursor:pointer;background:#888;">📷 ${f.plan_img?'差し替え':'画像を選択'}<input type="file" accept="image/*" style="display:none" onchange="hkPickImg(${i},'plan_img',this)"></label>
-             ${f.plan_img?`<button class="btn-sm btn-del" onclick="hkClearImg(${i},'plan_img')">画像を消す</button>`:''}
-           </div>
-         </div>
-       </div>
-       <div class="field" style="align-items:flex-start;"><label>立面図画像</label>
-         <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
-           ${f.elev_img ? `<div style="width:100%;max-width:520px;height:160px;background:${swStyle(f.elev_img,'contain','#fff')};border:1px solid #ccc;border-radius:4px;"></div>` : '<span class="hint" style="margin:0;">未取り込み</span>'}
-           <div style="display:flex;gap:6px;">
-             <label class="btn-sm" style="cursor:pointer;background:#888;">📷 ${f.elev_img?'差し替え':'画像を選択'}<input type="file" accept="image/*" style="display:none" onchange="hkPickImg(${i},'elev_img',this)"></label>
-             ${f.elev_img?`<button class="btn-sm btn-del" onclick="hkClearImg(${i},'elev_img')">画像を消す</button>`:''}
-           </div>
-         </div>
-       </div>
-       <div class="field" style="align-items:flex-start;"><label>貼り分けメモ</label>
-         <textarea oninput="hkSetFloor(${i},'note',this.value)" placeholder="例：1階南面＝QWラントダークグレー／1階東面＝QWセレノブラウニーブラック など、貼り分けの内訳を記入" style="width:100%;min-height:70px;padding:8px 10px;font-size:13px;border:1px solid #ccc;border-radius:4px;font-family:inherit;resize:vertical;">${esc(f.note||'')}</textarea>
-       </div>
-     </div></details>`;
+  // 貼り分けで使う外壁（追加リスト）
+  h += `<details class="card" open><summary><span class="area" style="background:#5a8a3c">貼分</span>貼り分けで使う外壁（${m.sub_walls.length}件）</summary><div class="body">
+     <div class="hint">メイン以外で使う外壁色を追加してください（仕様一覧表の外壁候補から自由入力）。</div>`;
+  m.sub_walls.forEach((w,i)=>{
+    // 仕様一覧表の variants から該当する色チップを探す（名前or品番マッチ）
+    const matched = variants.find(v=>v.nm===w.nm) || variants.find(v=>(v.values['品番']||'')===w.hinban);
+    const sw = matched ? matched.sw : '';
+    h += `<div style="display:grid;grid-template-columns:auto 1fr 1fr auto;gap:6px;align-items:center;margin-top:6px;padding:6px;border:1px solid #ddd;border-radius:4px;background:#fff;">
+       <div style="width:36px;height:32px;border-radius:3px;border:1px solid #00000022;background:${swStyle(sw,'cover')};"></div>
+       <input value="${esc(w.nm||'')}" list="hkSubWallNm" oninput="hkSetSubWall(${i},'nm',this.value)" placeholder="名前（例：QWラントダークグレー）" style="padding:4px 6px;font-size:12px;border:1px solid #ccc;border-radius:3px;">
+       <input value="${esc(w.hinban||'')}" list="hkSubWallHb" oninput="hkSetSubWall(${i},'hinban',this.value)" placeholder="品番（例：EW7533H）" style="padding:4px 6px;font-size:12px;border:1px solid #ccc;border-radius:3px;">
+       <button class="btn-sm btn-del" onclick="hkDelSubWall(${i})">削除</button>
+     </div>`;
   });
-  h += `<div class="card"><div class="body" style="display:flex;gap:8px;">
-     <button class="btn-sm" onclick="hkAddFloor()">＋ 階を追加</button>
-     ${m.floors.length>1?`<button class="btn-sm btn-del" onclick="hkDelLastFloor()">最後の階を削除</button>`:''}
-   </div></div>`;
+  h += `<div style="margin-top:8px;"><button class="btn-sm" onclick="hkAddSubWall()">＋ 貼り分け外壁を追加</button></div>
+     <datalist id="hkSubWallNm">${variants.map(v=>`<option value="${esc(v.nm)}">`).join('')}</datalist>
+     <datalist id="hkSubWallHb">${variants.map(v=>`<option value="${esc(v.values['品番']||'')}">`).join('')}</datalist>
+   </div></details>`;
+
+  // 平面図セクション
+  h += renderImgRow('plans', '🗺️ 平面図', m.plans);
+  // 立面図セクション
+  h += renderImgRow('elevations', '🏢 立面図', m.elevations);
+
+  // 共通の貼り分けメモ
+  h += `<details class="card" open><summary><span class="area" style="background:#6b7a8c">メモ</span>貼り分けメモ（全体共通）</summary><div class="body">
+     <textarea oninput="hkSetNote(this.value)" placeholder="例：南面＝QWラントダークグレー／東面＝QWセレノブラウニーブラック など、貼り分けの内訳を自由記入" style="width:100%;min-height:80px;padding:8px 10px;font-size:13px;border:1px solid #ccc;border-radius:4px;font-family:inherit;resize:vertical;">${esc(m.note||'')}</textarea>
+   </div></details>`;
+
   document.getElementById('editor').innerHTML = h;
 }
+/* 平面図／立面図セクションのレンダリング（共通） */
+function renderImgRow(key, title, arr){
+  let h = `<details class="card" open><summary><span class="area" style="background:#3b4a5c">図面</span>${title}（${arr.length}件）</summary><div class="body">
+     <div class="hint">各階の図面画像を取り込んでください。＋で階を追加できます。</div>`;
+  arr.forEach((it,i)=>{
+    h += `<div style="margin-top:8px;padding:8px;border:1px solid #ddd;border-radius:4px;background:#fff;">
+       <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;">
+         <label style="color:#555;font-size:12px;width:50px;">ラベル</label>
+         <input value="${esc(it.label||'')}" oninput="hkSetImgItem('${key}',${i},'label',this.value)" placeholder="例：1階／2階" style="max-width:180px;padding:4px 6px;font-size:12px;border:1px solid #ccc;border-radius:3px;">
+         <button class="btn-sm btn-del" style="margin-left:auto;" onclick="hkDelImgItem('${key}',${i})">削除</button>
+       </div>
+       ${it.img ? `<div style="width:100%;max-width:520px;height:140px;background:${swStyle(it.img,'contain','#fff')};border:1px solid #ccc;border-radius:3px;margin-bottom:6px;"></div>` : '<div class="hint" style="margin:0 0 6px;">未取り込み</div>'}
+       <div style="display:flex;gap:6px;">
+         <label class="btn-sm" style="cursor:pointer;background:#888;">📷 ${it.img?'差し替え':'画像を選択'}<input type="file" accept="image/*" style="display:none" onchange="hkPickImgItem('${key}',${i},this)"></label>
+         ${it.img?`<button class="btn-sm btn-del" onclick="hkClearImgItem('${key}',${i})">画像を消す</button>`:''}
+       </div>
+     </div>`;
+  });
+  h += `<div style="margin-top:8px;"><button class="btn-sm" onclick="hkAddImgItem('${key}')">＋ 階を追加</button></div>
+   </div></details>`;
+  return h;
+}
+/* 編集ハンドラ群 */
 function hkMeta(k,v){ HK.meta[k]=v; sync(); }
-function hkSetFloor(i,k,v){
-  HK.floors[i][k] = v;
-  // 文字入力（floor名・note）はフォーカス保持のため再描画せず、印刷シートだけ更新
-  if(k==='note' || k==='floor'){
-    // dheadラベルだけ部分更新
-    const summaries = [...document.querySelectorAll('#editor summary')];
-    if(summaries[i+1]){ // 最初の「基本情報」を飛ばして i+1
-      const area = summaries[i+1].querySelector('.area');
-      if(area) area.textContent = HK.floors[i].floor||'階';
-    }
-    renderSheet(); autosave();
-    return;
+function hkSetNote(v){ HK.note = String(v||''); renderSheet(); autosave(); }
+function hkAddSubWall(){ HK.sub_walls.push({nm:'', hinban:''}); renderEditor(); sync(); }
+function hkDelSubWall(i){ HK.sub_walls.splice(i,1); renderEditor(); sync(); }
+function hkSetSubWall(i,k,v){
+  HK.sub_walls[i][k] = String(v||'');
+  // フォーカス保持：行内の色チップだけ更新
+  const variants = getSidingVariants();
+  const w = HK.sub_walls[i];
+  const matched = variants.find(x=>x.nm===w.nm) || variants.find(x=>(x.values['品番']||'')===w.hinban);
+  const sw = matched ? matched.sw : '';
+  const rows = document.querySelectorAll('#editor div[style*="grid-template-columns:auto 1fr 1fr auto"]');
+  const row = rows[i];
+  if(row){
+    const chip = row.querySelector('div');
+    if(chip) chip.style.background = swStyle(sw, 'cover');
   }
+  renderSheet(); autosave();
+}
+function hkAddImgItem(key){
+  const arr = HK[key];
+  const nextNo = arr.length + 1;
+  arr.push({label:`${nextNo}階`, img:''});
   renderEditor(); sync();
 }
-function hkPickImg(i, field, input){
+function hkDelImgItem(key,i){
+  if(HK[key].length<=1) return;
+  if(!confirm('この階を削除します。よろしいですか？')) return;
+  HK[key].splice(i,1);
+  renderEditor(); sync();
+}
+function hkSetImgItem(key,i,field,v){
+  HK[key][i][field] = String(v||'');
+  if(field==='label'){ renderSheet(); autosave(); return; }
+  renderEditor(); sync();
+}
+function hkPickImgItem(key,i,input){
   const f=input.files[0]; if(!f) return;
-  fileToDataURL(f, 1800, durl=>{ HK.floors[i][field]=durl; renderEditor(); sync(); });
+  fileToDataURL(f, 1800, durl=>{ HK[key][i].img=durl; renderEditor(); sync(); });
   input.value='';
 }
-function hkClearImg(i, field){ HK.floors[i][field]=''; renderEditor(); sync(); }
-function hkAddFloor(){
-  const nextNo = HK.floors.length + 1;
-  HK.floors.push({floor:`${nextNo}階`, plan_img:"", elev_img:"", note:""});
-  renderEditor(); sync();
-}
-function hkDelLastFloor(){
-  if(HK.floors.length<=1) return;
-  if(!confirm('最後の階を削除します。よろしいですか？')) return;
-  HK.floors.pop();
-  renderEditor(); sync();
-}
-/* 印刷シート（A3横、各階1ページ。各ページに 外壁メイン情報＋平面＋立面＋メモ） */
+function hkClearImgItem(key,i){ HK[key][i].img=''; renderEditor(); sync(); }
+
+/* 印刷シート（A3横、1ページに全部入る構成）
+   ヘッダー＋外壁メイン＋貼り分け外壁リスト＋平面図（横並び）＋立面図（横並び）＋メモ＋フッター */
 function renderHarimakeSheet(){
   const p = DATA.project, m = HK;
   const mi = getSidingMainInfo();
+  const variants = getSidingVariants();
   let h = '';
-  (m.floors||[]).forEach((f,idx)=>{
-    if(idx>0) h += `<div style="break-before:page;page-break-before:always;"></div>`;
-    h += `<div class="sheet-head">
-        <div><div class="title">${esc(m.meta.title)} ${esc(f.floor||'')}</div>
-          <div class="proj">${esc(p.name)}</div></div>
-        <div class="meta">決定日：${esc(p.decided_date)||'　　　年　　月　　日'}<br>作成者：${esc(p.author)}</div>
-      </div>`;
-    // 外壁メイン
-    h += `<div style="margin-top:6px;border:1px solid #888;border-radius:4px;padding:6px 10px;display:grid;grid-template-columns:90px 70px 1fr;gap:6px 12px;font-size:12px;align-items:center;background:#f6f8fa;">
-        <div style="color:#555;font-weight:bold;">外壁メイン</div>
-        <div style="height:42px;border-radius:3px;border:1px solid #00000022;background:${swStyle(mi.sw,'cover')};"></div>
-        <div><b style="font-size:14px;">${esc(mi.nm||'(未決定)')}</b>${mi.hinban?` <span style="color:#666;">／ ${esc(mi.hinban)}</span>`:''}${mi.maker?` <span style="color:#888;font-size:11px;">／ ${esc(mi.maker)}</span>`:''}</div>
-      </div>`;
-    // 平面＋立面 2列
-    h += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:6mm;margin-top:6mm;">
-        <div>
-          <div style="background:#3b4a5c;color:#fff;font-weight:bold;font-size:12px;padding:3px 10px;border-radius:3px 3px 0 0;">平面図</div>
-          <div style="border:1px solid #888;border-top:none;height:100mm;background:${swStyle(f.plan_img,'contain','#fff')};border-radius:0 0 3px 3px;"></div>
-        </div>
-        <div>
-          <div style="background:#3b4a5c;color:#fff;font-weight:bold;font-size:12px;padding:3px 10px;border-radius:3px 3px 0 0;">立面図</div>
-          <div style="border:1px solid #888;border-top:none;height:100mm;background:${swStyle(f.elev_img,'contain','#fff')};border-radius:0 0 3px 3px;"></div>
-        </div>
-      </div>`;
-    // 貼り分けメモ
-    if((f.note||'').trim()){
-      h += `<div style="margin-top:5mm;border:1px solid #888;border-radius:3px;padding:6px 10px;background:#fffdf6;">
-          <div style="font-weight:bold;color:#a26a1f;font-size:12px;margin-bottom:3px;">貼り分けメモ</div>
-          <div style="font-size:12px;white-space:pre-wrap;line-height:1.55;">${esc(f.note)}</div>
+
+  // ヘッダー
+  h += `<div class="sheet-head">
+      <div><div class="title">${esc(m.meta.title)}</div>
+        <div class="proj">${esc(p.name)}</div></div>
+      <div class="meta">決定日：${esc(p.decided_date)||'　　　年　　月　　日'}<br>作成者：${esc(p.author)}</div>
+    </div>`;
+
+  // 外壁メイン
+  h += `<div style="margin-top:6px;border:1px solid #888;border-radius:4px;padding:6px 10px;display:grid;grid-template-columns:80px 70px 1fr;gap:6px 12px;font-size:12px;align-items:center;background:#f6f8fa;">
+      <div style="color:#555;font-weight:bold;">🏠 外壁メイン</div>
+      <div style="height:42px;border-radius:3px;border:1px solid #00000022;background:${swStyle(mi.sw,'cover')};"></div>
+      <div><b style="font-size:14px;">${esc(mi.nm||'(未決定)')}</b>${mi.hinban?` <span style="color:#666;">／ ${esc(mi.hinban)}</span>`:''}${mi.maker?` <span style="color:#888;font-size:11px;">／ ${esc(mi.maker)}</span>`:''}</div>
+    </div>`;
+
+  // 貼り分け外壁（追加分）
+  if(m.sub_walls.length){
+    h += `<div style="margin-top:4mm;border:1px solid #888;border-radius:4px;padding:6px 10px;background:#f6faf2;">
+        <div style="font-weight:bold;color:#3a7a17;font-size:12px;margin-bottom:4px;">🎨 貼り分けで使う外壁（${m.sub_walls.length}件）</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:4px 10px;font-size:11.5px;">`;
+    m.sub_walls.forEach(w=>{
+      const matched = variants.find(v=>v.nm===w.nm) || variants.find(v=>(v.values['品番']||'')===w.hinban);
+      const sw = matched ? matched.sw : '';
+      h += `<div style="display:grid;grid-template-columns:38px 1fr;gap:6px;align-items:center;">
+          <div style="height:30px;border-radius:3px;border:1px solid #00000022;background:${swStyle(sw,'cover')};"></div>
+          <div><b>${esc(w.nm||'-')}</b>${w.hinban?`<br><span style="color:#666;font-size:10px;">${esc(w.hinban)}</span>`:''}</div>
         </div>`;
-    }
-    h += `<div class="foot" style="margin-top:6mm;"><div>${esc(p.company)}</div><div>TEL ${esc(p.tel)}　／　FAX ${esc(p.fax)}</div></div>`;
-  });
+    });
+    h += `</div></div>`;
+  }
+
+  // 平面図セクション（複数階を横並び）
+  h += renderImgSection('🗺️ 平面図', m.plans, '#3b4a5c');
+  // 立面図セクション
+  h += renderImgSection('🏢 立面図', m.elevations, '#3b4a5c');
+
+  // 貼り分けメモ
+  if((m.note||'').trim()){
+    h += `<div style="margin-top:4mm;border:1px solid #888;border-radius:3px;padding:6px 10px;background:#fffdf6;">
+        <div style="font-weight:bold;color:#a26a1f;font-size:12px;margin-bottom:3px;">貼り分けメモ</div>
+        <div style="font-size:12px;white-space:pre-wrap;line-height:1.55;">${esc(m.note)}</div>
+      </div>`;
+  }
+
+  // フッター
+  h += `<div class="foot" style="margin-top:5mm;"><div>${esc(p.company)}</div><div>TEL ${esc(p.tel)}　／　FAX ${esc(p.fax)}</div></div>`;
+
   document.getElementById('sheet').innerHTML = h;
+}
+/* 平面/立面 セクション（複数階を横並び）の印刷HTML生成 */
+function renderImgSection(title, items, bgColor){
+  if(!items || !items.length) return '';
+  // 列数：階数に応じて。最大4列まで（A3横の幅に収めるため）
+  const cols = Math.min(items.length, 4);
+  let h = `<div style="margin-top:5mm;">
+      <div style="background:${bgColor};color:#fff;font-weight:bold;font-size:13px;padding:3px 10px;border-radius:3px;">${title}</div>
+      <div style="display:grid;grid-template-columns:repeat(${cols},1fr);gap:3mm;margin-top:2mm;">`;
+  items.forEach(it=>{
+    h += `<div>
+        <div style="text-align:center;font-size:11px;color:#555;font-weight:bold;margin-bottom:1mm;">${esc(it.label||'')}</div>
+        <div style="border:1px solid #888;height:80mm;background:${swStyle(it.img,'contain','#fff')};border-radius:3px;"></div>
+      </div>`;
+  });
+  h += `</div></div>`;
+  return h;
 }
 
 /* 書類切り替え（仕様一覧表 ⇔ 建具表 ⇔ クロス図面 ⇔ 照明図面 ⇔ 配線数量表 ⇔ 貼り分け図面） */
