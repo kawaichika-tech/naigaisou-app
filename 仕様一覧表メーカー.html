@@ -3350,18 +3350,25 @@ function normalizeHK(h){
   if(typeof h.note !== 'string') h.note = '';
   return h;
 }
-/* 仕様一覧表の外壁セクションから「メイン情報」を抽出 */
+/* 仕様一覧表の外壁セクションから「メイン情報」を抽出。
+   ちかさんが手で「メイン」欄に書いた本文（カラー名（仕上げ）　品番）を優先表示。
+   無い時のみ variant.nm + 品番 にフォールバック。 */
 function getSidingMainInfo(){
   const sec = DATA.sections.find(s=>s.id==='siding');
-  if(!sec) return {nm:"", hinban:"", maker:""};
+  if(!sec) return {mainText:"", maker:"", sw:"", munsell:""};
   const v = (sec.decided!=null) ? sec.variants[sec.decided] : null;
   const makerC = sec.common.find(c=>c.k==='メーカー');
+  const mainC  = sec.common.find(c=>c.k==='メイン');
+  // メイン commons の v を最優先、無ければ variant.nm + 品番 を組み立て
+  const fallback = v ? `${v.nm}${v.values["品番"]?'　'+v.values["品番"]:''}` : '';
   return {
-    nm: v?v.nm:"",
-    hinban: v?(v.values["品番"]||""):"",
-    sw: v?v.sw:"",
-    munsell: v?(v.values["カラー（マンセル値）"]||""):"",
-    maker: makerC ? makerC.v : ""
+    mainText: (mainC && (mainC.v||'').trim()) ? mainC.v : fallback,
+    maker:    makerC ? makerC.v : "",
+    sw:       v ? v.sw : "",
+    munsell:  v ? (v.values["カラー（マンセル値）"]||"") : "",
+    // 旧呼び出し互換（必要なら）
+    nm:       v ? v.nm : "",
+    hinban:   v ? (v.values["品番"]||"") : ""
   };
 }
 /* 外壁の全候補（仕様一覧表に登録済み）を datalist 用に取得 */
@@ -3387,10 +3394,10 @@ function renderHarimakeEditor(){
        <div style="display:grid;grid-template-columns:80px 60px 1fr;gap:8px 12px;font-size:13px;align-items:center;">
          <div style="color:#555;">商品</div>
          <div style="height:38px;border-radius:4px;border:1px solid #00000022;background:${swStyle(mi.sw,'cover')};"></div>
-         <div><b>${esc(mi.nm||'(未決定)')}</b>${mi.hinban?` <span style="color:#666;">／ ${esc(mi.hinban)}</span>`:''}${mi.munsell?` <span style="color:#888;font-size:11px;">（${esc(mi.munsell)}）</span>`:''}</div>
+         <div><b style="font-size:14px;">${esc(mi.mainText||'(未決定)')}</b>${mi.munsell?` <span style="color:#888;font-size:11px;">（${esc(mi.munsell)}）</span>`:''}</div>
          <div style="color:#555;">メーカー</div><div></div><div>${esc(mi.maker||'-')}</div>
        </div>
-       <div class="hint" style="margin-top:6px;font-size:11px;">※仕様一覧表タブで外壁を変更すると、ここも自動更新されます。</div>
+       <div class="hint" style="margin-top:6px;font-size:11px;">※仕様一覧表タブの外壁セクションで「メイン」欄を編集すると、ここも自動更新されます。</div>
      </div>
    </div></details>`;
 
@@ -3516,11 +3523,11 @@ function renderHarimakeSheet(){
       <div class="meta">決定日：${esc(p.decided_date)||'　　　年　　月　　日'}<br>作成者：${esc(p.author)}</div>
     </div>`;
 
-  // 外壁メイン
+  // 外壁メイン（「メイン」commonの自由記述をそのまま太字表示／カラー＋仕上げ＋品番すべて太字）
   h += `<div style="margin-top:6px;border:1px solid #888;border-radius:4px;padding:6px 10px;display:grid;grid-template-columns:80px 70px 1fr;gap:6px 12px;font-size:12px;align-items:center;background:#f6f8fa;">
       <div style="color:#555;font-weight:bold;">🏠 外壁メイン</div>
       <div style="height:42px;border-radius:3px;border:1px solid #00000022;background:${swStyle(mi.sw,'cover')};"></div>
-      <div><b style="font-size:14px;">${esc(mi.nm||'(未決定)')}</b>${mi.hinban?` <span style="color:#666;">／ ${esc(mi.hinban)}</span>`:''}${mi.maker?` <span style="color:#888;font-size:11px;">／ ${esc(mi.maker)}</span>`:''}</div>
+      <div><b style="font-size:14px;">${esc(mi.mainText||'(未決定)')}</b>${mi.maker?` <span style="color:#888;font-size:11px;">／ ${esc(mi.maker)}</span>`:''}</div>
     </div>`;
 
   // 貼り分け（メモ）— 外壁メインの直下に配置
@@ -3535,13 +3542,14 @@ function renderHarimakeSheet(){
   if(m.sub_walls.length){
     h += `<div style="margin-top:4mm;border:1px solid #888;border-radius:4px;padding:6px 10px;background:#f6faf2;">
         <div style="font-weight:bold;color:#3a7a17;font-size:12px;margin-bottom:4px;">🎨 貼り分けで使う外壁（${m.sub_walls.length}件）</div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:4px 10px;font-size:11.5px;">`;
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:4px 10px;font-size:12px;">`;
     m.sub_walls.forEach(w=>{
       const matched = variants.find(v=>v.nm===w.nm) || variants.find(v=>(v.values['品番']||'')===w.hinban);
       const sw = matched ? matched.sw : '';
+      // カラー名（仕上げ込み）と品番の両方を太字で表示
       h += `<div style="display:grid;grid-template-columns:38px 1fr;gap:6px;align-items:center;">
           <div style="height:30px;border-radius:3px;border:1px solid #00000022;background:${swStyle(sw,'cover')};"></div>
-          <div><b>${esc(w.nm||'-')}</b>${w.hinban?`<br><span style="color:#666;font-size:10px;">${esc(w.hinban)}</span>`:''}</div>
+          <div><b>${esc(w.nm||'-')}</b>${w.hinban?`　<b>${esc(w.hinban)}</b>`:''}</div>
         </div>`;
     });
     h += `</div></div>`;
