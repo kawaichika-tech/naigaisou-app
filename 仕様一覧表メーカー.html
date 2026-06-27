@@ -3656,30 +3656,22 @@ function renderHarimakeSheet(){
       <div style="font-size:14px;font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(mi.mainText||'(未決定)')}${mi.maker?`　／　${esc(mi.maker)}`:''}</div>
     </div>`;
 
-  // 貼り分け（参考画像＋メモ）— 外壁メインと同じく『画像 → 商品名（テキスト）』の横並び・背景はピンク系
+  // 貼り分け（参考画像＋メモ）— 外壁メインと完全に同じ3カラムレイアウト（ラベル｜画像｜テキスト）
   const hasNote = (m.note||'').trim();
   const noteImgs = Array.isArray(m.note_imgs) ? m.note_imgs : [];
   if(hasNote || noteImgs.length){
-    h += `<div style="margin-top:4mm;border:1px solid #d63d83;border-radius:4px;padding:6px 10px;background:#ffe9ef;">
-        <div style="font-weight:bold;color:#d63d83;font-size:13px;margin-bottom:4px;">貼り分け</div>
-        <div style="display:grid;grid-template-columns:auto 1fr;gap:8px 12px;align-items:center;font-size:14px;">`;
-    // 左：参考画像（真四角・画像全体が見える contain 表示）
+    // 画像セル（複数枚は横並び・無いなら空セル）
+    let imgsCell = '<div></div>';
     if(noteImgs.length){
-      h += `<div style="display:flex;gap:4px;flex-wrap:wrap;">`;
-      noteImgs.forEach(img=>{
-        h += `<div style="width:50px;height:50px;border-radius:3px;border:1px solid #00000022;background:${swStyle(img,'contain','#fff')};"></div>`;
-      });
-      h += `</div>`;
-    } else {
-      h += `<div></div>`; // 画像が無い時は左セル空
+      imgsCell = `<div style="display:flex;gap:4px;flex-wrap:wrap;">`
+        + noteImgs.map(img=>`<div style="width:50px;height:50px;border-radius:3px;border:1px solid #00000022;background:${swStyle(img,'contain','#fff')};"></div>`).join('')
+        + `</div>`;
     }
-    // 右：商品名・メモ本文（14px 太字／外壁メインと同じ強調レベル）
-    if(hasNote){
-      h += `<div style="font-weight:bold;white-space:pre-wrap;line-height:1.55;">${esc(m.note)}</div>`;
-    } else {
-      h += `<div></div>`;
-    }
-    h += `</div></div>`;
+    h += `<div style="margin-top:4mm;border:1px solid #d63d83;border-radius:4px;padding:6px 10px;display:grid;grid-template-columns:80px 50px 1fr;gap:6px 12px;font-size:12px;align-items:center;background:#ffe9ef;">
+        <div style="color:#d63d83;font-weight:bold;white-space:nowrap;">🎨 貼り分け</div>
+        ${imgsCell}
+        <div style="font-size:14px;font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(m.note||'')}</div>
+      </div>`;
   }
 
   // 貼り分け外壁（追加分）
