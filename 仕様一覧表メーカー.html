@@ -273,15 +273,11 @@
     #sheet{width:auto;box-shadow:none;margin:0;padding:6mm 8mm;}
     @page{size:A3 landscape;margin:8mm;}
     /* === 仕様一覧表（spec モード）：A3横で読みやすい2列レイアウト === */
-    /* 現場の人が見ながら作業するため、フォント読みやすさ優先（多少ページ増えてもOK） */
-    #sheet:not(.tg-mode){display:grid;grid-template-columns:1fr 1fr;gap:5mm 7mm;}
-    #sheet:not(.tg-mode) .sheet-head,
-    #sheet:not(.tg-mode) .areaTitle,
-    #sheet:not(.tg-mode) .warnbar,
-    #sheet:not(.tg-mode) .regline,
-    #sheet:not(.tg-mode) .sign,
-    #sheet:not(.tg-mode) .foot,
-    #sheet:not(.tg-mode) .note{grid-column:1 / -1;}
+    /* 現場の人が見ながら作業するため、フォント読みやすさ優先 */
+    /* 1枚目=外部、2枚目=内部 で綺麗に分割。各area-block 内で2列グリッド */
+    #sheet:not(.tg-mode){display:block;}
+    #sheet:not(.tg-mode) .area-block{break-inside:avoid-page;page-break-inside:avoid;}
+    #sheet:not(.tg-mode) .sec-grid{display:grid;grid-template-columns:1fr 1fr;gap:5mm 7mm;margin-top:1mm;}
     #sheet:not(.tg-mode) .sheet-head{margin-bottom:3mm;}
     #sheet:not(.tg-mode) .sheet-head .title{font-size:22px;letter-spacing:1.5px;}
     #sheet:not(.tg-mode) .sheet-head .proj{font-size:14px;}
@@ -742,8 +738,11 @@ function renderSpecSheet(){
     if(ng.length) h += `<div class="warnbar">⚠ 色彩規制に不適合の可能性：<br>・${ng.map(esc).join('<br>・')}</div>`;
   }
 
-  ['外部','内部'].forEach(area=>{
+  ['外部','内部'].forEach((area, ai)=>{
+    // 2つ目以降のエリア（内部）の前で強制改ページ → 1枚目=外部 / 2枚目=内部
+    h += `<div class="area-block"${ai>0?' style="break-before:page;page-break-before:always;"':''}>`;
     h += `<div class="areaTitle">${area}</div>`;
+    h += `<div class="sec-grid">`;
     DATA.sections.filter(s=>s.area===area && !(s.optional && !s.present)).forEach(s=>{
       h += `<div class="sec"><div class="sec-h">${esc(s.title)}</div><div class="sec-b">`;
       s.common.forEach(c=>{ if(c.v!=='') h += `<div class="kv"><div class="k">${esc(c.k)}</div><div class="v">${esc(c.v)}</div></div>`; });
@@ -777,6 +776,7 @@ function renderSpecSheet(){
       }
       h += `</div></div>`;
     });
+    h += `</div></div>`;  // /sec-grid /area-block
   });
 
   h += `<div class="sign">
