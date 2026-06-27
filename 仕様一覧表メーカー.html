@@ -1898,10 +1898,10 @@ function renderTateguEditor(){
           <label class="btn-sm" style="cursor:pointer;">📷 画像を選択
             <input type="file" accept="image/*" style="display:none" onchange="tgSpecPick(${i},this)"></label>
           ${s.file?`<button class="btn-sm btn-del" onclick="tgSpec(${i},'file','')">画像を消す</button>`:''}
-          ${s.file?`<button class="btn-sm" id="ocrbtn${i}" onclick="tgOcrSpec(${i})" style="background:#3b6ea5">📐 画像から W・H を自動入力</button>`:''}
+          ${s.file && !IMG_BASE ?`<button class="btn-sm" id="ocrbtn${i}" onclick="tgOcrSpec(${i})" style="background:#3b6ea5">📐 画像から W・H を自動入力</button>`:''}
           <span class="hint" style="margin:0">${s.file?(isData?'✅ 取り込み済み':'フォルダ参照中'):'未選択'}</span>
         </div>
-        ${s.file?`<div class="hint" style="margin:4px 0 0">「📐 画像から W・H を自動入力」を押すと、画像のWD番号・幅・高さを読み取って建具リストに反映します（初回はネット接続が必要・読み取り後は数値をご確認ください）。</div>`:''}
+        ${s.file && !IMG_BASE ?`<div class="hint" style="margin:4px 0 0">「📐 画像から W・H を自動入力」を押すと、画像のWD番号・幅・高さを読み取って建具リストに反映します（初回はネット接続が必要・読み取り後は数値をご確認ください）。</div>`:''}
         ${s.file?`<img src="${imgSrc(s.file)}" style="max-width:100%;max-height:170px;margin-top:8px;border:1px solid #ccc;border-radius:4px;display:block;">`:''}
         <div style="text-align:right;margin-top:4px;"><button class="btn-sm btn-del" onclick="tgDelSpec(${i})">この欄を削除</button></div>
        </div>`;
@@ -2611,7 +2611,7 @@ function renderLightingEditor(){
              ${e.img?`<div class="dthumb" style="width:64px;height:64px;background:${swStyle(e.img,'contain','#fff')}"></div>`:'<span class="hint" style="margin:0;">未取り込み</span>'}
              <label class="btn-sm" style="cursor:pointer;background:#888;">📷 ${e.img?'差し替え':'画像を選択'}<input type="file" accept="image/*" style="display:none" onchange="ltPick(${i},this)"></label>
              ${e.img?`<button class="btn-sm btn-del" onclick="ltClearImg(${i})">画像を消す</button>`:''}
-             ${e.img?`<button id="ltOcrBtn${i}" class="btn-sm" style="background:#a26a1f;" onclick="ltOcrPrice(${i})">📐 価格をAIで取得</button>`:''}
+             ${e.img && !IMG_BASE ?`<button id="ltOcrBtn${i}" class="btn-sm" style="background:#a26a1f;" onclick="ltOcrPrice(${i})">📐 価格をAIで取得</button>`:''}
            </div>
          </div>
        </div>
@@ -2620,7 +2620,7 @@ function renderLightingEditor(){
   h += `<div class="addrow">
        <button class="btn-sm" onclick="ltAdd('1階')">＋ 1階の照明を追加</button>
        <button class="btn-sm" onclick="ltAdd('2階')" style="margin-left:6px;">＋ 2階の照明を追加</button>
-       ${m.entries.some(e=>e.img)?`<button id="ltOcrAllBtn" class="btn-sm" style="background:#a26a1f;margin-left:14px;" onclick="ltOcrPriceAll()">📐 全エントリの価格をAIで一括取得</button>`:''}
+       ${m.entries.some(e=>e.img) && !IMG_BASE ?`<button id="ltOcrAllBtn" class="btn-sm" style="background:#a26a1f;margin-left:14px;" onclick="ltOcrPriceAll()">📐 全エントリの価格をAIで一括取得</button>`:''}
      </div></div></details>`;
   // datalist
   const dl=(id,arr)=>`<datalist id="${id}">${arr.map(o=>`<option value="${esc(o)}">`).join('')}</datalist>`;
