@@ -3419,8 +3419,10 @@ const HARIMAKE_MASTER = {
     {label:"南", img:""},
     {label:"西", img:""}
   ],
-  // 全体の貼り分けメモ
-  note:""
+  // 全体の貼り分けメモ（テキスト）
+  note:"",
+  // 貼り分けの参考画像（自分で取り込む。複数枚対応）
+  note_imgs:[]
 };
 function normalizeHK(h){
   const base = JSON.parse(JSON.stringify(HARIMAKE_MASTER));
@@ -3441,6 +3443,7 @@ function normalizeHK(h){
   h.plans      = h.plans.map(p=>Object.assign({label:"", img:""}, p));
   h.elevations = h.elevations.map(e=>Object.assign({label:"", img:""}, e));
   if(typeof h.note !== 'string') h.note = '';
+  if(!Array.isArray(h.note_imgs)) h.note_imgs = [];
   return h;
 }
 /* 仕様一覧表の外壁セクションから「メイン情報」を抽出。
@@ -3494,9 +3497,20 @@ function renderHarimakeEditor(){
      </div>
    </div></details>`;
 
-  // 貼り分け（メモ・テキスト）。外壁メインの直下に置く
+  // 貼り分け（メモ・テキスト＋画像）。外壁メインの直下に置く
   h += `<details class="card" open><summary><span class="area" style="background:#a26a1f">貼分</span>貼り分け</summary><div class="body">
      <textarea oninput="hkSetNote(this.value)" placeholder="例：南面＝QWラントダークグレー／東面＝QWセレノブラウニーブラック など、貼り分けの内訳を自由記入" style="width:100%;min-height:80px;padding:8px 10px;font-size:13px;border:1px solid #ccc;border-radius:4px;font-family:inherit;resize:vertical;">${esc(m.note||'')}</textarea>
+     <div style="margin-top:10px;">
+       <div style="font-size:12px;color:#555;font-weight:bold;margin-bottom:4px;">参考画像（任意・複数枚OK）</div>
+       <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:flex-start;">`;
+  (m.note_imgs||[]).forEach((img,i)=>{
+    h += `<div style="position:relative;width:120px;height:120px;border:1px solid #ccc;border-radius:4px;background:${swStyle(img,'contain','#fff')};">
+        <button onclick="hkDelNoteImg(${i})" style="position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;border:1px solid #b32424;background:#fff;color:#b32424;font-weight:bold;cursor:pointer;font-size:14px;line-height:1;" title="この画像を削除">×</button>
+      </div>`;
+  });
+  h += `       <label class="btn-sm" style="cursor:pointer;background:#888;align-self:center;">📷 画像を追加<input type="file" accept="image/*" multiple style="display:none" onchange="hkAddNoteImg(this)"></label>
+       </div>
+     </div>
    </div></details>`;
 
   // 貼り分けで使う外壁（追加リスト）
@@ -3552,6 +3566,25 @@ function renderImgRow(key, title, arr, unitLabel){
 /* 編集ハンドラ群 */
 function hkMeta(k,v){ HK.meta[k]=v; sync(); }
 function hkSetNote(v){ HK.note = String(v||''); renderSheet(); autosave(); }
+function hkAddNoteImg(input){
+  const files = Array.from(input.files||[]);
+  if(!files.length) return;
+  let remain = files.length;
+  files.forEach(f=>{
+    fileToDataURL(f, 1800, durl=>{
+      if(!Array.isArray(HK.note_imgs)) HK.note_imgs = [];
+      HK.note_imgs.push(durl);
+      remain--;
+      if(remain===0){ renderEditor(); sync(); }
+    });
+  });
+  input.value='';
+}
+function hkDelNoteImg(i){
+  if(!Array.isArray(HK.note_imgs)) return;
+  HK.note_imgs.splice(i,1);
+  renderEditor(); sync();
+}
 function hkAddSubWall(){ HK.sub_walls.push({nm:'', hinban:''}); renderEditor(); sync(); }
 function hkDelSubWall(i){ HK.sub_walls.splice(i,1); renderEditor(); sync(); }
 function hkSetSubWall(i,k,v){
@@ -3623,12 +3656,25 @@ function renderHarimakeSheet(){
       <div style="font-size:14px;font-weight:bold;">${esc(mi.mainText||'(未決定)')}${mi.maker?`　／　${esc(mi.maker)}`:''}</div>
     </div>`;
 
-  // 貼り分け（メモ）— 外壁メインの直下に配置。本文は外壁メインと揃えて 14px・太字
-  if((m.note||'').trim()){
+  // 貼り分け（メモ＋参考画像）— 外壁メインの直下に配置。本文は外壁メインと揃えて 14px・太字
+  const hasNote = (m.note||'').trim();
+  const noteImgs = Array.isArray(m.note_imgs) ? m.note_imgs : [];
+  if(hasNote || noteImgs.length){
     h += `<div style="margin-top:4mm;border:1px solid #888;border-radius:3px;padding:8px 12px;background:#fffdf6;">
-        <div style="font-weight:bold;color:#a26a1f;font-size:13px;margin-bottom:4px;">貼り分け</div>
-        <div style="font-size:14px;font-weight:bold;white-space:pre-wrap;line-height:1.55;">${esc(m.note)}</div>
-      </div>`;
+        <div style="font-weight:bold;color:#a26a1f;font-size:13px;margin-bottom:4px;">貼り分け</div>`;
+    if(hasNote){
+      h += `<div style="font-size:14px;font-weight:bold;white-space:pre-wrap;line-height:1.55;">${esc(m.note)}</div>`;
+    }
+    if(noteImgs.length){
+      // 参考画像：最大4列で横並び、各画像 contain で表示
+      const cols = Math.min(noteImgs.length, 4);
+      h += `<div style="display:grid;grid-template-columns:repeat(${cols},1fr);gap:3mm;margin-top:${hasNote?'3mm':'0'};">`;
+      noteImgs.forEach(img=>{
+        h += `<div style="height:55mm;border:1px solid #ccc;border-radius:3px;background:${swStyle(img,'contain','#fff')};"></div>`;
+      });
+      h += `</div>`;
+    }
+    h += `</div>`;
   }
 
   // 貼り分け外壁（追加分）
