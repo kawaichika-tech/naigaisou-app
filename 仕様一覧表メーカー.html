@@ -2331,10 +2331,10 @@ function renderTateguSheet(){
     const isLast = fi===floors.length-1;
     h+=`<div class="tg-floor-page">
       <div class="tg-floor-left">
-        <div class="tg-floor-plan">
-          <div class="ph"><span>${esc(fl)}　間取り図</span><span style="font-size:11px;font-weight:normal;">（スライドで色付け済の画像）</span></div>
-          <div class="pbody">${planImg?`<img src="${imgSrc(planImg)}" alt="${esc(fl)}間取り図">`:`<div class="empty">📐 ${esc(fl)} の間取り図は未取り込みです<br><span style="font-size:10px;">編集画面で 📷 から取り込んでください</span></div>`}</div>
-        </div>
+        ${planImg ? `<div class="tg-floor-plan">
+          <div class="ph"><span>${esc(fl)}　間取り図</span></div>
+          <div class="pbody"><img src="${imgSrc(planImg)}" alt="${esc(fl)}間取り図"></div>
+        </div>` : ''}
         ${commonHtml()}
         ${floorSpecHtml(fl)}
         ${isLast?signHtml():''}
@@ -2532,10 +2532,10 @@ function renderKurosuSheet(){
     const subtitle = fl==='1階' ? (m.meta.subtitle_1f||'') : fl==='2階' ? (m.meta.subtitle_2f||'') : '';
     h+=`<div class="kr-floor-page">
       <div class="kr-floor-left">
-        <div class="kr-floor-plan">
-          <div class="ph"><span>${esc(fl)}　間取り図</span><span style="font-size:11px;font-weight:normal;">（スライドで色付け済の画像）</span></div>
-          <div class="pbody">${planImg?`<img src="${imgSrc(planImg)}" alt="${esc(fl)}間取り図">`:`<div class="empty">📐 ${esc(fl)} の間取り図は未取り込みです<br><span style="font-size:10px;">編集画面で 📷 から取り込んでください</span></div>`}</div>
-        </div>
+        ${planImg ? `<div class="kr-floor-plan">
+          <div class="ph"><span>${esc(fl)}　間取り図</span></div>
+          <div class="pbody"><img src="${imgSrc(planImg)}" alt="${esc(fl)}間取り図"></div>
+        </div>` : ''}
         <div class="kr-meta">
           <div class="row"><div class="k">${esc(m.meta.base_cloth_label||'基本クロス')}</div><div class="v">${esc(m.meta.base_cloth_hinban||'')}</div></div>
           ${subtitle?`<div class="row"><div class="k">タイトル</div><div class="v">${esc(subtitle)}</div></div>`:''}
