@@ -3394,6 +3394,11 @@ function renderHarimakeEditor(){
      </div>
    </div></details>`;
 
+  // 貼り分け（メモ・テキスト）。外壁メインの直下に置く
+  h += `<details class="card" open><summary><span class="area" style="background:#a26a1f">貼分</span>貼り分け</summary><div class="body">
+     <textarea oninput="hkSetNote(this.value)" placeholder="例：南面＝QWラントダークグレー／東面＝QWセレノブラウニーブラック など、貼り分けの内訳を自由記入" style="width:100%;min-height:80px;padding:8px 10px;font-size:13px;border:1px solid #ccc;border-radius:4px;font-family:inherit;resize:vertical;">${esc(m.note||'')}</textarea>
+   </div></details>`;
+
   // 貼り分けで使う外壁（追加リスト）
   h += `<details class="card" open><summary><span class="area" style="background:#5a8a3c">貼分</span>貼り分けで使う外壁（${m.sub_walls.length}件）</summary><div class="body">
      <div class="hint">メイン以外で使う外壁色を追加してください（仕様一覧表の外壁候補から自由入力）。</div>`;
@@ -3417,11 +3422,6 @@ function renderHarimakeEditor(){
   h += renderImgRow('plans', '🗺️ 平面図', m.plans, '階');
   // 立面図セクション（方角別：北・東・南・西）
   h += renderImgRow('elevations', '🏢 立面図', m.elevations, '方角');
-
-  // 共通の貼り分けメモ
-  h += `<details class="card" open><summary><span class="area" style="background:#6b7a8c">メモ</span>貼り分けメモ（全体共通）</summary><div class="body">
-     <textarea oninput="hkSetNote(this.value)" placeholder="例：南面＝QWラントダークグレー／東面＝QWセレノブラウニーブラック など、貼り分けの内訳を自由記入" style="width:100%;min-height:80px;padding:8px 10px;font-size:13px;border:1px solid #ccc;border-radius:4px;font-family:inherit;resize:vertical;">${esc(m.note||'')}</textarea>
-   </div></details>`;
 
   document.getElementById('editor').innerHTML = h;
 }
@@ -3523,6 +3523,14 @@ function renderHarimakeSheet(){
       <div><b style="font-size:14px;">${esc(mi.nm||'(未決定)')}</b>${mi.hinban?` <span style="color:#666;">／ ${esc(mi.hinban)}</span>`:''}${mi.maker?` <span style="color:#888;font-size:11px;">／ ${esc(mi.maker)}</span>`:''}</div>
     </div>`;
 
+  // 貼り分け（メモ）— 外壁メインの直下に配置
+  if((m.note||'').trim()){
+    h += `<div style="margin-top:4mm;border:1px solid #888;border-radius:3px;padding:6px 10px;background:#fffdf6;">
+        <div style="font-weight:bold;color:#a26a1f;font-size:12px;margin-bottom:3px;">貼り分け</div>
+        <div style="font-size:12px;white-space:pre-wrap;line-height:1.55;">${esc(m.note)}</div>
+      </div>`;
+  }
+
   // 貼り分け外壁（追加分）
   if(m.sub_walls.length){
     h += `<div style="margin-top:4mm;border:1px solid #888;border-radius:4px;padding:6px 10px;background:#f6faf2;">
@@ -3543,14 +3551,6 @@ function renderHarimakeSheet(){
   h += renderImgSection('🗺️ 平面図', m.plans, '#3b4a5c');
   // 立面図セクション
   h += renderImgSection('🏢 立面図', m.elevations, '#3b4a5c');
-
-  // 貼り分けメモ
-  if((m.note||'').trim()){
-    h += `<div style="margin-top:4mm;border:1px solid #888;border-radius:3px;padding:6px 10px;background:#fffdf6;">
-        <div style="font-weight:bold;color:#a26a1f;font-size:12px;margin-bottom:3px;">貼り分けメモ</div>
-        <div style="font-size:12px;white-space:pre-wrap;line-height:1.55;">${esc(m.note)}</div>
-      </div>`;
-  }
 
   // フッター
   h += `<div class="foot" style="margin-top:5mm;"><div>${esc(p.company)}</div><div>TEL ${esc(p.tel)}　／　FAX ${esc(p.fax)}</div></div>`;
