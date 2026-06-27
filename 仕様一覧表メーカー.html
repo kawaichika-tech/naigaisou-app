@@ -3666,11 +3666,10 @@ function renderHarimakeSheet(){
       h += `<div style="font-size:14px;font-weight:bold;white-space:pre-wrap;line-height:1.55;">${esc(m.note)}</div>`;
     }
     if(noteImgs.length){
-      // 参考画像：最大4列で横並び、各画像 contain で表示
-      const cols = Math.min(noteImgs.length, 4);
-      h += `<div style="display:grid;grid-template-columns:repeat(${cols},1fr);gap:3mm;margin-top:${hasNote?'3mm':'0'};">`;
+      // 参考画像：外壁メインの色チップサイズに合わせて小さく横並び（高さ約12mm）
+      h += `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:${hasNote?'3mm':'0'};">`;
       noteImgs.forEach(img=>{
-        h += `<div style="height:55mm;border:1px solid #ccc;border-radius:3px;background:${swStyle(img,'contain','#fff')};"></div>`;
+        h += `<div style="width:24mm;height:12mm;border:1px solid #00000022;border-radius:3px;background:${swStyle(img,'cover','#fff')};"></div>`;
       });
       h += `</div>`;
     }
