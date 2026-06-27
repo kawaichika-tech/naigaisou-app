@@ -3693,10 +3693,35 @@ function renderHarimakeSheet(){
     h += `</div></div>`;
   }
 
-  // 平面図セクション（複数階を横並び）
-  h += renderImgSection('🗺️ 平面図', m.plans, '#3b4a5c');
-  // 立面図セクション
-  h += renderImgSection('🏢 立面図', m.elevations, '#3b4a5c');
+  // 平面図と立面図を2カラムレイアウト：左=平面図（縦並び）、右=立面図（横並び or 2x2）
+  h += `<div style="display:grid;grid-template-columns:1fr 2fr;gap:5mm;margin-top:5mm;align-items:start;">`;
+
+  // 左カラム：平面図（1階・2階を縦並び、コンパクトサイズ）
+  h += `<div>
+      <div style="background:#3b4a5c;color:#fff;font-weight:bold;font-size:13px;padding:3px 10px;border-radius:3px;">🗺️ 平面図</div>`;
+  (m.plans||[]).forEach(it=>{
+    h += `<div style="margin-top:2mm;">
+        <div style="text-align:center;font-size:11px;color:#555;font-weight:bold;margin-bottom:1mm;">${esc(it.label||'')}</div>
+        <div style="border:1px solid #888;height:75mm;background:${swStyle(it.img,'contain','#fff')};border-radius:3px;"></div>
+      </div>`;
+  });
+  h += `</div>`;
+
+  // 右カラム：立面図（4方向なら 2x2、5以上なら 3列で折り返し）
+  const elevs = m.elevations || [];
+  const elevCols = elevs.length <= 4 ? 2 : 3;
+  h += `<div>
+      <div style="background:#3b4a5c;color:#fff;font-weight:bold;font-size:13px;padding:3px 10px;border-radius:3px;">🏢 立面図</div>
+      <div style="display:grid;grid-template-columns:repeat(${elevCols},1fr);gap:3mm;margin-top:2mm;">`;
+  elevs.forEach(it=>{
+    h += `<div>
+        <div style="text-align:center;font-size:11px;color:#555;font-weight:bold;margin-bottom:1mm;">${esc(it.label||'')}</div>
+        <div style="border:1px solid #888;height:75mm;background:${swStyle(it.img,'contain','#fff')};border-radius:3px;"></div>
+      </div>`;
+  });
+  h += `</div></div>`;
+
+  h += `</div>`; // /grid 2カラム
 
   // フッター
   h += `<div class="foot" style="margin-top:5mm;"><div>${esc(p.company)}</div><div>TEL ${esc(p.tel)}　／　FAX ${esc(p.fax)}</div></div>`;
