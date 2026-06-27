@@ -3697,8 +3697,8 @@ function renderHarimakeSheet(){
   // A3横1ページに確実に収めるため、項目数に応じて画像高さを動的に
   const plans = m.plans || [];
   const elevs = m.elevations || [];
-  // 平面：1階2階で約120mm、3階以上なら圧縮
-  const planH = plans.length <= 2 ? 60 : Math.max(40, Math.floor(130 / plans.length));
+  // 平面：1階2階でコンパクトに（A3横1ページに収まるように）
+  const planH = plans.length <= 2 ? 48 : Math.max(35, Math.floor(100 / plans.length));
   // 立面：実物の立面図は横長（高さ:幅 ≒ 1:3）なので枠を低めにして contain の上下余白を削減
   const elevCols = elevs.length <= 4 ? 2 : 3;
   const elevRows = Math.ceil(elevs.length / elevCols);
