@@ -1898,10 +1898,10 @@ function renderTateguEditor(){
           <label class="btn-sm" style="cursor:pointer;">📷 画像を選択
             <input type="file" accept="image/*" style="display:none" onchange="tgSpecPick(${i},this)"></label>
           ${s.file?`<button class="btn-sm btn-del" onclick="tgSpec(${i},'file','')">画像を消す</button>`:''}
-          ${s.file && !IMG_BASE ?`<button class="btn-sm" id="ocrbtn${i}" onclick="tgOcrSpec(${i})" style="background:#3b6ea5">📐 画像から W・H を自動入力</button>`:''}
+          ${s.file?`<button class="btn-sm" id="ocrbtn${i}" onclick="tgOcrSpec(${i})" style="background:#3b6ea5">📐 画像から W・H を自動入力</button>`:''}
           <span class="hint" style="margin:0">${s.file?(isData?'✅ 取り込み済み':'フォルダ参照中'):'未選択'}</span>
         </div>
-        ${s.file && !IMG_BASE ?`<div class="hint" style="margin:4px 0 0">「📐 画像から W・H を自動入力」を押すと、画像のWD番号・幅・高さを読み取って建具リストに反映します（初回はネット接続が必要・読み取り後は数値をご確認ください）。</div>`:''}
+        ${s.file?`<div class="hint" style="margin:4px 0 0">「📐 画像から W・H を自動入力」を押すと、画像のWD番号・幅・高さを読み取って建具リストに反映します（初回はネット接続が必要・読み取り後は数値をご確認ください）。</div>`:''}
         ${s.file?`<img src="${imgSrc(s.file)}" style="max-width:100%;max-height:170px;margin-top:8px;border:1px solid #ccc;border-radius:4px;display:block;">`:''}
         <div style="text-align:right;margin-top:4px;"><button class="btn-sm btn-del" onclick="tgDelSpec(${i})">この欄を削除</button></div>
        </div>`;
@@ -2157,7 +2157,12 @@ function preprocessForOcr(src){
   });
 }
 /* ローカルAIサーバー（ocr_server.py）のURL */
-const OCR_API_URL='http://127.0.0.1:8788/api/ocr-tategu';
+/* OCRエンドポイントの切替：Cloud時（IMG_BASE が GitHub Raw URL）は Vercel Functions、
+   ローカル時はローカルOCRサーバ（ocr_server.py）。URLは window.__OCR_HOST__ で
+   streamlit_app.py から上書き可能。 */
+const OCR_HOST = (typeof window !== 'undefined' && window.__OCR_HOST__) ||
+                 (IMG_BASE ? 'https://naigaisou-app-ocr.vercel.app' : 'http://127.0.0.1:8788');
+const OCR_API_URL = `${OCR_HOST}/api/ocr-tategu`;
 
 /* 読み取り結果（{no,type,w,h,room}の配列）を建具リストに反映（既存は更新／無ければ新規） */
 function tgApplyDoorData(list){
@@ -2611,7 +2616,7 @@ function renderLightingEditor(){
              ${e.img?`<div class="dthumb" style="width:64px;height:64px;background:${swStyle(e.img,'contain','#fff')}"></div>`:'<span class="hint" style="margin:0;">未取り込み</span>'}
              <label class="btn-sm" style="cursor:pointer;background:#888;">📷 ${e.img?'差し替え':'画像を選択'}<input type="file" accept="image/*" style="display:none" onchange="ltPick(${i},this)"></label>
              ${e.img?`<button class="btn-sm btn-del" onclick="ltClearImg(${i})">画像を消す</button>`:''}
-             ${e.img && !IMG_BASE ?`<button id="ltOcrBtn${i}" class="btn-sm" style="background:#a26a1f;" onclick="ltOcrPrice(${i})">📐 価格をAIで取得</button>`:''}
+             ${e.img?`<button id="ltOcrBtn${i}" class="btn-sm" style="background:#a26a1f;" onclick="ltOcrPrice(${i})">📐 価格をAIで取得</button>`:''}
            </div>
          </div>
        </div>
@@ -2620,7 +2625,7 @@ function renderLightingEditor(){
   h += `<div class="addrow">
        <button class="btn-sm" onclick="ltAdd('1階')">＋ 1階の照明を追加</button>
        <button class="btn-sm" onclick="ltAdd('2階')" style="margin-left:6px;">＋ 2階の照明を追加</button>
-       ${m.entries.some(e=>e.img) && !IMG_BASE ?`<button id="ltOcrAllBtn" class="btn-sm" style="background:#a26a1f;margin-left:14px;" onclick="ltOcrPriceAll()">📐 全エントリの価格をAIで一括取得</button>`:''}
+       ${m.entries.some(e=>e.img)?`<button id="ltOcrAllBtn" class="btn-sm" style="background:#a26a1f;margin-left:14px;" onclick="ltOcrPriceAll()">📐 全エントリの価格をAIで一括取得</button>`:''}
      </div></div></details>`;
   // datalist
   const dl=(id,arr)=>`<datalist id="${id}">${arr.map(o=>`<option value="${esc(o)}">`).join('')}</datalist>`;
@@ -2736,12 +2741,38 @@ function ltImgToDataUrl(src){
     img.src = src;
   });
 }
-const LT_OCR_API_URL = 'http://127.0.0.1:8788/api/ocr-lighting';
-/* 画像ソースに応じて適切なペイロードを作る：
-   - data:URI → {image: ...}
-   - 相対パス（照明/xxx.jpg等）→ {imageFile: ...} でサーバー側読み込みに任せる（CORS回避） */
+const LT_OCR_API_URL = `${OCR_HOST}/api/ocr-lighting`;
+/* 画像→data:URI 化（Cloud版で imageFile が使えないため）。data: 始まりはそのまま返す */
+async function _imgToDataUrl(src){
+  if(!src) return '';
+  if(/^data:/.test(src)) return src;
+  // 相対パスや https URL なら fetch → blob → data:URI
+  const url = imgUrl(src);  // IMG_BASE が空ならローカル相対、Cloudなら GitHub Raw
+  const resp = await fetch(url);
+  if(!resp.ok) throw new Error(`画像取得失敗（${resp.status}）：${url}`);
+  const blob = await resp.blob();
+  return await new Promise((resolve, reject)=>{
+    const fr = new FileReader();
+    fr.onload = ()=>resolve(fr.result);
+    fr.onerror = ()=>reject(new Error('画像のdata:URI変換に失敗'));
+    fr.readAsDataURL(blob);
+  });
+}
+/* 画像ソースに応じて適切なペイロードを作る。
+   - ローカル かつ 相対パス → {imageFile: ...} でサーバー側読込（CORS回避）
+   - それ以外（data: or Cloud） → {image: data:URI} */
 async function ltOcrPriceCore(src){
-  const payload = /^data:/.test(src) ? {image: src} : {imageFile: src};
+  let payload;
+  if(/^data:/.test(src)){
+    payload = {image: src};
+  } else if(IMG_BASE){
+    // Cloud版：相対パスを data:URI に変換してから送る
+    const dataUrl = await _imgToDataUrl(src);
+    payload = {image: dataUrl};
+  } else {
+    // ローカル版：サーバー側ファイル読込に任せる
+    payload = {imageFile: src};
+  }
   let res;
   try{ res = await fetch(LT_OCR_API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); }
   catch(e){ const err = new Error('AIサーバーに接続できません'); err.noServer = true; throw err; }
