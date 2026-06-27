@@ -1267,11 +1267,10 @@ const TATEGU_MASTER = {
     {k:"床下点検口", v:"アイボリー"},
     {k:"床下エアコン", v:""}
   ],
+  // 2F には床下点検口・床下エアコンは無い（1F のみ）
   floor_2f:[
     {k:"フローリング", v:"ウッドワン　12mm　アイボリー　FKK224D-J1", pattern:"", img:"床/FKK224D-J1.jpg"},
-    {k:"畳", type:"", color:"", count:"", img:""},
-    {k:"床下点検口", v:"アイボリー"},
-    {k:"床下エアコン", v:""}
+    {k:"畳", type:"", color:"", count:"", img:""}
   ],
   doors:[
     {floor:"1階", no:"WD101", room:"脱衣室", type:"片引戸", hinban:"B-XF", color:"GE（グレージュ）", w:"1324", h:"2035", handle:"SH型（ブラック）", threshold:"有", remark:"スイッチ設置のため", remark2:"", img:""},
@@ -1767,6 +1766,8 @@ function wrSummary(){
 
 /* 床下エアコンの選択肢。"斜線"は印刷シートで本物の斜め線として描画する */
 const TG_FLOOR_AC=["ガラリ図面参照","斜線"];
+/* 床下点検口の色（1F のみ。プルダウンの選択肢） */
+const TG_FLOOR_INSPECTION=["アイボリー","ナチュラル"];
 const SLASH_SVG=`<svg viewBox="0 0 100 20" preserveAspectRatio="none" style="width:170px;height:16px;display:inline-block;vertical-align:middle"><line x1="0" y1="20" x2="100" y2="0" stroke="#333" stroke-width="1.2" vector-effect="non-scaling-stroke"/></svg>`;
 /* カード内セル用：横いっぱいに引く斜め線 */
 const SLASH_CELL=`<svg viewBox="0 0 100 16" preserveAspectRatio="none" style="flex:1;height:14px;align-self:center"><line x1="0" y1="16" x2="100" y2="0" stroke="#333" stroke-width="1" vector-effect="non-scaling-stroke"/></svg>`;
@@ -1787,8 +1788,8 @@ function normalizeTG(t){
   const oldFloor  = Array.isArray(t.floor)  ? t.floor  : null;
   t.common_1f = migrateCommon(Array.isArray(t.common_1f) ? t.common_1f : (oldCommon || base.common_1f));
   t.common_2f = migrateCommon(Array.isArray(t.common_2f) ? t.common_2f : (oldCommon || base.common_2f));
-  t.floor_1f  = migrateFloor(Array.isArray(t.floor_1f)  ? t.floor_1f  : (oldFloor  || base.floor_1f));
-  t.floor_2f  = migrateFloor(Array.isArray(t.floor_2f)  ? t.floor_2f  : (oldFloor  || base.floor_2f));
+  t.floor_1f  = migrateFloor(Array.isArray(t.floor_1f)  ? t.floor_1f  : (oldFloor  || base.floor_1f), false);
+  t.floor_2f  = migrateFloor(Array.isArray(t.floor_2f)  ? t.floor_2f  : (oldFloor  || base.floor_2f), true);
   delete t.common; delete t.floor;  // 旧キーは保存しない
   t.doors = migrateDoors(Array.isArray(t.doors)?t.doors:base.doors);
   return t;
@@ -1850,8 +1851,9 @@ function migrateCommon(arr){
 }
 /* 床仕様を整える。基本＝フローリング／畳／床下点検口／床下エアコン。
    旧データの内部土間仕上げ・無垢フローリング等は除外し、「フローリング（2P/3P）」は「フローリング」へ統合。
-   畳タイプが選択されている場合のみ、和室付随行（敷居・畳よせ・雑巾摺）を畳の直後に追加。 */
-function migrateFloor(arr){
+   畳タイプが選択されている場合のみ、和室付随行（敷居・畳よせ・雑巾摺）を畳の直後に追加。
+   is2f=true（2F）の時は床下点検口・床下エアコンを含めない（2F には無いため）。 */
+function migrateFloor(arr, is2f){
   arr=arr||[];
   const pick=k=> arr.find(x=> x.k===k || (k==='フローリング'&&/^フローリング/.test(x.k||'')) );
   const fl=pick('フローリング')||{};
@@ -1864,8 +1866,10 @@ function migrateFloor(arr){
       out.push(ex ? {k:w.k, v:ex.v||'', spec:ex.spec||''} : JSON.parse(JSON.stringify(w)));
     });
   }
-  out.push({k:'床下点検口', v:(pick('床下点検口')||{}).v||''});
-  out.push({k:'床下エアコン', v:(pick('床下エアコン')||{}).v||''});
+  if(!is2f){
+    out.push({k:'床下点検口', v:(pick('床下点検口')||{}).v||'アイボリー'});
+    out.push({k:'床下エアコン', v:(pick('床下エアコン')||{}).v||''});
+  }
   return out;
 }
 
@@ -1963,6 +1967,10 @@ function renderTateguEditor(){
       if(c.k==='床下エアコン'){
         h+=`<div class="field"><label>床下エアコン</label>${tgSel(TG_FLOOR_AC,c.v||'',`tgFloorAC('${fk}',${i},this.value)`)}</div>`;
         if(c.v==='斜線') h+=`<div class="field"><label>表示プレビュー</label><div style="flex:1;display:flex;align-items:center;gap:8px;">${SLASH_SVG}<span class="hint" style="margin:0">印刷ではこの斜め線が入ります</span></div></div>`;
+        return;
+      }
+      if(c.k==='床下点検口'){
+        h+=`<div class="field"><label>床下点検口</label>${tgSel(TG_FLOOR_INSPECTION,c.v||'',`tgFloor('${fk}',${i},this.value)`)}</div>`;
         return;
       }
       h+=`<div class="field"><label>${esc(c.k)}</label><input value="${esc(c.v)}" oninput="tgFloor('${fk}',${i},this.value)"></div>`;
@@ -2063,7 +2071,7 @@ function tgFloorImgPick(fk,i,input){ const arr=TG['floor_'+fk]; if(!arr) return;
 function tgTatami(fk,i,k,v){
   const arr=TG['floor_'+fk]; if(!arr) return;
   arr[i][k]=v;
-  if(k==='type'){ TG['floor_'+fk]=migrateFloor(arr); renderEditor(); } // 畳タイプ有無で和室行を自動追加/削除
+  if(k==='type'){ TG['floor_'+fk]=migrateFloor(arr, fk==='2f'); renderEditor(); } // 畳タイプ有無で和室行を自動追加/削除（2Fは床下系なし）
   if(k==='color'){ arr[i].img = v ? `畳/${v}.jpg` : ''; renderEditor(); } // 畳色ごとに「畳」フォルダーの画像を自動参照
   sync();
 }
