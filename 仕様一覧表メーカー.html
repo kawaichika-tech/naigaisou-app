@@ -3649,11 +3649,11 @@ function renderHarimakeSheet(){
       <div class="meta">決定日：${esc(p.decided_date)||'　　　年　　月　　日'}<br>作成者：${esc(p.author)}</div>
     </div>`;
 
-  // 外壁メイン（カラー名／品番／メーカー すべて太字 14px・画像は 50x50 正方形 contain）
+  // 外壁メイン（カラー名／品番／メーカー すべて太字 14px・画像は 50x50 正方形 contain・1行表示）
   h += `<div style="margin-top:6px;border:1px solid #888;border-radius:4px;padding:6px 10px;display:grid;grid-template-columns:80px 50px 1fr;gap:6px 12px;font-size:12px;align-items:center;background:#f6f8fa;">
-      <div style="color:#555;font-weight:bold;">🏠 外壁メイン</div>
+      <div style="color:#555;font-weight:bold;white-space:nowrap;">🏠 外壁メイン</div>
       <div style="width:50px;height:50px;border-radius:3px;border:1px solid #00000022;background:${swStyle(mi.sw,'contain','#fff')};"></div>
-      <div style="font-size:14px;font-weight:bold;">${esc(mi.mainText||'(未決定)')}${mi.maker?`　／　${esc(mi.maker)}`:''}</div>
+      <div style="font-size:14px;font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(mi.mainText||'(未決定)')}${mi.maker?`　／　${esc(mi.maker)}`:''}</div>
     </div>`;
 
   // 貼り分け（参考画像＋メモ）— 外壁メインと同じく『画像 → 商品名（テキスト）』の横並び・背景はピンク系
