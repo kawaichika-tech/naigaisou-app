@@ -2386,7 +2386,8 @@ function renderTateguSheet(){
     <div class="note">※ 安全性・デザイン性・施工性を優先する場合、仕様詳細図面通りの施工とならない場合がございます。</div>
     <div class="foot"><div>${esc(p.company)}</div><div>TEL ${esc(p.tel)}　／　FAX ${esc(p.fax)}</div></div>`;
 
-  // 階ごとに A3横の1ページ：左に[間取り図＋共通仕様＋床仕様]、右に建具カード。署名は最後の階のみ末尾に。
+  // 階ごとに A3横の1ページ：左に[間取り図＋共通仕様＋床仕様]、右に建具カード。
+  // 署名は最後の階の grid の「下」に出す（左カラムではなく、建具表の下まで全幅）
   const floors=[...new Set(m.doors.map(d=>d.floor||''))].filter(Boolean);
   floors.forEach((fl,fi)=>{
     const list=m.doors.filter(d=>(d.floor||'')===fl);
@@ -2401,13 +2402,14 @@ function renderTateguSheet(){
         </div>` : ''}
         ${commonHtml(fl)}
         ${floorSpecHtml(fl)}
-        ${isLast?signHtml():''}
       </div>
       <div class="tg-floor-col">
         <div class="tg-floor-title">${esc(fl)}　建具表</div>
         <div class="tg-cards">${list.map(cardHtml).join('')}</div>
       </div>
     </div>`;
+    // 最後の階のページ末尾に署名（grid 外に出して建具表の下に全幅で表示）
+    if(isLast) h += signHtml();
   });
   // ※ 設計仕様詳細の画像は「入力画面のみ」表示。印刷シートには載せない。
   document.getElementById('sheet').innerHTML=h;
