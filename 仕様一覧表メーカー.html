@@ -3623,11 +3623,11 @@ function renderHarimakeSheet(){
       <div><b style="font-size:14px;">${esc(mi.mainText||'(未決定)')}</b>${mi.maker?` <span style="color:#888;font-size:11px;">／ ${esc(mi.maker)}</span>`:''}</div>
     </div>`;
 
-  // 貼り分け（メモ）— 外壁メインの直下に配置
+  // 貼り分け（メモ）— 外壁メインの直下に配置。本文は外壁メインと揃えて 14px・太字
   if((m.note||'').trim()){
-    h += `<div style="margin-top:4mm;border:1px solid #888;border-radius:3px;padding:6px 10px;background:#fffdf6;">
-        <div style="font-weight:bold;color:#a26a1f;font-size:12px;margin-bottom:3px;">貼り分け</div>
-        <div style="font-size:12px;white-space:pre-wrap;line-height:1.55;">${esc(m.note)}</div>
+    h += `<div style="margin-top:4mm;border:1px solid #888;border-radius:3px;padding:8px 12px;background:#fffdf6;">
+        <div style="font-weight:bold;color:#a26a1f;font-size:13px;margin-bottom:4px;">貼り分け</div>
+        <div style="font-size:14px;font-weight:bold;white-space:pre-wrap;line-height:1.55;">${esc(m.note)}</div>
       </div>`;
   }
 
