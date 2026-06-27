@@ -297,7 +297,8 @@
     #sheet:not(.tg-mode) .sign{margin-top:5mm;padding-top:4mm;}
     #sheet:not(.tg-mode) .sign .box{min-height:18mm;padding:4px 8px;font-size:11px;}
     /* === 建具表（tg-mode）：A3 横1ページに6カード（3列×2行）が収まるよう縮小 === */
-    #sheet.tg-mode .tg-floor-page{gap:4mm!important;margin-top:4mm!important;}
+    /* 左カラム（間取り＋仕様＋床）を狭めて、右カラム（建具カード3列）の幅を確保 */
+    #sheet.tg-mode .tg-floor-page{grid-template-columns:0.55fr 1fr!important;gap:4mm!important;margin-top:4mm!important;}
     #sheet.tg-mode .tg-cards{grid-template-columns:repeat(3,1fr)!important;gap:3px!important;margin:2px 0 4px!important;}
     #sheet.tg-mode .tg-card-head{font-size:9.5px!important;}
     #sheet.tg-mode .tg-card-head .no{padding:2px 5px;min-width:46px;}
