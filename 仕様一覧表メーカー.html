@@ -3656,24 +3656,30 @@ function renderHarimakeSheet(){
       <div style="font-size:14px;font-weight:bold;">${esc(mi.mainText||'(未決定)')}${mi.maker?`　／　${esc(mi.maker)}`:''}</div>
     </div>`;
 
-  // 貼り分け（メモ＋参考画像）— 外壁メインの直下に配置。本文は外壁メインと揃えて 14px・太字
+  // 貼り分け（参考画像＋メモ）— 外壁メインと同じく『画像 → 商品名（テキスト）』の横並び
   const hasNote = (m.note||'').trim();
   const noteImgs = Array.isArray(m.note_imgs) ? m.note_imgs : [];
   if(hasNote || noteImgs.length){
-    h += `<div style="margin-top:4mm;border:1px solid #888;border-radius:3px;padding:8px 12px;background:#fffdf6;">
-        <div style="font-weight:bold;color:#a26a1f;font-size:13px;margin-bottom:4px;">貼り分け</div>`;
-    if(hasNote){
-      h += `<div style="font-size:14px;font-weight:bold;white-space:pre-wrap;line-height:1.55;">${esc(m.note)}</div>`;
-    }
+    h += `<div style="margin-top:4mm;border:1px solid #888;border-radius:4px;padding:6px 10px;background:#fffdf6;">
+        <div style="font-weight:bold;color:#a26a1f;font-size:13px;margin-bottom:4px;">貼り分け</div>
+        <div style="display:grid;grid-template-columns:auto 1fr;gap:8px 12px;align-items:center;font-size:14px;">`;
+    // 左：参考画像（横並び、外壁メインと同じ色チップサイズ）
     if(noteImgs.length){
-      // 参考画像：外壁メインの色チップサイズに合わせて小さく横並び（高さ約12mm）
-      h += `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:${hasNote?'3mm':'0'};">`;
+      h += `<div style="display:flex;gap:4px;flex-wrap:wrap;">`;
       noteImgs.forEach(img=>{
-        h += `<div style="width:24mm;height:12mm;border:1px solid #00000022;border-radius:3px;background:${swStyle(img,'cover','#fff')};"></div>`;
+        h += `<div style="width:70px;height:42px;border-radius:3px;border:1px solid #00000022;background:${swStyle(img,'cover','#fff')};"></div>`;
       });
       h += `</div>`;
+    } else {
+      h += `<div></div>`; // 画像が無い時は左セル空
     }
-    h += `</div>`;
+    // 右：商品名・メモ本文（14px 太字／外壁メインと同じ強調レベル）
+    if(hasNote){
+      h += `<div style="font-weight:bold;white-space:pre-wrap;line-height:1.55;">${esc(m.note)}</div>`;
+    } else {
+      h += `<div></div>`;
+    }
+    h += `</div></div>`;
   }
 
   // 貼り分け外壁（追加分）
