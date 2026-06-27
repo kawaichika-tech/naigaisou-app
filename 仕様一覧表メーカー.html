@@ -3663,11 +3663,11 @@ function renderHarimakeSheet(){
     h += `<div style="margin-top:4mm;border:1px solid #888;border-radius:4px;padding:6px 10px;background:#fffdf6;">
         <div style="font-weight:bold;color:#a26a1f;font-size:13px;margin-bottom:4px;">貼り分け</div>
         <div style="display:grid;grid-template-columns:auto 1fr;gap:8px 12px;align-items:center;font-size:14px;">`;
-    // 左：参考画像（横並び、外壁メインと同じ色チップサイズ）
+    // 左：参考画像（真四角・画像全体が見える contain 表示）
     if(noteImgs.length){
       h += `<div style="display:flex;gap:4px;flex-wrap:wrap;">`;
       noteImgs.forEach(img=>{
-        h += `<div style="width:70px;height:42px;border-radius:3px;border:1px solid #00000022;background:${swStyle(img,'cover','#fff')};"></div>`;
+        h += `<div style="width:50px;height:50px;border-radius:3px;border:1px solid #00000022;background:${swStyle(img,'contain','#fff')};"></div>`;
       });
       h += `</div>`;
     } else {
