@@ -3319,10 +3319,12 @@ const HARIMAKE_MASTER = {
     {label:"1階", img:""},
     {label:"2階", img:""}
   ],
-  // 立面図（階別画像）
+  // 立面図（方角別画像）：北・東・南・西の4方向
   elevations:[
-    {label:"1階", img:""},
-    {label:"2階", img:""}
+    {label:"北", img:""},
+    {label:"東", img:""},
+    {label:"南", img:""},
+    {label:"西", img:""}
   ],
   // 全体の貼り分けメモ
   note:""
@@ -3411,10 +3413,10 @@ function renderHarimakeEditor(){
      <datalist id="hkSubWallHb">${variants.map(v=>`<option value="${esc(v.values['品番']||'')}">`).join('')}</datalist>
    </div></details>`;
 
-  // 平面図セクション
-  h += renderImgRow('plans', '🗺️ 平面図', m.plans);
-  // 立面図セクション
-  h += renderImgRow('elevations', '🏢 立面図', m.elevations);
+  // 平面図セクション（階別：1階・2階…）
+  h += renderImgRow('plans', '🗺️ 平面図', m.plans, '階');
+  // 立面図セクション（方角別：北・東・南・西）
+  h += renderImgRow('elevations', '🏢 立面図', m.elevations, '方角');
 
   // 共通の貼り分けメモ
   h += `<details class="card" open><summary><span class="area" style="background:#6b7a8c">メモ</span>貼り分けメモ（全体共通）</summary><div class="body">
@@ -3424,14 +3426,16 @@ function renderHarimakeEditor(){
   document.getElementById('editor').innerHTML = h;
 }
 /* 平面図／立面図セクションのレンダリング（共通） */
-function renderImgRow(key, title, arr){
+function renderImgRow(key, title, arr, unitLabel){
+  const unit = unitLabel || '項目';  // 例：'階'（平面図） or '方角'（立面図）
+  const placeholder = (unit==='方角') ? '例：北／東／南／西' : '例：1階／2階';
   let h = `<details class="card" open><summary><span class="area" style="background:#3b4a5c">図面</span>${title}（${arr.length}件）</summary><div class="body">
-     <div class="hint">各階の図面画像を取り込んでください。＋で階を追加できます。</div>`;
+     <div class="hint">各${esc(unit)}の図面画像を取り込んでください。＋で${esc(unit)}を追加できます。</div>`;
   arr.forEach((it,i)=>{
     h += `<div style="margin-top:8px;padding:8px;border:1px solid #ddd;border-radius:4px;background:#fff;">
        <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;">
          <label style="color:#555;font-size:12px;width:50px;">ラベル</label>
-         <input value="${esc(it.label||'')}" oninput="hkSetImgItem('${key}',${i},'label',this.value)" placeholder="例：1階／2階" style="max-width:180px;padding:4px 6px;font-size:12px;border:1px solid #ccc;border-radius:3px;">
+         <input value="${esc(it.label||'')}" oninput="hkSetImgItem('${key}',${i},'label',this.value)" placeholder="${esc(placeholder)}" style="max-width:180px;padding:4px 6px;font-size:12px;border:1px solid #ccc;border-radius:3px;">
          <button class="btn-sm btn-del" style="margin-left:auto;" onclick="hkDelImgItem('${key}',${i})">削除</button>
        </div>
        ${it.img ? `<div style="width:100%;max-width:520px;height:140px;background:${swStyle(it.img,'contain','#fff')};border:1px solid #ccc;border-radius:3px;margin-bottom:6px;"></div>` : '<div class="hint" style="margin:0 0 6px;">未取り込み</div>'}
@@ -3441,7 +3445,7 @@ function renderImgRow(key, title, arr){
        </div>
      </div>`;
   });
-  h += `<div style="margin-top:8px;"><button class="btn-sm" onclick="hkAddImgItem('${key}')">＋ 階を追加</button></div>
+  h += `<div style="margin-top:8px;"><button class="btn-sm" onclick="hkAddImgItem('${key}')">＋ ${esc(unit)}を追加</button></div>
    </div></details>`;
   return h;
 }
@@ -3467,8 +3471,16 @@ function hkSetSubWall(i,k,v){
 }
 function hkAddImgItem(key){
   const arr = HK[key];
-  const nextNo = arr.length + 1;
-  arr.push({label:`${nextNo}階`, img:''});
+  let label = '';
+  if(key==='elevations'){
+    // 立面図：北→東→南→西 の順で未使用のラベルを次の候補に
+    const directions = ['北','東','南','西','北東','南東','南西','北西'];
+    label = directions.find(d=>!arr.some(x=>x.label===d)) || '';
+  } else {
+    // 平面図：次の階番号
+    label = `${arr.length + 1}階`;
+  }
+  arr.push({label, img:''});
   renderEditor(); sync();
 }
 function hkDelImgItem(key,i){
