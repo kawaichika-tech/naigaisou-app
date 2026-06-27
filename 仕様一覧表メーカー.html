@@ -1245,14 +1245,29 @@ function showTab(t){
    ============================================================ */
 const TATEGU_MASTER = {
   meta:{ title:"建具・床図面", maker:"ウッドテック DOORETUS Bタイプ", plan_image:"", plan_images:{"1階":"","2階":""}, spec_images:[] },
-  common:[
+  // 建具仕様（共通）— 1F／2F で個別に設定可能（ちかさん依頼により分割）
+  common_1f:[
     {k:"ドア色", v:"GE（グレージュ）", note:""},
     {k:"ストッパー", v:"ブラック色"},
     {k:"キャッチャー", v:"シルバー色"},
     {k:"枠色", v:"GE（グレージュ）"},
     {k:"ハンドル", v:"ブラック"}
   ],
-  floor:[
+  common_2f:[
+    {k:"ドア色", v:"GE（グレージュ）", note:""},
+    {k:"ストッパー", v:"ブラック色"},
+    {k:"キャッチャー", v:"シルバー色"},
+    {k:"枠色", v:"GE（グレージュ）"},
+    {k:"ハンドル", v:"ブラック"}
+  ],
+  // 床仕様 — 1F／2F で個別に
+  floor_1f:[
+    {k:"フローリング", v:"ウッドワン　12mm　アイボリー　FKK224D-J1", pattern:"", img:"床/FKK224D-J1.jpg"},
+    {k:"畳", type:"", color:"", count:"", img:""},
+    {k:"床下点検口", v:"アイボリー"},
+    {k:"床下エアコン", v:""}
+  ],
+  floor_2f:[
     {k:"フローリング", v:"ウッドワン　12mm　アイボリー　FKK224D-J1", pattern:"", img:"床/FKK224D-J1.jpg"},
     {k:"畳", type:"", color:"", count:"", img:""},
     {k:"床下点検口", v:"アイボリー"},
@@ -1766,8 +1781,15 @@ function normalizeTG(t){
     t.meta.plan_images = {"1階":"", "2階":""};
     if(t.meta.plan_image) t.meta.plan_images["1階"]=t.meta.plan_image;
   }
-  t.common = migrateCommon(Array.isArray(t.common)?t.common:base.common);
-  t.floor = migrateFloor(Array.isArray(t.floor)?t.floor:base.floor);
+  // 建具仕様（共通）・床仕様：1F/2F分割対応（旧データの common / floor から自動移行）
+  // 旧フォーマット：t.common / t.floor → 両方の階に同じ内容をコピー
+  const oldCommon = Array.isArray(t.common) ? t.common : null;
+  const oldFloor  = Array.isArray(t.floor)  ? t.floor  : null;
+  t.common_1f = migrateCommon(Array.isArray(t.common_1f) ? t.common_1f : (oldCommon || base.common_1f));
+  t.common_2f = migrateCommon(Array.isArray(t.common_2f) ? t.common_2f : (oldCommon || base.common_2f));
+  t.floor_1f  = migrateFloor(Array.isArray(t.floor_1f)  ? t.floor_1f  : (oldFloor  || base.floor_1f));
+  t.floor_2f  = migrateFloor(Array.isArray(t.floor_2f)  ? t.floor_2f  : (oldFloor  || base.floor_2f));
+  delete t.common; delete t.floor;  // 旧キーは保存しない
   t.doors = migrateDoors(Array.isArray(t.doors)?t.doors:base.doors);
   return t;
 }
@@ -1857,10 +1879,10 @@ function renderTateguEditor(){
     return `<select onchange="${handler}"><option value=""${!val?' selected':''}>（未選択）</option>`
       +o.map(x=>`<option value="${esc(x)}"${x===val?' selected':''}>${esc(x)}</option>`).join('')+`</select>`; };
   /* 床材の画像欄（📷取り込み＝データ埋め込み／ドア色連動の自動セットにも対応） */
-  const tgFloorImgField=(i,img,label)=>`<div class="field"><label>${esc(label)}</label>
+  const tgFloorImgField=(fk,i,img,label)=>`<div class="field"><label>${esc(label)}</label>
     <div style="flex:1;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-      <label class="btn-sm" style="cursor:pointer;">📷 画像を選択<input type="file" accept="image/*" style="display:none" onchange="tgFloorImgPick(${i},this)"></label>
-      ${img?`<button class="btn-sm btn-del" onclick="tgFloorImg(${i},'')">消す</button>`:''}
+      <label class="btn-sm" style="cursor:pointer;">📷 画像を選択<input type="file" accept="image/*" style="display:none" onchange="tgFloorImgPick('${fk}',${i},this)"></label>
+      ${img?`<button class="btn-sm btn-del" onclick="tgFloorImg('${fk}',${i},'')">消す</button>`:''}
       ${img?`<div class="dthumb" style="width:48px;height:48px;background:${swStyle(img,'cover')}"></div>`
            :`<span class="hint" style="margin:0">（未設定）</span>`}
     </div></div>`;
@@ -1907,44 +1929,50 @@ function renderTateguEditor(){
        </div>`;
   });
   h+=`<div class="addrow"><button class="btn-sm" onclick="tgAddSpec()">＋ 画像の欄を追加</button></div></div></details>`;
-  // 建具仕様（共通）
-  h+=`<details class="card" open><summary><span class="area" style="background:#3b4a5c">建具</span>建具仕様（共通）</summary><div class="body">`;
-  m.common.forEach((c,i)=>{ const opts=TG_COMMON_OPTS[c.k];
-    const ctrl = opts ? tgSel(opts,c.v,`tgCommon(${i},this.value)`)
-                      : `<input value="${esc(c.v)}" oninput="tgCommon(${i},this.value)">`;
-    h+=`<div class="field"><label>${esc(c.k)}</label>${ctrl}</div>`;
-    if(TG_COMMON_NOTE.includes(c.k)){
-      h+=`<div class="field"><label>${esc(c.k)}：一部変更（任意）</label><input value="${esc(c.note||'')}" oninput="tgCommonNote(${i},this.value)" placeholder="例：オフホワイト"></div>`;
-    } });
-  h+=`</div></details>`;
-  // 床仕様（フローリング／畳／床下点検口／床下エアコン）
-  h+=`<details class="card"><summary><span class="area" style="background:#7a5a2a">床</span>床仕様</summary><div class="body">`;
-  m.floor.forEach((c,i)=>{
-    if(c.k==='畳'){
-      h+=`<div class="field"><label>畳のタイプ</label>${tgSel(TG_TATAMI_TYPE,c.type||'',`tgTatami(${i},'type',this.value)`)}</div>`;
-      h+=`<div class="field"><label>畳色</label>${tgSel(TG_TATAMI_COLOR,c.color||'',`tgTatami(${i},'color',this.value)`)}</div>`;
-      h+=`<div class="field"><label>畳 枚数</label><input value="${esc(c.count||'')}" oninput="tgTatami(${i},'count',this.value)" placeholder="例：6枚"></div>`;
-      h+=tgFloorImgField(i,c.img,'畳 画像');
-      if(c.type) h+=`<div class="hint" style="margin:0 0 6px">畳タイプを選んだので、下に和室の付随仕様（敷居・畳よせ・雑巾摺）を自動追加しました。不要なら畳タイプを「（未選択）」に戻すと消えます。</div>`;
-      return;
-    }
-    if(WASHITSU_KEYS.includes(c.k)){
-      h+=`<div class="field"><label>${esc(c.k)}</label><input value="${esc(c.v)}" oninput="tgFloor(${i},this.value)"></div>`;
-      h+=`<div class="field"><label>${esc(c.k)}：仕様・注記</label><input value="${esc(c.spec||'')}" oninput="tgFloorSpec(${i},this.value)"></div>`;
-      return;
-    }
-    if(c.k==='床下エアコン'){
-      h+=`<div class="field"><label>床下エアコン</label>${tgSel(TG_FLOOR_AC,c.v||'',`tgFloorAC(${i},this.value)`)}</div>`;
-      if(c.v==='斜線') h+=`<div class="field"><label>表示プレビュー</label><div style="flex:1;display:flex;align-items:center;gap:8px;">${SLASH_SVG}<span class="hint" style="margin:0">印刷ではこの斜め線が入ります</span></div></div>`;
-      return;
-    }
-    h+=`<div class="field"><label>${esc(c.k)}</label><input value="${esc(c.v)}" oninput="tgFloor(${i},this.value)"></div>`;
-    if(c.k==='フローリング'){
-      h+=`<div class="field"><label>フローリング 割付（2P／3P）</label>${tgSel(['2P','3P'],c.pattern||'',`tgFloorPattern(${i},this.value)`)}</div>`;
-      h+=tgFloorImgField(i,c.img,'フローリング 画像');
-    }
+  // 建具仕様＋床仕様：1F／2F の2セットを順番に描画
+  ['1f','2f'].forEach(fk=>{
+    const label = fk==='1f' ? '1F' : '2F';
+    const commonArr = m['common_'+fk] || [];
+    const floorArr  = m['floor_'+fk]  || [];
+    // 建具仕様（{fk}）
+    h+=`<details class="card" open><summary><span class="area" style="background:#3b4a5c">建具</span>建具仕様（${label}）</summary><div class="body">`;
+    commonArr.forEach((c,i)=>{ const opts=TG_COMMON_OPTS[c.k];
+      const ctrl = opts ? tgSel(opts,c.v,`tgCommon('${fk}',${i},this.value)`)
+                        : `<input value="${esc(c.v)}" oninput="tgCommon('${fk}',${i},this.value)">`;
+      h+=`<div class="field"><label>${esc(c.k)}</label>${ctrl}</div>`;
+      if(TG_COMMON_NOTE.includes(c.k)){
+        h+=`<div class="field"><label>${esc(c.k)}：一部変更（任意）</label><input value="${esc(c.note||'')}" oninput="tgCommonNote('${fk}',${i},this.value)" placeholder="例：オフホワイト"></div>`;
+      } });
+    h+=`</div></details>`;
+    // 床仕様（{fk}）
+    h+=`<details class="card"><summary><span class="area" style="background:#7a5a2a">床</span>床仕様（${label}）</summary><div class="body">`;
+    floorArr.forEach((c,i)=>{
+      if(c.k==='畳'){
+        h+=`<div class="field"><label>畳のタイプ</label>${tgSel(TG_TATAMI_TYPE,c.type||'',`tgTatami('${fk}',${i},'type',this.value)`)}</div>`;
+        h+=`<div class="field"><label>畳色</label>${tgSel(TG_TATAMI_COLOR,c.color||'',`tgTatami('${fk}',${i},'color',this.value)`)}</div>`;
+        h+=`<div class="field"><label>畳 枚数</label><input value="${esc(c.count||'')}" oninput="tgTatami('${fk}',${i},'count',this.value)" placeholder="例：6枚"></div>`;
+        h+=tgFloorImgField(fk,i,c.img,'畳 画像');
+        if(c.type) h+=`<div class="hint" style="margin:0 0 6px">畳タイプを選んだので、下に和室の付随仕様（敷居・畳よせ・雑巾摺）を自動追加しました。不要なら畳タイプを「（未選択）」に戻すと消えます。</div>`;
+        return;
+      }
+      if(WASHITSU_KEYS.includes(c.k)){
+        h+=`<div class="field"><label>${esc(c.k)}</label><input value="${esc(c.v)}" oninput="tgFloor('${fk}',${i},this.value)"></div>`;
+        h+=`<div class="field"><label>${esc(c.k)}：仕様・注記</label><input value="${esc(c.spec||'')}" oninput="tgFloorSpec('${fk}',${i},this.value)"></div>`;
+        return;
+      }
+      if(c.k==='床下エアコン'){
+        h+=`<div class="field"><label>床下エアコン</label>${tgSel(TG_FLOOR_AC,c.v||'',`tgFloorAC('${fk}',${i},this.value)`)}</div>`;
+        if(c.v==='斜線') h+=`<div class="field"><label>表示プレビュー</label><div style="flex:1;display:flex;align-items:center;gap:8px;">${SLASH_SVG}<span class="hint" style="margin:0">印刷ではこの斜め線が入ります</span></div></div>`;
+        return;
+      }
+      h+=`<div class="field"><label>${esc(c.k)}</label><input value="${esc(c.v)}" oninput="tgFloor('${fk}',${i},this.value)"></div>`;
+      if(c.k==='フローリング'){
+        h+=`<div class="field"><label>フローリング 割付（2P／3P）</label>${tgSel(['2P','3P'],c.pattern||'',`tgFloorPattern('${fk}',${i},this.value)`)}</div>`;
+        h+=tgFloorImgField(fk,i,c.img,'フローリング 画像');
+      }
+    });
+    h+=`</div></details>`;
   });
-  h+=`</div></details>`;
   // 建具リスト
   h+=`<details class="card" open><summary><span class="area" style="background:#3b4a5c">建具</span>建具リスト（${m.doors.length}件）</summary><div class="body">`;
   m.doors.forEach((d,i)=>{
@@ -1990,37 +2018,53 @@ function renderTateguEditor(){
 }
 function tgMeta(k,v){ TG.meta[k]=v; sync(); }
 /* ドア色を起点に共通項目（ストッパー等）＋フローリング（文字・画像）を一括セット */
-function applyDoorColorPreset(color){
-  const di=TG.common.findIndex(c=>c.k==='ドア色');
-  if(di>=0) TG.common[di].v=color;
+/* applyDoorColorPreset：指定階のドア色＋連動項目をプリセット適用。
+   fk='1f' or '2f' or 'all'（all なら両方の階に適用 = テイスト連動時など） */
+function applyDoorColorPreset(fkOrColor, colorMaybe){
+  // 後方互換：第1引数だけで色を渡された場合は両方の階に適用
+  let fk, color;
+  if(arguments.length===1){ fk='all'; color=fkOrColor; }
+  else { fk=fkOrColor; color=colorMaybe; }
+  const floorsToApply = (fk==='all') ? ['1f','2f'] : [fk];
+  floorsToApply.forEach(f=>{ _applyDoorColorPresetFloor(f, color); });
+}
+function _applyDoorColorPresetFloor(fk, color){
+  const common = TG['common_'+fk];
+  const floor  = TG['floor_'+fk];
+  if(!common || !floor) return;
+  const di=common.findIndex(c=>c.k==='ドア色');
+  if(di>=0) common[di].v=color;
   const p=DOOR_COLOR_PRESET[color];
   if(p){
-    TG.common.forEach(c=>{ if(p[c.k]!=null) c.v=p[c.k]; });
-    const fi=TG.floor.findIndex(c=>c.k==='フローリング');
-    if(fi>=0 && p['フローリング']!=null) TG.floor[fi].v=p['フローリング'];
-    if(fi>=0 && FLOOR_IMG[color]) TG.floor[fi].img=FLOOR_IMG[color];
+    common.forEach(c=>{ if(p[c.k]!=null) c.v=p[c.k]; });
+    const fi=floor.findIndex(c=>c.k==='フローリング');
+    if(fi>=0 && p['フローリング']!=null) floor[fi].v=p['フローリング'];
+    if(fi>=0 && FLOOR_IMG[color]) floor[fi].img=FLOOR_IMG[color];
   }
 }
-function tgCommon(i,v){
-  TG.common[i].v=v;
-  if(TG.common[i].k==='ドア色' && DOOR_COLOR_PRESET[v]){
-    applyDoorColorPreset(v);
+/* 共通仕様＋床仕様 各ハンドラ：fk='1f' or '2f' を第1引数で受け取り対応する階を操作 */
+function tgCommon(fk,i,v){
+  const arr = TG['common_'+fk]; if(!arr) return;
+  arr[i].v=v;
+  if(arr[i].k==='ドア色' && DOOR_COLOR_PRESET[v]){
+    applyDoorColorPreset(fk, v);  // 当該階のみプリセット適用（他階は触らない）
     if(COLOR_TASTE[v]) DATA.project.taste=COLOR_TASTE[v]; // 仕様一覧表のテイスト表示も同期
     renderEditor();
   }
   sync();
 }
-function tgCommonNote(i,v){ TG.common[i].note=v; sync(); }
-function tgFloor(i,v){ TG.floor[i].v=v; sync(); }
-function tgFloorPattern(i,v){ TG.floor[i].pattern=v; sync(); }
-function tgFloorSpec(i,v){ TG.floor[i].spec=v; sync(); }
-function tgFloorAC(i,v){ TG.floor[i].v=v; renderEditor(); sync(); } // 斜線プレビュー反映のため再描画
-function tgFloorImg(i,v){ TG.floor[i].img=v; renderEditor(); sync(); }
-function tgFloorImgPick(i,input){ const f=input.files[0]; if(!f) return; fileToDataURL(f,1400,durl=>{ TG.floor[i].img=durl; renderEditor(); sync(); }); input.value=''; }
-function tgTatami(i,k,v){
-  TG.floor[i][k]=v;
-  if(k==='type'){ TG.floor=migrateFloor(TG.floor); renderEditor(); } // 畳タイプ有無で和室行を自動追加/削除
-  if(k==='color'){ TG.floor[i].img = v ? `畳/${v}.jpg` : ''; renderEditor(); } // 畳色ごとに「畳」フォルダーの画像を自動参照
+function tgCommonNote(fk,i,v){ const arr=TG['common_'+fk]; if(arr) { arr[i].note=v; sync(); } }
+function tgFloor(fk,i,v){ const arr=TG['floor_'+fk]; if(arr) { arr[i].v=v; sync(); } }
+function tgFloorPattern(fk,i,v){ const arr=TG['floor_'+fk]; if(arr) { arr[i].pattern=v; sync(); } }
+function tgFloorSpec(fk,i,v){ const arr=TG['floor_'+fk]; if(arr) { arr[i].spec=v; sync(); } }
+function tgFloorAC(fk,i,v){ const arr=TG['floor_'+fk]; if(arr) { arr[i].v=v; renderEditor(); sync(); } } // 斜線プレビュー反映のため再描画
+function tgFloorImg(fk,i,v){ const arr=TG['floor_'+fk]; if(arr) { arr[i].img=v; renderEditor(); sync(); } }
+function tgFloorImgPick(fk,i,input){ const arr=TG['floor_'+fk]; if(!arr) return; const f=input.files[0]; if(!f) return; fileToDataURL(f,1400,durl=>{ arr[i].img=durl; renderEditor(); sync(); }); input.value=''; }
+function tgTatami(fk,i,k,v){
+  const arr=TG['floor_'+fk]; if(!arr) return;
+  arr[i][k]=v;
+  if(k==='type'){ TG['floor_'+fk]=migrateFloor(arr); renderEditor(); } // 畳タイプ有無で和室行を自動追加/削除
+  if(k==='color'){ arr[i].img = v ? `畳/${v}.jpg` : ''; renderEditor(); } // 畳色ごとに「畳」フォルダーの画像を自動参照
   sync();
 }
 function tgDoorBool(i,k,v){ TG.doors[i][k]=!!v; renderEditor(); sync(); }
@@ -2284,19 +2328,29 @@ function renderTateguSheet(){
   // 建具仕様（共通）と床仕様のHTMLは階ごとページ内で再利用するため関数化
   const kvrow=(k,v)=>`<div class="kv"><div class="k">${esc(k)}</div><div class="v">${v}</div></div>`;
   const fImg=(img)=> img?`<div style="display:inline-block;width:48px;height:48px;vertical-align:middle;margin-left:8px;border:1px solid #ccc;border-radius:4px;background:${swStyle(img,'cover')}"></div>`:'';
-  const commonHtml = () => {
-    let s=`<div class="sec"><div class="sec-h">建具仕様（共通）</div><div class="sec-b">`;
-    m.common.forEach(c=>{ if(c.v==='' && !c.note) return; let v=esc(c.v);
+  /* 階名（「1階」「2階」など）から floor key（'1f' or '2f'）に変換 */
+  const floorKey = (floorName) => {
+    if(!floorName) return '1f';
+    if(/^2/.test(floorName)) return '2f';
+    return '1f';  // 1階・3階以降などは1F扱い（必要なら拡張）
+  };
+  const commonHtml = (floorName) => {
+    const fk = floorKey(floorName);
+    const commonArr = m['common_'+fk] || [];
+    let s=`<div class="sec"><div class="sec-h">建具仕様（${esc(floorName||'共通')}）</div><div class="sec-b">`;
+    commonArr.forEach(c=>{ if(c.v==='' && !c.note) return; let v=esc(c.v);
       if(c.note) v+=`　※一部変更：${esc(c.note)}`;
       s+=`<div class="kv"><div class="k">${esc(c.k)}</div><div class="v">${v}</div></div>`; });
     s+=`</div></div>`;
     return s;
   };
   const floorSpecHtml = (floorName) => {
+    const fk = floorKey(floorName);
+    const floorArr = m['floor_'+fk] || [];
     // 床下点検口・床下エアコンは1階のみ印刷に出す（2階以上では非表示）
     const isUpper = floorName && floorName!=='1階';
-    let s=`<div class="sec"><div class="sec-h">床仕様</div><div class="sec-b">`;
-    m.floor.forEach(c=>{
+    let s=`<div class="sec"><div class="sec-h">床仕様（${esc(floorName||'')}）</div><div class="sec-b">`;
+    floorArr.forEach(c=>{
       if(isUpper && (c.k==='床下点検口' || c.k==='床下エアコン')) return;
       if(c.k==='畳'){
         const t=[c.type,c.color,c.count].filter(Boolean).map(esc).join('　');
@@ -2335,7 +2389,7 @@ function renderTateguSheet(){
           <div class="ph"><span>${esc(fl)}　間取り図</span></div>
           <div class="pbody"><img src="${imgSrc(planImg)}" alt="${esc(fl)}間取り図"></div>
         </div>` : ''}
-        ${commonHtml()}
+        ${commonHtml(fl)}
         ${floorSpecHtml(fl)}
         ${isLast?signHtml():''}
       </div>
