@@ -274,8 +274,10 @@
     #toolbar,#editor{display:none!important;}
     body{background:#fff;}
     #previewWrap{padding:0;background:#fff;overflow:visible;}
-    #sheet{width:auto;box-shadow:none;margin:0;padding:6mm 8mm;}
-    @page{size:A3 landscape;margin:8mm;}
+    /* ページ余白を最小限に。物理印刷マージンの安全圏（多くのプリンタで 5mm）を確保しつつ
+       sheet 側 padding も 3mm 4mm に圧縮して、A3 横の用紙幅をしっかり使う。 */
+    #sheet{width:auto;box-shadow:none;margin:0;padding:3mm 4mm;}
+    @page{size:A3 landscape;margin:5mm;}
     /* === 仕様一覧表（spec モード）：A3横で読みやすい2列レイアウト === */
     /* 現場の人が見ながら作業するため、フォント読みやすさ優先 */
     /* 1枚目=外部、2枚目=内部 で綺麗に分割。各area-block 内で2列グリッド */
