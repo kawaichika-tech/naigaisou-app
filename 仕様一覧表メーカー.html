@@ -89,12 +89,12 @@
   .tg-floor-page + .tg-floor-page{page-break-before:always;margin-top:0;}
   /* 画面プレビューでは「全建具が一覧で見やすい」レイアウトに切替（印刷は上のグリッドを維持） */
   @media screen {
-    #sheet.tg-mode .tg-floor-page{display:block;margin-top:18px;}
-    #sheet.tg-mode .tg-floor-page + .tg-floor-page{margin-top:22px;border-top:2px dashed #aaa;padding-top:18px;}
-    #sheet.tg-mode .tg-floor-left{display:grid;grid-template-columns:340px 1fr 1fr;gap:10px;align-items:start;margin-bottom:10px;}
-    #sheet.tg-mode .tg-floor-plan{height:auto;min-height:220px;}
-    #sheet.tg-mode .tg-floor-col{margin-top:6px;}
-    #sheet.tg-mode .tg-cards{grid-template-columns:repeat(auto-fill, minmax(min(340px, 100%), 1fr));}
+    #sheet.tategu-mode .tg-floor-page{display:block;margin-top:18px;}
+    #sheet.tategu-mode .tg-floor-page + .tg-floor-page{margin-top:22px;border-top:2px dashed #aaa;padding-top:18px;}
+    #sheet.tategu-mode .tg-floor-left{display:grid;grid-template-columns:340px 1fr 1fr;gap:10px;align-items:start;margin-bottom:10px;}
+    #sheet.tategu-mode .tg-floor-plan{height:auto;min-height:220px;}
+    #sheet.tategu-mode .tg-floor-col{margin-top:6px;}
+    #sheet.tategu-mode .tg-cards{grid-template-columns:repeat(auto-fill, minmax(min(340px, 100%), 1fr));}
   }
   .tg-floor-left{display:flex;flex-direction:column;gap:5mm;}
   .tg-floor-plan{display:flex;flex-direction:column;border:1px solid #888;border-radius:4px;overflow:hidden;background:#fff;height:130mm;}
@@ -136,13 +136,13 @@
   .kr-card-style{padding:3px 6px;text-align:center;font-size:11px;font-weight:bold;color:#b0734a;background:#fff7f0;border-bottom:1px solid #f0e0d0;}
   .kr-card-img{height:90px;background-color:#fff;border-bottom:1px solid #ddd;}
   .kr-card-foot{padding:4px 6px;text-align:center;font-size:11px;font-weight:bold;color:#222;}
-  /* 画面プレビュー：tg-modeで階ページを縦積み・カード幅を枠追従に */
+  /* 画面プレビュー：kurosu-modeで階ページを縦積み・カード幅を枠追従に */
   @media screen {
-    #sheet.tg-mode .kr-floor-page{display:block;margin-top:18px;}
-    #sheet.tg-mode .kr-floor-page + .kr-floor-page{margin-top:22px;border-top:2px dashed #aaa;padding-top:18px;}
-    #sheet.tg-mode .kr-floor-left{display:grid;grid-template-columns:340px 1fr;gap:10px;align-items:start;margin-bottom:10px;}
-    #sheet.tg-mode .kr-floor-plan{height:auto;min-height:220px;}
-    #sheet.tg-mode .kr-cards{grid-template-columns:repeat(auto-fill, minmax(min(200px, 100%), 1fr));}
+    #sheet.kurosu-mode .kr-floor-page{display:block;margin-top:18px;}
+    #sheet.kurosu-mode .kr-floor-page + .kr-floor-page{margin-top:22px;border-top:2px dashed #aaa;padding-top:18px;}
+    #sheet.kurosu-mode .kr-floor-left{display:grid;grid-template-columns:340px 1fr;gap:10px;align-items:start;margin-bottom:10px;}
+    #sheet.kurosu-mode .kr-floor-plan{height:auto;min-height:220px;}
+    #sheet.kurosu-mode .kr-cards{grid-template-columns:repeat(auto-fill, minmax(min(200px, 100%), 1fr));}
   }
 
   /* ===== 照明図面（商品カタログ式） ===== */
@@ -171,7 +171,7 @@
   table.lt-sum-table td.total{background:#fff7e0;font-weight:bold;}
   /* 画面プレビューではカード幅を枠追従に（商品画像内の品番が読める380px～） */
   @media screen {
-    #sheet.tg-mode .lt-cards{grid-template-columns:repeat(auto-fill, minmax(min(380px, 100%), 1fr));}
+    #sheet.lighting-mode .lt-cards{grid-template-columns:repeat(auto-fill, minmax(min(380px, 100%), 1fr));}
   }
 
   .wrap{display:flex;gap:0;}
@@ -219,8 +219,12 @@
 
   /* ===== プレビュー（印刷シート） ===== */
   #sheet{background:#fff;width:980px;margin:0 auto;padding:22px 26px;box-shadow:0 2px 10px #0003;}
-  /* 建具表モードのプレビューはプレビュー枠に追従（max 1400px）。印刷時は @page で実寸 */
-  #sheet.tg-mode{width:auto;max-width:1400px;padding:18px 22px;}
+  /* 仕様一覧表以外のモードはプレビュー枠に追従（max 1400px）。印刷時は @page で実寸 */
+  #sheet.tategu-mode,
+  #sheet.kurosu-mode,
+  #sheet.lighting-mode,
+  #sheet.wiring-mode,
+  #sheet.harimake-mode{width:auto;max-width:1400px;padding:18px 22px;}
   .sheet-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #2f3e2f;padding-bottom:8px;margin-bottom:10px;}
   .sheet-head .title{font-size:22px;font-weight:bold;letter-spacing:2px;}
   .sheet-head .proj{font-size:14px;font-weight:bold;margin-top:3px;}
@@ -275,70 +279,70 @@
     /* === 仕様一覧表（spec モード）：A3横で読みやすい2列レイアウト === */
     /* 現場の人が見ながら作業するため、フォント読みやすさ優先 */
     /* 1枚目=外部、2枚目=内部 で綺麗に分割。各area-block 内で2列グリッド */
-    #sheet:not(.tg-mode){display:block;}
+    #sheet.spec-mode{display:block;}
     /* area-block 全体に break-inside:avoid を付けるとブラウザが『丸ごと次ページに送ろう』
        として上に大きな空白ができてしまうので外す。代わりに各 .sec（セクションカード）
        単位で分割を避けるだけにする。 */
-    #sheet:not(.tg-mode) .sec{break-inside:avoid;page-break-inside:avoid;}
-    #sheet:not(.tg-mode) .sec-grid{display:grid;grid-template-columns:1fr 1fr;gap:5mm 7mm;margin-top:1mm;}
-    #sheet:not(.tg-mode) .sheet-head{margin-bottom:3mm;}
-    #sheet:not(.tg-mode) .sheet-head .title{font-size:22px;letter-spacing:1.5px;}
-    #sheet:not(.tg-mode) .sheet-head .proj{font-size:14px;}
-    #sheet:not(.tg-mode) .sheet-head .meta{font-size:11px;line-height:1.5;}
-    #sheet:not(.tg-mode) .areaTitle{margin:4mm 0 2mm;padding:3px 10px;font-size:14px;}
-    #sheet:not(.tg-mode) .sec{margin-bottom:3mm;}
-    #sheet:not(.tg-mode) .sec-h{padding:4px 10px;font-size:13px;}
-    #sheet:not(.tg-mode) .sec-b{padding:4mm 4mm;}
-    #sheet:not(.tg-mode) .kv{font-size:11.5px;padding:2.5px 0;}
-    #sheet:not(.tg-mode) .kv .k{width:110px;}
-    #sheet:not(.tg-mode) .decided-box{padding:5px 8px;gap:8px;margin-top:4px;border-radius:4px;}
-    #sheet:not(.tg-mode) .decided-box .dsw{width:64px;height:50px;}
-    #sheet:not(.tg-mode) .decided-box .label{font-size:9.5px;}
-    #sheet:not(.tg-mode) .decided-box .nm{font-size:14px;}
-    #sheet:not(.tg-mode) .decided-box .det{font-size:11px;margin-top:2px;}
-    #sheet:not(.tg-mode) .undecided{font-size:11.5px;margin-top:4px;}
-    #sheet:not(.tg-mode) .sign{margin-top:5mm;padding-top:4mm;}
-    #sheet:not(.tg-mode) .sign .box{min-height:18mm;padding:4px 8px;font-size:11px;}
-    /* === 建具表（tg-mode）：A3 横1ページに6カード（3列×2行）が収まるよう縮小 === */
+    #sheet.spec-mode .sec{break-inside:avoid;page-break-inside:avoid;}
+    #sheet.spec-mode .sec-grid{display:grid;grid-template-columns:1fr 1fr;gap:5mm 7mm;margin-top:1mm;}
+    #sheet.spec-mode .sheet-head{margin-bottom:3mm;}
+    #sheet.spec-mode .sheet-head .title{font-size:22px;letter-spacing:1.5px;}
+    #sheet.spec-mode .sheet-head .proj{font-size:14px;}
+    #sheet.spec-mode .sheet-head .meta{font-size:11px;line-height:1.5;}
+    #sheet.spec-mode .areaTitle{margin:4mm 0 2mm;padding:3px 10px;font-size:14px;}
+    #sheet.spec-mode .sec{margin-bottom:3mm;}
+    #sheet.spec-mode .sec-h{padding:4px 10px;font-size:13px;}
+    #sheet.spec-mode .sec-b{padding:4mm 4mm;}
+    #sheet.spec-mode .kv{font-size:11.5px;padding:2.5px 0;}
+    #sheet.spec-mode .kv .k{width:110px;}
+    #sheet.spec-mode .decided-box{padding:5px 8px;gap:8px;margin-top:4px;border-radius:4px;}
+    #sheet.spec-mode .decided-box .dsw{width:64px;height:50px;}
+    #sheet.spec-mode .decided-box .label{font-size:9.5px;}
+    #sheet.spec-mode .decided-box .nm{font-size:14px;}
+    #sheet.spec-mode .decided-box .det{font-size:11px;margin-top:2px;}
+    #sheet.spec-mode .undecided{font-size:11.5px;margin-top:4px;}
+    #sheet.spec-mode .sign{margin-top:5mm;padding-top:4mm;}
+    #sheet.spec-mode .sign .box{min-height:18mm;padding:4px 8px;font-size:11px;}
+    /* === 建具表（tategu-mode）：A3 横1ページに6カード（3列×2行）が収まるよう縮小 === */
     /* 左カラム（間取り＋仕様＋床）を狭めて、右カラム（建具カード3列）の幅を確保 */
-    #sheet.tg-mode .tg-floor-page{grid-template-columns:0.55fr 1fr!important;gap:4mm!important;margin-top:4mm!important;}
-    #sheet.tg-mode .tg-cards{grid-template-columns:repeat(3,1fr)!important;gap:3px!important;margin:2px 0 4px!important;}
-    #sheet.tg-mode .tg-card-head{font-size:10.5px!important;}
-    #sheet.tg-mode .tg-card-head .no{padding:2px 6px;min-width:52px;}
-    #sheet.tg-mode .tg-card-head .room{padding:2px 6px;}
-    #sheet.tg-mode .tg-card-img-wrap{width:66px;padding:3px;}
-    #sheet.tg-mode .tg-card-img{width:60px;height:60px;}
-    #sheet.tg-mode .tg-card-attrs .row{font-size:10px;}
-    #sheet.tg-mode .tg-card-attrs .note{padding:2px 5px;font-size:9px;}
-    #sheet.tg-mode .tg-card .row .k{width:68px;padding:3px 4px;font-size:10px;}
-    #sheet.tg-mode .tg-card .row .v{padding:3px 5px;font-size:10.5px;}
-    #sheet.tg-mode .tg-card .row .v .acc-img{width:22px;height:22px;}
-    #sheet.tg-mode .tg-card-spec .row{font-size:10px;}
-    #sheet.tg-mode .tg-floor-title{font-size:11px!important;margin-bottom:2px!important;}
+    #sheet.tategu-mode .tg-floor-page{grid-template-columns:0.55fr 1fr!important;gap:4mm!important;margin-top:4mm!important;}
+    #sheet.tategu-mode .tg-cards{grid-template-columns:repeat(3,1fr)!important;gap:3px!important;margin:2px 0 4px!important;}
+    #sheet.tategu-mode .tg-card-head{font-size:10.5px!important;}
+    #sheet.tategu-mode .tg-card-head .no{padding:2px 6px;min-width:52px;}
+    #sheet.tategu-mode .tg-card-head .room{padding:2px 6px;}
+    #sheet.tategu-mode .tg-card-img-wrap{width:66px;padding:3px;}
+    #sheet.tategu-mode .tg-card-img{width:60px;height:60px;}
+    #sheet.tategu-mode .tg-card-attrs .row{font-size:10px;}
+    #sheet.tategu-mode .tg-card-attrs .note{padding:2px 5px;font-size:9px;}
+    #sheet.tategu-mode .tg-card .row .k{width:68px;padding:3px 4px;font-size:10px;}
+    #sheet.tategu-mode .tg-card .row .v{padding:3px 5px;font-size:10.5px;}
+    #sheet.tategu-mode .tg-card .row .v .acc-img{width:22px;height:22px;}
+    #sheet.tategu-mode .tg-card-spec .row{font-size:10px;}
+    #sheet.tategu-mode .tg-floor-title{font-size:11px!important;margin-bottom:2px!important;}
     /* 左カラム（仕様/床）をさらにコンパクトに */
-    #sheet.tg-mode .tg-floor-left{gap:3mm!important;}
-    #sheet.tg-mode .tg-floor-left .sec-h{font-size:10.5px!important;padding:1.5px 6px!important;}
-    #sheet.tg-mode .tg-floor-left .sec-b{padding:2px 6px!important;}
-    #sheet.tg-mode .tg-floor-left .kv{font-size:9.5px!important;padding:1px 0!important;}
-    #sheet.tg-mode .tg-floor-left .kv .k{width:88px!important;}
+    #sheet.tategu-mode .tg-floor-left{gap:3mm!important;}
+    #sheet.tategu-mode .tg-floor-left .sec-h{font-size:10.5px!important;padding:1.5px 6px!important;}
+    #sheet.tategu-mode .tg-floor-left .sec-b{padding:2px 6px!important;}
+    #sheet.tategu-mode .tg-floor-left .kv{font-size:9.5px!important;padding:1px 0!important;}
+    #sheet.tategu-mode .tg-floor-left .kv .k{width:88px!important;}
     /* 間取り図をさらにコンパクトに */
-    #sheet.tg-mode .tg-floor-plan{height:auto!important;max-height:55mm;}
-    #sheet.tg-mode .tg-floor-plan .ph{padding:2px 8px;font-size:10.5px;}
-    #sheet.tg-mode .tg-floor-plan .pbody{padding:1mm;}
-    #sheet.tg-mode .tg-floor-plan .pbody img{max-height:48mm;}
-    /* 照明カードは A3 横で 8列×4行 = 32個 入るように小さく整える */
-    #sheet .lt-cards{grid-template-columns:repeat(8, 1fr)!important;gap:2mm!important;}
-    #sheet .lt-card{height:54mm;overflow:hidden;border-radius:2px;}
-    #sheet .lt-card-head{padding:1mm 1.5mm!important;font-size:8.5px!important;line-height:1.2!important;}
-    #sheet .lt-card-head .room{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-    #sheet .lt-card-head .qty{font-size:8px!important;padding:0 1.5mm!important;border-radius:6px;}
-    #sheet .lt-card-img{height:22mm!important;}
-    #sheet .lt-card-body{padding:1mm 1.5mm!important;font-size:7.5px!important;line-height:1.3!important;}
-    #sheet .lt-card-body .meta{margin-top:0.5mm!important;}
-    #sheet .lt-floor-title{font-size:11px!important;padding:2px 8px!important;margin:6px 0 4px!important;}
-    #sheet .lt-grand{padding:4px 10px!important;margin:6px 0!important;}
-    #sheet .lt-grand-label{font-size:11px!important;}
-    #sheet .lt-grand-yen{font-size:16px!important;}
+    #sheet.tategu-mode .tg-floor-plan{height:auto!important;max-height:55mm;}
+    #sheet.tategu-mode .tg-floor-plan .ph{padding:2px 8px;font-size:10.5px;}
+    #sheet.tategu-mode .tg-floor-plan .pbody{padding:1mm;}
+    #sheet.tategu-mode .tg-floor-plan .pbody img{max-height:48mm;}
+    /* 照明カードは A3 横で 8列×4行 = 32個 入るように小さく整える（lighting-mode のみ） */
+    #sheet.lighting-mode .lt-cards{grid-template-columns:repeat(8, 1fr)!important;gap:2mm!important;}
+    #sheet.lighting-mode .lt-card{height:54mm;overflow:hidden;border-radius:2px;}
+    #sheet.lighting-mode .lt-card-head{padding:1mm 1.5mm!important;font-size:8.5px!important;line-height:1.2!important;}
+    #sheet.lighting-mode .lt-card-head .room{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    #sheet.lighting-mode .lt-card-head .qty{font-size:8px!important;padding:0 1.5mm!important;border-radius:6px;}
+    #sheet.lighting-mode .lt-card-img{height:22mm!important;}
+    #sheet.lighting-mode .lt-card-body{padding:1mm 1.5mm!important;font-size:7.5px!important;line-height:1.3!important;}
+    #sheet.lighting-mode .lt-card-body .meta{margin-top:0.5mm!important;}
+    #sheet.lighting-mode .lt-floor-title{font-size:11px!important;padding:2px 8px!important;margin:6px 0 4px!important;}
+    #sheet.lighting-mode .lt-grand{padding:4px 10px!important;margin:6px 0!important;}
+    #sheet.lighting-mode .lt-grand-label{font-size:11px!important;}
+    #sheet.lighting-mode .lt-grand-yen{font-size:16px!important;}
   }
 </style>
 </head>
@@ -3791,6 +3795,19 @@ function renderImgSection(title, items, bgColor){
   return h;
 }
 
+/* #sheet に書類ごとの専用モードクラスを排他的に付与する。
+   各図面のCSSはこのモードクラスにスコープされているため、ある図面の調整が
+   他の図面に波及しなくなる（旧 tg-mode の共有による干渉を解消）。 */
+const SHEET_MODE_MAP = {
+  spec:'spec-mode', tategu:'tategu-mode', kurosu:'kurosu-mode',
+  lighting:'lighting-mode', wiring:'wiring-mode', harimake:'harimake-mode'
+};
+function setSheetMode(d){
+  const sheet = document.getElementById('sheet');
+  Object.values(SHEET_MODE_MAP).forEach(c => sheet.classList.remove(c));
+  sheet.classList.add(SHEET_MODE_MAP[d] || 'spec-mode');
+}
+
 /* 書類切り替え（仕様一覧表 ⇔ 建具表 ⇔ クロス図面 ⇔ 照明図面 ⇔ 配線数量表 ⇔ 貼り分け図面） */
 function switchDoc(d){
   DOC=d;
@@ -3807,8 +3824,8 @@ function switchDoc(d){
     d==='wiring'   ? '⚡ 配線数量表メーカー' :
     d==='harimake' ? '🧱 外壁貼り分け図面メーカー' :
                      '📋 外部・内部仕様一覧表メーカー';
-  // 建具表・クロス図面・照明図面・配線数量表・貼り分け図面は A3横ベースで広めのプレビュー幅を使う
-  document.getElementById('sheet').classList.toggle('tg-mode', d==='tategu' || d==='kurosu' || d==='lighting' || d==='wiring' || d==='harimake');
+  // 各図面ごとに独立したモードクラスを付与（CSSのスコープを完全分離して相互干渉を防ぐ）
+  setSheetMode(d);
   renderEditor(); renderSheet(); window.scrollTo(0,0);
 }
 
@@ -3861,7 +3878,7 @@ function loadHaibanDb(){
 
 /* 起動 */
 loadLocal();
-document.getElementById('sheet').classList.toggle('tg-mode', DOC==='tategu' || DOC==='kurosu' || DOC==='lighting' || DOC==='wiring' || DOC==='harimake'); // 初期表示にも幅切替を反映
+setSheetMode(DOC); // 初期表示でも各図面ごとの独立モードクラスを付与
 renderEditor();
 renderSheet();
 showTab('edit');
