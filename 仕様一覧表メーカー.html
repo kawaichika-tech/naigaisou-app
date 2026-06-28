@@ -1807,6 +1807,8 @@ function wrSummary(){
 const TG_FLOOR_AC=["ガラリ図面参照","斜線"];
 /* 床下点検口の色（1F のみ。プルダウンの選択肢） */
 const TG_FLOOR_INSPECTION=["アイボリー","ナチュラル"];
+/* 床下点検口の色 → 画像（プレビュー＆印刷で色見本を表示） */
+const TG_INSPECTION_IMG={"アイボリー":"床/アイボリー.png","ナチュラル":"床/ナチュラル.png"};
 const SLASH_SVG=`<svg viewBox="0 0 100 20" preserveAspectRatio="none" style="width:170px;height:16px;display:inline-block;vertical-align:middle"><line x1="0" y1="20" x2="100" y2="0" stroke="#333" stroke-width="1.2" vector-effect="non-scaling-stroke"/></svg>`;
 /* カード内セル用：横いっぱいに引く斜め線 */
 const SLASH_CELL=`<svg viewBox="0 0 100 16" preserveAspectRatio="none" style="flex:1;height:14px;align-self:center"><line x1="0" y1="16" x2="100" y2="0" stroke="#333" stroke-width="1" vector-effect="non-scaling-stroke"/></svg>`;
@@ -2009,7 +2011,8 @@ function renderTateguEditor(){
         return;
       }
       if(c.k==='床下点検口'){
-        h+=`<div class="field"><label>床下点検口</label>${tgSel(TG_FLOOR_INSPECTION,c.v||'',`tgFloor('${fk}',${i},this.value)`)}</div>`;
+        const insSw = TG_INSPECTION_IMG[c.v||''];
+        h+=`<div class="field"><label>床下点検口</label>${tgSel(TG_FLOOR_INSPECTION,c.v||'',`tgFloor('${fk}',${i},this.value)`)}${insSw?`<div style="display:inline-block;width:34px;height:34px;vertical-align:middle;margin-left:8px;border:1px solid #ccc;border-radius:4px;background:${swStyle(insSw,'cover')}"></div>`:''}</div>`;
         return;
       }
       h+=`<div class="field"><label>${esc(c.k)}</label><input value="${esc(c.v)}" oninput="tgFloor('${fk}',${i},this.value)"></div>`;
@@ -2413,6 +2416,7 @@ function renderTateguSheet(){
       let v = c.v==='斜線' ? SLASH_SVG : esc(c.v);
       if(c.k==='フローリング'&&c.pattern) v+=`　（${esc(c.pattern)}）`;
       if(c.k==='フローリング') v+=fImg(c.img);
+      if(c.k==='床下点検口'&&TG_INSPECTION_IMG[c.v]) v+=fImg(TG_INSPECTION_IMG[c.v]);
       s+=kvrow(c.k,v);
     });
     s+=`</div></div>`;
