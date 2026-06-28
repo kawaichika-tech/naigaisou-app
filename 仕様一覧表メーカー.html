@@ -333,6 +333,23 @@
     #sheet.tategu-mode .tg-floor-plan .ph{padding:1.5px 7px;font-size:10px;}
     #sheet.tategu-mode .tg-floor-plan .pbody{padding:1mm;}
     #sheet.tategu-mode .tg-floor-plan .pbody img{max-height:44mm;}
+    /* === クロス図面（kurosu-mode）：A3 横1ページ収まり。間取り図 160mm を縮めて
+       注釈までを1ページに収める === */
+    #sheet.kurosu-mode .kr-floor-page{grid-template-columns:0.85fr 1fr!important;gap:5mm!important;margin-top:3mm!important;align-items:start!important;}
+    #sheet.kurosu-mode .kr-floor-plan{height:auto!important;max-height:135mm!important;}
+    #sheet.kurosu-mode .kr-floor-plan .ph{padding:2px 9px;font-size:11px;}
+    #sheet.kurosu-mode .kr-floor-plan .pbody{padding:1.5mm;}
+    #sheet.kurosu-mode .kr-floor-title{padding:2.5px 9px!important;font-size:12px!important;margin:0 0 3mm!important;}
+    #sheet.kurosu-mode .kr-cards{grid-template-columns:repeat(3,1fr)!important;gap:3mm!important;}
+    #sheet.kurosu-mode .kr-card-head{padding:2.5px 7px!important;font-size:10.5px!important;}
+    #sheet.kurosu-mode .kr-card-head .part{font-size:9px!important;}
+    #sheet.kurosu-mode .kr-card-style{padding:2px 5px!important;font-size:10px!important;}
+    #sheet.kurosu-mode .kr-card-img{height:24mm!important;}
+    #sheet.kurosu-mode .kr-card-foot{padding:3px 5px!important;font-size:10.5px!important;}
+    #sheet.kurosu-mode .kr-meta{margin-top:3mm!important;padding:4px 8px!important;}
+    #sheet.kurosu-mode .kr-meta .row{font-size:10px!important;padding:0.5px 0!important;}
+    #sheet.kurosu-mode .kr-meta .row .k{width:90px!important;}
+    #sheet.kurosu-mode .kr-meta .note{font-size:9.2px!important;margin-top:2px!important;line-height:1.45!important;}
     /* 照明カードは A3 横で 8列×4行 = 32個 入るように小さく整える（lighting-mode のみ） */
     #sheet.lighting-mode .lt-cards{grid-template-columns:repeat(8, 1fr)!important;gap:2mm!important;}
     #sheet.lighting-mode .lt-card{height:54mm;overflow:hidden;border-radius:2px;}
