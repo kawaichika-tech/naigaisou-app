@@ -306,33 +306,33 @@
     #sheet.spec-mode .warnbar{padding:4px 9px;font-size:10.5px;margin-bottom:2mm;}
     #sheet.spec-mode .sign{margin-top:3mm;padding-top:3mm;}
     #sheet.spec-mode .sign .box{min-height:15mm;padding:3px 7px;font-size:10.5px;}
-    /* === 建具表（tategu-mode）：A3 横1ページに6カード（3列×2行）が収まるよう縮小 === */
-    /* 左カラム（間取り＋仕様＋床）を狭めて、右カラム（建具カード3列）の幅を確保 */
-    #sheet.tategu-mode .tg-floor-page{grid-template-columns:0.55fr 1fr!important;gap:4mm!important;margin-top:4mm!important;}
+    /* === 建具表（tategu-mode）：A3 横1ページに収めつつ下部余白を減らす中間サイズ === */
+    /* 左カラム（間取り＋仕様＋床）は中ぐらいの幅で建具仕様の改行を防ぐ */
+    #sheet.tategu-mode .tg-floor-page{grid-template-columns:0.62fr 1fr!important;gap:4mm!important;margin-top:3mm!important;}
     #sheet.tategu-mode .tg-cards{grid-template-columns:repeat(3,1fr)!important;gap:3px!important;margin:2px 0 4px!important;}
-    #sheet.tategu-mode .tg-card-head{font-size:10.5px!important;}
-    #sheet.tategu-mode .tg-card-head .no{padding:2px 6px;min-width:52px;}
+    #sheet.tategu-mode .tg-card-head{font-size:10.8px!important;}
+    #sheet.tategu-mode .tg-card-head .no{padding:2px 6px;min-width:54px;}
     #sheet.tategu-mode .tg-card-head .room{padding:2px 6px;}
-    #sheet.tategu-mode .tg-card-img-wrap{width:66px;padding:3px;}
-    #sheet.tategu-mode .tg-card-img{width:60px;height:60px;}
-    #sheet.tategu-mode .tg-card-attrs .row{font-size:10px;}
-    #sheet.tategu-mode .tg-card-attrs .note{padding:2px 5px;font-size:9px;}
-    #sheet.tategu-mode .tg-card .row .k{width:68px;padding:3px 4px;font-size:10px;}
-    #sheet.tategu-mode .tg-card .row .v{padding:3px 5px;font-size:10.5px;}
-    #sheet.tategu-mode .tg-card .row .v .acc-img{width:22px;height:22px;}
-    #sheet.tategu-mode .tg-card-spec .row{font-size:10px;}
-    #sheet.tategu-mode .tg-floor-title{font-size:11px!important;margin-bottom:2px!important;}
-    /* 左カラム（仕様/床）をさらにコンパクトに */
+    #sheet.tategu-mode .tg-card-img-wrap{width:70px;padding:3px;}
+    #sheet.tategu-mode .tg-card-img{width:62px;height:62px;}
+    #sheet.tategu-mode .tg-card-attrs .row{font-size:10.5px;}
+    #sheet.tategu-mode .tg-card-attrs .note{padding:2px 5px;font-size:9.2px;}
+    #sheet.tategu-mode .tg-card .row .k{width:70px;padding:3px 4px;font-size:10.3px;}
+    #sheet.tategu-mode .tg-card .row .v{padding:3px 5px;font-size:10.8px;}
+    #sheet.tategu-mode .tg-card .row .v .acc-img{width:24px;height:24px;}
+    #sheet.tategu-mode .tg-card-spec .row{font-size:10.3px;}
+    #sheet.tategu-mode .tg-floor-title{font-size:11.5px!important;margin-bottom:2px!important;}
+    /* 左カラム（仕様/床）も少し大きく＆改行を防ぐ */
     #sheet.tategu-mode .tg-floor-left{gap:3mm!important;}
-    #sheet.tategu-mode .tg-floor-left .sec-h{font-size:10.5px!important;padding:1.5px 6px!important;}
-    #sheet.tategu-mode .tg-floor-left .sec-b{padding:2px 6px!important;}
-    #sheet.tategu-mode .tg-floor-left .kv{font-size:9.5px!important;padding:1px 0!important;}
-    #sheet.tategu-mode .tg-floor-left .kv .k{width:88px!important;}
-    /* 間取り図をさらにコンパクトに */
-    #sheet.tategu-mode .tg-floor-plan{height:auto!important;max-height:55mm;}
-    #sheet.tategu-mode .tg-floor-plan .ph{padding:2px 8px;font-size:10.5px;}
-    #sheet.tategu-mode .tg-floor-plan .pbody{padding:1mm;}
-    #sheet.tategu-mode .tg-floor-plan .pbody img{max-height:48mm;}
+    #sheet.tategu-mode .tg-floor-left .sec-h{font-size:11px!important;padding:1.8px 7px!important;}
+    #sheet.tategu-mode .tg-floor-left .sec-b{padding:2.5px 7px!important;}
+    #sheet.tategu-mode .tg-floor-left .kv{font-size:10px!important;padding:1.2px 0!important;}
+    #sheet.tategu-mode .tg-floor-left .kv .k{width:92px!important;}
+    /* 間取り図サイズ（A3に収まる範囲で少し大きく） */
+    #sheet.tategu-mode .tg-floor-plan{height:auto!important;max-height:62mm;}
+    #sheet.tategu-mode .tg-floor-plan .ph{padding:2px 8px;font-size:11px;}
+    #sheet.tategu-mode .tg-floor-plan .pbody{padding:1.5mm;}
+    #sheet.tategu-mode .tg-floor-plan .pbody img{max-height:55mm;}
     /* 照明カードは A3 横で 8列×4行 = 32個 入るように小さく整える（lighting-mode のみ） */
     #sheet.lighting-mode .lt-cards{grid-template-columns:repeat(8, 1fr)!important;gap:2mm!important;}
     #sheet.lighting-mode .lt-card{height:54mm;overflow:hidden;border-radius:2px;}
