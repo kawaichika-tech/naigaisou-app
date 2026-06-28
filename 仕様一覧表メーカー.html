@@ -3441,9 +3441,9 @@ function renderWiringSheet(){
         </tr>
       </thead>
       <tbody>`;
-  // ちかさん要望：印刷は『いる物だけ』。追加金額が発生している項目のみ印刷に出す。
-  const visibleItems = m.items.filter(it => (wrItemSubtotal(it)||0) > 0);
-  visibleItems.forEach(it=>{
+  // 基本数量追加表は全項目を印刷（ちかさん：標準工事の構成として常に並べたい）。
+  // 『いる物だけ』フィルタは下の追加配線等数量表（extraItems）のみに適用。
+  m.items.forEach(it=>{
     const base = wrItemBase(it);
     const add  = wrItemAdditional(it);
     const sub  = wrItemSubtotal(it);
@@ -3459,9 +3459,6 @@ function renderWiringSheet(){
         <td style="border:1px solid #888;padding:5px 6px;text-align:right;font-weight:bold;color:${(sub||0)>0?'#1a4a7a':'#222'};">${skip?'-':formatYen(sub)}</td>
       </tr>`;
   });
-  if(!visibleItems.length){
-    h += `<tr><td colspan="7" style="border:1px solid #888;padding:8px;text-align:center;color:#999;font-style:italic;">（追加項目はありません）</td></tr>`;
-  }
   const subSum = m.items.reduce((s,it)=>s + (wrItemSubtotal(it)||0), 0);
   h += `<tr style="background:#fff7e0;font-weight:bold;">
        <td colspan="6" style="border:1px solid #888;padding:6px 8px;text-align:right;">合計</td>
