@@ -3008,7 +3008,7 @@ function renderLightingSheet(){
       <div class="lt-card-img" style="background:${swStyle(e.img,'contain','#fff')}"></div>
       <div class="lt-card-body">
         ${e.maker?`<div class="meta">${esc(e.maker)}</div>`:''}
-        <div class="meta" style="color:#222;font-weight:bold;">単価 ${esc(formatYen(e.price))}　／　総額 ${esc(formatYen(subtotal))}</div>
+        <div class="meta" style="color:#222;font-weight:bold;">単価 ${esc(formatYen(e.price))}　／　個数 ${qty}　／　総額 ${esc(formatYen(subtotal))}</div>
         <div class="meta" style="color:#a26a1f;font-weight:bold;background:#fffaee;border-radius:3px;padding:2px 4px;">お客様出し ${esc(formatYen(customerPayItem))}（×${LT_KAKERITSU}）</div>
         ${e.remark?`<div class="meta" style="color:#b0734a;">※ ${esc(e.remark)}</div>`:''}
       </div>
