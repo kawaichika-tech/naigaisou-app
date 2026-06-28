@@ -283,29 +283,30 @@
     /* area-block 全体に break-inside:avoid を付けるとブラウザが『丸ごと次ページに送ろう』
        として上に大きな空白ができてしまうので外す。代わりに各 .sec（セクションカード）
        単位で分割を避けるだけにする。 */
+    /* === A3横 1枚目=外部、2枚目=内部 を想定したサイズ感（文字大きめ・余白広め） === */
     #sheet.spec-mode .sec{break-inside:avoid;page-break-inside:avoid;}
-    #sheet.spec-mode .sec-grid{display:grid;grid-template-columns:1fr 1fr;gap:3mm 5mm;margin-top:1mm;}
-    #sheet.spec-mode .sheet-head{margin-bottom:2mm;padding-bottom:4px;}
-    #sheet.spec-mode .sheet-head .title{font-size:20px;letter-spacing:1.2px;}
-    #sheet.spec-mode .sheet-head .proj{font-size:13px;margin-top:2px;}
-    #sheet.spec-mode .sheet-head .meta{font-size:10px;line-height:1.4;}
-    #sheet.spec-mode .regline{font-size:9.5px;margin:1mm 0 2mm;}
-    #sheet.spec-mode .areaTitle{margin:2mm 0 1.5mm;padding:2px 10px;font-size:12.5px;}
-    #sheet.spec-mode .sec{margin-bottom:2mm;}
-    #sheet.spec-mode .sec-h{padding:3px 9px;font-size:11.5px;}
-    #sheet.spec-mode .sec-b{padding:2.5mm 3mm;}
-    #sheet.spec-mode .kv{font-size:10.5px;padding:1.5px 0;}
-    #sheet.spec-mode .kv .k{width:100px;}
-    #sheet.spec-mode .decided-box{padding:3px 7px;gap:7px;margin-top:3px;border-radius:4px;}
-    #sheet.spec-mode .decided-box .dsw{width:56px;height:44px;}
-    #sheet.spec-mode .decided-box .sw{width:38px;height:38px;}
-    #sheet.spec-mode .decided-box .label{font-size:9px;}
-    #sheet.spec-mode .decided-box .nm{font-size:12.5px;}
-    #sheet.spec-mode .decided-box .det{font-size:10px;margin-top:1px;}
-    #sheet.spec-mode .undecided{font-size:10.5px;margin-top:3px;}
-    #sheet.spec-mode .warnbar{padding:4px 9px;font-size:10.5px;margin-bottom:2mm;}
-    #sheet.spec-mode .sign{margin-top:3mm;padding-top:3mm;}
-    #sheet.spec-mode .sign .box{min-height:15mm;padding:3px 7px;font-size:10.5px;}
+    #sheet.spec-mode .sec-grid{display:grid;grid-template-columns:1fr 1fr;gap:6mm 9mm;margin-top:2mm;}
+    #sheet.spec-mode .sheet-head{margin-bottom:4mm;padding-bottom:7px;}
+    #sheet.spec-mode .sheet-head .title{font-size:24px;letter-spacing:1.8px;}
+    #sheet.spec-mode .sheet-head .proj{font-size:15px;margin-top:3px;}
+    #sheet.spec-mode .sheet-head .meta{font-size:12px;line-height:1.55;}
+    #sheet.spec-mode .regline{font-size:11.5px;margin:2mm 0 3.5mm;}
+    #sheet.spec-mode .areaTitle{margin:5mm 0 3mm;padding:4px 12px;font-size:16px;}
+    #sheet.spec-mode .sec{margin-bottom:4mm;}
+    #sheet.spec-mode .sec-h{padding:5px 12px;font-size:14.5px;}
+    #sheet.spec-mode .sec-b{padding:4.5mm 5mm;}
+    #sheet.spec-mode .kv{font-size:12.5px;padding:3px 0;}
+    #sheet.spec-mode .kv .k{width:120px;}
+    #sheet.spec-mode .decided-box{padding:6px 10px;gap:10px;margin-top:5px;border-radius:5px;}
+    #sheet.spec-mode .decided-box .dsw{width:72px;height:56px;}
+    #sheet.spec-mode .decided-box .sw{width:50px;height:50px;}
+    #sheet.spec-mode .decided-box .label{font-size:10.5px;}
+    #sheet.spec-mode .decided-box .nm{font-size:15.5px;}
+    #sheet.spec-mode .decided-box .det{font-size:12px;margin-top:2px;}
+    #sheet.spec-mode .undecided{font-size:12.5px;margin-top:5px;}
+    #sheet.spec-mode .warnbar{padding:6px 12px;font-size:12.5px;margin-bottom:3mm;}
+    #sheet.spec-mode .sign{margin-top:6mm;padding-top:5mm;}
+    #sheet.spec-mode .sign .box{min-height:22mm;padding:5px 9px;font-size:12px;}
     /* === 建具表（tategu-mode）：A3 横1ページ最優先。1階は床下点検口や長い注記で
        左カラムが伸びがちなため、サイズは保守的に。下部に多少余白が残ってもOK。 === */
     #sheet.tategu-mode .tg-floor-page{grid-template-columns:0.58fr 1fr!important;gap:3mm!important;margin-top:3mm!important;align-items:start!important;}
