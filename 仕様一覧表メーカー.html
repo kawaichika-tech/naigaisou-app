@@ -359,6 +359,29 @@
     #sheet.kurosu-mode .kr-meta .row{font-size:13px!important;padding:2px 0!important;}
     #sheet.kurosu-mode .kr-meta .row .k{width:125px!important;}
     #sheet.kurosu-mode .kr-meta .note{font-size:12px!important;margin-top:5px!important;line-height:1.6!important;}
+    /* === 配線数量表（wiring-mode）：A3 横1ページに収めるためコンパクトに === */
+    #sheet.wiring-mode{font-size:11px;}
+    #sheet.wiring-mode .sheet-head{margin-bottom:3mm;padding-bottom:5px;}
+    #sheet.wiring-mode .sheet-head .title{font-size:18px;}
+    #sheet.wiring-mode .sheet-head .proj{font-size:12px;}
+    #sheet.wiring-mode .sheet-head .meta{font-size:10px;line-height:1.4;}
+    /* 坪数表・集計部・基本数量・追加配線の各テーブル */
+    #sheet.wiring-mode table{font-size:10.5px!important;margin-top:5px!important;}
+    #sheet.wiring-mode table th{padding:3px 5px!important;font-size:10px!important;}
+    #sheet.wiring-mode table td{padding:3px 5px!important;font-size:10.5px!important;}
+    /* 坪数の根拠資料：A3 ではコンパクトに */
+    #sheet.wiring-mode img[src^="data:image"]{max-height:35mm!important;}
+    /* 集計部の ③ をやや大きく強調維持 */
+    #sheet.wiring-mode table tr td[style*="font-size:17px"]{font-size:13px!important;}
+    #sheet.wiring-mode table tr td[style*="font-size:14px"]{font-size:11.5px!important;}
+    /* テーブル間の見出しバー（基本数量追加表／追加配線等 数量表）を縮める */
+    #sheet.wiring-mode div[style*="background:#3b4a5c"][style*="padding:4px 12px"]{padding:2px 8px!important;font-size:11.5px!important;margin:6px 0 3px!important;}
+    /* テーブル行は1ページ内で行単位の改ページを許可（テーブル丸ごと送りで上に大空白ができるのを防ぐ） */
+    #sheet.wiring-mode table{break-inside:auto!important;page-break-inside:auto!important;}
+    #sheet.wiring-mode tr{break-inside:avoid!important;page-break-inside:avoid!important;}
+    /* 備考欄・hint・margin も縮める */
+    #sheet.wiring-mode .hint{font-size:9.5px!important;}
+
     /* 照明カードは A3 横で 8列×4行 = 32個 入るように小さく整える（lighting-mode のみ） */
     #sheet.lighting-mode .lt-cards{grid-template-columns:repeat(8, 1fr)!important;gap:2mm!important;}
     #sheet.lighting-mode .lt-card{height:54mm;overflow:hidden;border-radius:2px;}
