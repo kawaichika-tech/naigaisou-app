@@ -3249,12 +3249,15 @@ function wrItemSetFloor(i, field, v, group){
   }
   wrUpdateItemRow(i, grp);
   wrUpdateGrandTotalRow();
-  autosave();  // 印刷側は次のレンダリングで反映（renderSheet呼ばないことでフォーカス確実保持）
+  renderSheet();  // プレビュー側（#sheet）を即時更新。編集パネル側の input フォーカスは別DOMなので保持される
+  autosave();
 }
-/* 場所/室名の更新：input のフォーカス保持のため再描画せず保存のみ */
+/* 場所/室名の更新：input のフォーカス保持のため編集パネルは再描画しない。
+   プレビュー（#sheet）は別 DOM なので renderSheet しても入力中フォーカスは奪われない。 */
 function wrItemSetPlace(i, v, group){
   const grp = (group==='extraItems') ? 'extraItems' : 'items';
   WR[grp][i].place = String(v||'');
+  renderSheet();
   autosave();
 }
 /* 該当itemの「合計」「追加個数」「総額」セルを直接更新 */
