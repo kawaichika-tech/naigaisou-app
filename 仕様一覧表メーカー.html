@@ -276,7 +276,10 @@
     /* 現場の人が見ながら作業するため、フォント読みやすさ優先 */
     /* 1枚目=外部、2枚目=内部 で綺麗に分割。各area-block 内で2列グリッド */
     #sheet:not(.tg-mode){display:block;}
-    #sheet:not(.tg-mode) .area-block{break-inside:avoid-page;page-break-inside:avoid;}
+    /* area-block 全体に break-inside:avoid を付けるとブラウザが『丸ごと次ページに送ろう』
+       として上に大きな空白ができてしまうので外す。代わりに各 .sec（セクションカード）
+       単位で分割を避けるだけにする。 */
+    #sheet:not(.tg-mode) .sec{break-inside:avoid;page-break-inside:avoid;}
     #sheet:not(.tg-mode) .sec-grid{display:grid;grid-template-columns:1fr 1fr;gap:5mm 7mm;margin-top:1mm;}
     #sheet:not(.tg-mode) .sheet-head{margin-bottom:3mm;}
     #sheet:not(.tg-mode) .sheet-head .title{font-size:22px;letter-spacing:1.5px;}
