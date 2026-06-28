@@ -1673,6 +1673,7 @@ const WIRING_MASTER = {
     note:"※UBの照明は電気工事に含んでいるため、電灯数の数値に含めておりません。"
   },
   tsubo:        0,      // 坪数（手入力）
+  tsubo_image:  "",     // 坪数の根拠資料（data:URI 画像。プラン図など）
   base_price:   8000,   // 基本金額（プルダウン：8000/10000/11500/15000）
   memo:         "",     // 備考欄（自由記入・印刷下部に出る）
   // 基本数量 追加表（現状数量はユーザー入力、それ以外はマスタ／坪数連動）
@@ -1747,8 +1748,9 @@ function normalizeWR(w){
   if(!w || typeof w!=='object') return base;
   if(!w.meta) w.meta = base.meta;
   ['title','note'].forEach(k=>{ if(w.meta[k]==null) w.meta[k]=base.meta[k]; });
-  w.tsubo      = Number(w.tsubo)||0;
-  w.base_price = Number(w.base_price)||8000;
+  w.tsubo       = Number(w.tsubo)||0;
+  w.tsubo_image = String(w.tsubo_image || '');
+  w.base_price  = Number(w.base_price)||8000;
   if(typeof w.memo !== 'string') w.memo = '';
   // items / extraItems：保存済みの 1F/2F/その他＋place を引き継ぎ、マスタ定義は最新で上書き
   const mergeFloors = (masterArr, savedArr)=>{
@@ -3059,6 +3061,13 @@ function renderWiringEditor(){
   h += `<details class="card" open><summary><span class="area" style="background:#3b4a5c">配線</span>基本情報</summary><div class="body">
      <div class="field"><label>図面タイトル</label><input value="${esc(m.meta.title)}" oninput="wrMeta('title',this.value)"></div>
      <div class="field"><label>坪数</label><input type="text" inputmode="decimal" value="${esc(String(m.tsubo||''))}" oninput="wrSet('tsubo',this.value)" placeholder="例：29.32" style="max-width:160px;"><span class="hint" style="margin:0 0 0 8px;">坪</span></div>
+     <div class="field"><label>坪数の根拠資料</label>
+       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+         <input type="file" accept="image/*" onchange="wrTsuboImgPick(this)" style="font-size:11px;">
+         ${m.tsubo_image ? `<button onclick="wrTsuboImgClear()" class="ghost" style="font-size:11px;">画像を削除</button>` : ''}
+       </div>
+       ${m.tsubo_image ? `<img src="${esc(m.tsubo_image)}" style="max-width:280px;max-height:200px;border:1px solid #ccc;border-radius:4px;margin-top:8px;display:block;">` : '<span class="hint" style="margin:4px 0 0;">プラン図など、坪数の根拠となる画像を添付できます（印刷時に表示）</span>'}
+     </div>
      <div class="field"><label>基本金額</label>
        <select onchange="wrSet('base_price',this.value)" style="max-width:200px;">${baseOpts}</select>
        <span class="hint" style="margin:0 0 0 8px;">坪×基本金額で定価</span></div>
@@ -3291,6 +3300,32 @@ function wrUpdateGrandTotalRow(){
   if(gel) gel.textContent = formatYen(s.grandTotal);
 }
 function wrMeta(k,v){ WR.meta[k]=v; sync(); }
+
+/* 坪数の根拠資料（画像）取り込み。大きい画像は最大幅1200pxに縮小して data:URI として保存。 */
+function wrTsuboImgPick(input){
+  const f = input.files && input.files[0]; if(!f) return;
+  const reader = new FileReader();
+  reader.onload = (e)=>{
+    const img = new Image();
+    img.onload = ()=>{
+      const maxW = 1200;
+      const ratio = Math.min(maxW / img.width, 1);
+      const cw = Math.round(img.width * ratio);
+      const ch = Math.round(img.height * ratio);
+      const canvas = document.createElement('canvas');
+      canvas.width = cw; canvas.height = ch;
+      canvas.getContext('2d').drawImage(img, 0, 0, cw, ch);
+      WR.tsubo_image = canvas.toDataURL('image/jpeg', 0.85);
+      renderEditor(); renderSheet(); autosave();
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(f);
+}
+function wrTsuboImgClear(){
+  WR.tsubo_image = '';
+  renderEditor(); renderSheet(); autosave();
+}
 function wrSet(k,v){
   if(k==='tsubo'){
     // 全角数字→半角、カンマ・空白除去、小数許可
@@ -3298,6 +3333,11 @@ function wrSet(k,v){
       .replace(/[０-９．]/g, c=>String.fromCharCode(c.charCodeAt(0)-0xFEE0))
       .replace(/[,\s]/g,'');
     WR.tsubo = parseFloat(s) || 0;
+    // ★ input のフォーカスを奪わないため renderEditor は呼ばずに印刷シートと自動保存のみ更新。
+    //   編集パネル側の関連サマリー（定価/持分/標準個数）は他のフィールド操作 or タブ切替時に
+    //   再描画されて反映される。
+    renderSheet(); autosave();
+    return;
   } else if(k==='base_price'){
     WR.base_price = parseInt(v)||8000;
   } else if(k==='memo'){
@@ -3343,6 +3383,14 @@ function renderWiringSheet(){
         </tr>
       </tbody>
     </table>`;
+
+  // 坪数の根拠資料（プラン図など）。設定されていれば坪数表のすぐ下に表示。
+  if(m.tsubo_image){
+    h += `<div style="margin-top:8px;border:1px solid #c8cfd6;border-radius:4px;background:#f8fafc;padding:6px 8px;">
+      <div style="font-size:11px;color:#555;font-weight:bold;margin-bottom:4px;">坪数の根拠資料</div>
+      <img src="${esc(m.tsubo_image)}" style="max-width:100%;max-height:120mm;display:block;border:1px solid #ddd;border-radius:3px;">
+    </div>`;
+  }
 
   // 集計部（照明＋配線連動）
   const sum = wrSummary();
