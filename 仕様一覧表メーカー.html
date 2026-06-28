@@ -284,25 +284,28 @@
        として上に大きな空白ができてしまうので外す。代わりに各 .sec（セクションカード）
        単位で分割を避けるだけにする。 */
     #sheet.spec-mode .sec{break-inside:avoid;page-break-inside:avoid;}
-    #sheet.spec-mode .sec-grid{display:grid;grid-template-columns:1fr 1fr;gap:5mm 7mm;margin-top:1mm;}
-    #sheet.spec-mode .sheet-head{margin-bottom:3mm;}
-    #sheet.spec-mode .sheet-head .title{font-size:22px;letter-spacing:1.5px;}
-    #sheet.spec-mode .sheet-head .proj{font-size:14px;}
-    #sheet.spec-mode .sheet-head .meta{font-size:11px;line-height:1.5;}
-    #sheet.spec-mode .areaTitle{margin:4mm 0 2mm;padding:3px 10px;font-size:14px;}
-    #sheet.spec-mode .sec{margin-bottom:3mm;}
-    #sheet.spec-mode .sec-h{padding:4px 10px;font-size:13px;}
-    #sheet.spec-mode .sec-b{padding:4mm 4mm;}
-    #sheet.spec-mode .kv{font-size:11.5px;padding:2.5px 0;}
-    #sheet.spec-mode .kv .k{width:110px;}
-    #sheet.spec-mode .decided-box{padding:5px 8px;gap:8px;margin-top:4px;border-radius:4px;}
-    #sheet.spec-mode .decided-box .dsw{width:64px;height:50px;}
-    #sheet.spec-mode .decided-box .label{font-size:9.5px;}
-    #sheet.spec-mode .decided-box .nm{font-size:14px;}
-    #sheet.spec-mode .decided-box .det{font-size:11px;margin-top:2px;}
-    #sheet.spec-mode .undecided{font-size:11.5px;margin-top:4px;}
-    #sheet.spec-mode .sign{margin-top:5mm;padding-top:4mm;}
-    #sheet.spec-mode .sign .box{min-height:18mm;padding:4px 8px;font-size:11px;}
+    #sheet.spec-mode .sec-grid{display:grid;grid-template-columns:1fr 1fr;gap:3mm 5mm;margin-top:1mm;}
+    #sheet.spec-mode .sheet-head{margin-bottom:2mm;padding-bottom:4px;}
+    #sheet.spec-mode .sheet-head .title{font-size:20px;letter-spacing:1.2px;}
+    #sheet.spec-mode .sheet-head .proj{font-size:13px;margin-top:2px;}
+    #sheet.spec-mode .sheet-head .meta{font-size:10px;line-height:1.4;}
+    #sheet.spec-mode .regline{font-size:9.5px;margin:1mm 0 2mm;}
+    #sheet.spec-mode .areaTitle{margin:2mm 0 1.5mm;padding:2px 10px;font-size:12.5px;}
+    #sheet.spec-mode .sec{margin-bottom:2mm;}
+    #sheet.spec-mode .sec-h{padding:3px 9px;font-size:11.5px;}
+    #sheet.spec-mode .sec-b{padding:2.5mm 3mm;}
+    #sheet.spec-mode .kv{font-size:10.5px;padding:1.5px 0;}
+    #sheet.spec-mode .kv .k{width:100px;}
+    #sheet.spec-mode .decided-box{padding:3px 7px;gap:7px;margin-top:3px;border-radius:4px;}
+    #sheet.spec-mode .decided-box .dsw{width:56px;height:44px;}
+    #sheet.spec-mode .decided-box .sw{width:38px;height:38px;}
+    #sheet.spec-mode .decided-box .label{font-size:9px;}
+    #sheet.spec-mode .decided-box .nm{font-size:12.5px;}
+    #sheet.spec-mode .decided-box .det{font-size:10px;margin-top:1px;}
+    #sheet.spec-mode .undecided{font-size:10.5px;margin-top:3px;}
+    #sheet.spec-mode .warnbar{padding:4px 9px;font-size:10.5px;margin-bottom:2mm;}
+    #sheet.spec-mode .sign{margin-top:3mm;padding-top:3mm;}
+    #sheet.spec-mode .sign .box{min-height:15mm;padding:3px 7px;font-size:10.5px;}
     /* === 建具表（tategu-mode）：A3 横1ページに6カード（3列×2行）が収まるよう縮小 === */
     /* 左カラム（間取り＋仕様＋床）を狭めて、右カラム（建具カード3列）の幅を確保 */
     #sheet.tategu-mode .tg-floor-page{grid-template-columns:0.55fr 1fr!important;gap:4mm!important;margin-top:4mm!important;}
