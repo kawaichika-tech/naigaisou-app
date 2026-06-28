@@ -326,7 +326,8 @@
     #sheet.tategu-mode .tg-card-attrs .row .v{padding:3px 6px;font-size:12px;}
     #sheet.tategu-mode .tg-card-attrs .note{padding:3px 6px;font-size:10.5px;}
     #sheet.tategu-mode .tg-card-spec .row{font-size:12.5px;}
-    #sheet.tategu-mode .tg-card-spec .row .k{width:86px;padding:4px 6px;font-size:12px;}
+    /* spec の k 幅もベース 92px の継承を上書きして狭める（『種類』『品番』『大きさ』は3-4文字） */
+    #sheet.tategu-mode .tg-card-spec .row .k{width:64px!important;padding:4px 6px;font-size:12px;}
     #sheet.tategu-mode .tg-card-spec .row .v{padding:4px 7px;font-size:13px;}
     #sheet.tategu-mode .tg-card .row .v .acc-img{width:32px;height:32px;}
     #sheet.tategu-mode .tg-floor-title{font-size:14.5px!important;margin-bottom:4px!important;}
@@ -335,7 +336,8 @@
     #sheet.tategu-mode .tg-floor-left .sec-h{font-size:14px!important;padding:4px 10px!important;}
     #sheet.tategu-mode .tg-floor-left .sec-b{padding:5px 11px!important;}
     #sheet.tategu-mode .tg-floor-left .kv{font-size:12.5px!important;padding:2.5px 0!important;}
-    #sheet.tategu-mode .tg-floor-left .kv .k{width:120px!important;}
+    /* 左カラム kv の k 幅も狭く（『ドア色』『キャッチャー』等は最長6文字） */
+    #sheet.tategu-mode .tg-floor-left .kv .k{width:90px!important;}
     /* 間取り図は A3 サイズに合わせて大きく */
     #sheet.tategu-mode .tg-floor-plan{height:auto!important;max-height:115mm;}
     #sheet.tategu-mode .tg-floor-plan .ph{padding:4px 10px;font-size:13.5px;}
