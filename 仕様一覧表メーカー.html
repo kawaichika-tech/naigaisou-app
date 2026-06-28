@@ -1727,11 +1727,11 @@ const WR_OPTS = {
 const WR_TSUBO_STANDARD = [
   // {min, max(exclusive), lighting, outlet}  ※maxは「未満」、最後は45坪以上
   { min:20, max:25, lighting:20, outlet:17 },
-  { min:25, max:30, lighting:22, outlet:20 },
-  { min:30, max:35, lighting:24, outlet:22 },
-  { min:35, max:40, lighting:26, outlet:24 },
-  { min:40, max:45, lighting:28, outlet:26 },
-  { min:45, max:Infinity, lighting:30, outlet:28 }
+  { min:25, max:30, lighting:22, outlet:22 },
+  { min:30, max:35, lighting:24, outlet:24 },
+  { min:35, max:40, lighting:26, outlet:28 },
+  { min:40, max:45, lighting:28, outlet:30 },
+  { min:45, max:Infinity, lighting:30, outlet:32 }
 ];
 /* 坪数から標準数量を返す（範囲外は最も近い帯のもの。20坪未満はnull） */
 function wrStandardForTsubo(tsubo){
