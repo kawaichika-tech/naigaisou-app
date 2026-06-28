@@ -1804,7 +1804,7 @@ function wrItemSubtotal(it){
 /* 上部集計：照明データから自動算出
    - 定価合計（税抜）＝LTエントリの (price × qty) の合計
    - お客様だし合計（税抜）＝LTエントリの (price × qty × 0.8) の合計
-   - ①差額＝持ち分−お客様だし合計（プラスなら持ち分内に収まる、マイナスなら超過。符号付きで返す）
+   - ①差額＝お客様だし合計−持ち分（プラスなら超過、マイナスなら持ち分内に収まる。符号付きで返す）
    - 計上個数合計＝LTエントリの qty 合計
    - ②配線追加工事合計＝WR.itemsのsubtotal合計
    - ③①+②＝お客様だし合計＋配線追加工事合計（追加電気工事等合計） */
@@ -1824,7 +1824,7 @@ function wrSummary(){
   return {
     okyakuTotal: customer,                  // ① お客様だし金額合計（=照明追加工事代金）
     teikaTotal:  teika,                     // 照明器具代金定価合計
-    diff: wrMochibun() - customer,          // ①差額（持ち分 − お客様だし金額合計）
+    diff: customer - wrMochibun(),          // ①差額（お客様だし金額合計 − 持ち分）
     qtyTotal: qty,                          // 計上商品個数合計
     wiringTotal: wiringSub,                 // ② 配線工事ご請求代金合計
     grandTotal:  customer + wiringSub       // ③ ①+② 追加電気工事等合計
@@ -3101,8 +3101,8 @@ function renderWiringEditor(){
        <div style="color:#a26a1f;font-weight:bold;font-size:15px;">${formatYen(sum.okyakuTotal)}<span style="font-size:11px;color:#666;margin-left:8px;">＝照明 総額 × 0.8</span></div>
        <div style="color:#555;">照明器具代金定価合計（税抜）</div>
        <div style="color:#1a4a7a;font-weight:bold;font-size:15px;">${formatYen(sum.teikaTotal)}<span style="font-size:11px;color:#666;margin-left:8px;">＝照明 単価×個数 の合計</span></div>
-       <div style="color:#555;">差額（持ち分 − お客様だし金額合計）</div>
-       <div style="color:${sum.diff>=0?'#1a7a3a':'#c0392b'};font-weight:bold;font-size:15px;">${formatYen(Math.abs(sum.diff))}${sum.diff>0?' （持ち分内で収まる）':(sum.diff<0?' （お客様だし超過）':'')}<span style="font-size:11px;color:#666;margin-left:8px;">持ち分：${formatYen(wrMochibun())}</span></div>
+       <div style="color:#555;">差額（お客様だし金額合計 − 持ち分）</div>
+       <div style="color:${sum.diff>=0?'#c0392b':'#1a7a3a'};font-weight:bold;font-size:15px;">${formatYen(Math.abs(sum.diff))}${sum.diff>0?' （お客様だし超過）':(sum.diff<0?' （持ち分内で収まる）':'')}<span style="font-size:11px;color:#666;margin-left:8px;">持ち分：${formatYen(wrMochibun())}</span></div>
        <div style="color:#555;">計上商品個数合計</div>
        <div style="font-weight:bold;font-size:15px;">${sum.qtyTotal} 個</div>
        <div style="color:#555;">② 基本数量 追加表 及び 追加配線等数量表<br>ご請求代金合計（税抜）</div>
@@ -3408,8 +3408,8 @@ function renderWiringSheet(){
           <td style="border:1px solid #888;padding:6px 12px;text-align:right;font-weight:bold;color:#1a4a7a;font-size:14px;">${formatYen(sum.teikaTotal)}</td>
         </tr>
         <tr>
-          <td style="border:1px solid #888;background:#eef2f6;padding:6px 12px;">差額（持ち分 − お客様だし金額合計）</td>
-          <td style="border:1px solid #888;padding:6px 12px;text-align:right;font-weight:bold;color:${sum.diff>=0?'#1a7a3a':'#c0392b'};font-size:14px;">${formatYen(Math.abs(sum.diff))}${sum.diff>0?' （持ち分内で収まる）':(sum.diff<0?' （お客様だし超過）':'')}</td>
+          <td style="border:1px solid #888;background:#eef2f6;padding:6px 12px;">差額（お客様だし金額合計 − 持ち分）</td>
+          <td style="border:1px solid #888;padding:6px 12px;text-align:right;font-weight:bold;color:${sum.diff>=0?'#c0392b':'#1a7a3a'};font-size:14px;">${formatYen(Math.abs(sum.diff))}${sum.diff>0?' （お客様だし超過）':(sum.diff<0?' （持ち分内で収まる）':'')}</td>
         </tr>
         <tr>
           <td style="border:1px solid #888;background:#eef2f6;padding:6px 12px;">計上商品個数合計</td>
