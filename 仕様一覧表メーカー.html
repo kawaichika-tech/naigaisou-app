@@ -1697,21 +1697,21 @@ const WIRING_MASTER = {
     // スイッチ配線
     {key:'sw3way',       name:'3路 スイッチ配線',              note:'',                  base:4, unit:10000, current:0, category:'switch'},
     {key:'sw4way',       name:'4路 スイッチ配線',              note:'',                  base:0, unit:12000, current:0, category:'switch'},
-    {key:'sw4wayPlus1',  name:'4路+1 スイッチ配線',           note:'',                  base:0, unit:6500, current:0, category:'switch'},
+    {key:'sw4wayPlus1',  name:'4路+1 スイッチ配線',           note:'',                  base:0, unit:24000, current:0, category:'switch'},
     // 各種コンセント追加
-    {key:'outletAdopt',  name:'床用コンセント：F型〈シルバー・木目カラー〉', note:'',          base:0, unit:8000, current:0, category:'outlet_ex'},
+    {key:'outletAdopt',  name:'床用コンセント：F型〈シルバー・木目カラー〉', note:'',          base:0, unit:22000, current:0, category:'outlet_ex'},
     {key:'bathFanDry',   name:'浴室換気乾燥',                 note:'',                  base:0, unit:15000, current:0, category:'outlet_ex'},
     {key:'cooking',      name:'クッキングコンセントを利用する場合',     note:'',          base:0, unit:15000, current:0, category:'outlet_ex'},
-    {key:'autoFaucet',   name:'自動水栓',                     note:'',                  base:0, unit:8000, current:0, category:'outlet_ex'},
+    {key:'autoFaucet',   name:'自動水栓',                     note:'',                  base:0, unit:15000, current:0, category:'outlet_ex'},
     {key:'panel200v',    name:'住宅設備で200Vを利用する場合', note:'',                  base:0, unit:15000, current:0, category:'outlet_ex'},
-    {key:'outlet3',      name:'3口コンセント',                note:'',                  base:0, unit:5000, current:0, category:'outlet_ex'},
-    {key:'gasCo',        name:'ガス栓(炊飯器・乾太くんのみ使用可)',     note:'',          base:0, unit:8000, current:0, category:'outlet_ex'},
+    {key:'outlet3',      name:'3口コンセント',                note:'',                  base:0, unit:3700, current:0, category:'outlet_ex'},
+    {key:'gasCo',        name:'ガス栓(炊飯器・乾太くんのみ使用可)',     note:'',          base:0, unit:25000, current:0, category:'outlet_ex'},
     // 電話ネット関係
-    {key:'panaAkagas',   name:'ﾃﾚﾋﾞｱﾝﾃﾅ設置工事（ﾌﾞｰｽﾀｰﾀｲﾌﾟ）地上波のみ', note:'',         base:0, unit:10000, current:0, category:'net'},
-    {key:'bscs',         name:'BS/CS 配線',                  note:'',                  base:0, unit:8000, current:0, category:'net'},
+    {key:'panaAkagas',   name:'ﾃﾚﾋﾞｱﾝﾃﾅ設置工事（ﾌﾞｰｽﾀｰﾀｲﾌﾟ）地上波のみ', note:'',         base:0, unit:40700, current:0, category:'net'},
+    {key:'bscs',         name:'BS/CS 配線',                  note:'',                  base:0, unit:30000, current:0, category:'net'},
     {key:'lan1',         name:'LAN入線（カテゴリー６/ヨリ線）端末器込', note:'',         base:0, unit:8500, current:0, category:'net'},
-    {key:'lan2',         name:'LAN入線（カテゴリー６A/ヨリ線）端末器込', note:'',        base:0, unit:12000, current:0, category:'net'},
-    {key:'telTube',      name:'TEL用空配管モデムと電話を離して設置する場合', note:'',    base:0, unit:6000, current:0, category:'net'}
+    {key:'lan2',         name:'LAN入線（カテゴリー６A/ヨリ線）端末器込', note:'',        base:0, unit:20000, current:0, category:'net'},
+    {key:'telTube',      name:'TEL用空配管モデムと電話を離して設置する場合', note:'',    base:0, unit:8500, current:0, category:'net'}
   ]
 };
 // 追加配線等のカテゴリ表示名
@@ -3438,7 +3438,9 @@ function renderWiringSheet(){
         </tr>
       </thead>
       <tbody>`;
-  m.items.forEach(it=>{
+  // ちかさん要望：印刷は『いる物だけ』。追加金額が発生している項目のみ印刷に出す。
+  const visibleItems = m.items.filter(it => (wrItemSubtotal(it)||0) > 0);
+  visibleItems.forEach(it=>{
     const base = wrItemBase(it);
     const add  = wrItemAdditional(it);
     const sub  = wrItemSubtotal(it);
@@ -3454,6 +3456,9 @@ function renderWiringSheet(){
         <td style="border:1px solid #888;padding:5px 6px;text-align:right;font-weight:bold;color:${(sub||0)>0?'#1a4a7a':'#222'};">${skip?'-':formatYen(sub)}</td>
       </tr>`;
   });
+  if(!visibleItems.length){
+    h += `<tr><td colspan="7" style="border:1px solid #888;padding:8px;text-align:center;color:#999;font-style:italic;">（追加項目はありません）</td></tr>`;
+  }
   const subSum = m.items.reduce((s,it)=>s + (wrItemSubtotal(it)||0), 0);
   h += `<tr style="background:#fff7e0;font-weight:bold;">
        <td colspan="6" style="border:1px solid #888;padding:6px 8px;text-align:right;">合計</td>
@@ -3476,8 +3481,11 @@ function renderWiringSheet(){
         </tr>
       </thead>
       <tbody>`;
+  // ちかさん要望：印刷は『いる物だけ』。追加金額が発生している項目のみ印刷に出す。
+  // 空のカテゴリー見出しも出さないように、表示対象だけフィルタしてからループ。
+  const visibleExtra = (m.extraItems||[]).filter(it => (wrItemSubtotal(it)||0) > 0);
   let lastCatSheet = null;
-  (m.extraItems||[]).forEach(it=>{
+  visibleExtra.forEach(it=>{
     if(it.category !== lastCatSheet){
       h += `<tr style="background:#e8eef5;"><td colspan="7" style="border:1px solid #888;padding:4px 8px;font-weight:bold;color:#1a4a7a;font-size:11px;">${esc(WR_CATEGORY_LABEL[it.category]||'')}</td></tr>`;
       lastCatSheet = it.category;
@@ -3497,6 +3505,9 @@ function renderWiringSheet(){
         <td style="border:1px solid #888;padding:5px 6px;text-align:right;font-weight:bold;color:${(sub||0)>0?'#1a4a7a':'#222'};">${skip?'-':formatYen(sub)}</td>
       </tr>`;
   });
+  if(!visibleExtra.length){
+    h += `<tr><td colspan="7" style="border:1px solid #888;padding:8px;text-align:center;color:#999;font-style:italic;">（追加配線等はありません）</td></tr>`;
+  }
   const extraSum = (m.extraItems||[]).reduce((s,it)=>s + (wrItemSubtotal(it)||0), 0);
   h += `<tr style="background:#fff7e0;font-weight:bold;">
        <td colspan="6" style="border:1px solid #888;padding:6px 8px;text-align:right;">合計</td>
