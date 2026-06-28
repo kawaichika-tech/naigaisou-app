@@ -307,34 +307,37 @@
     #sheet.spec-mode .warnbar{padding:6px 12px;font-size:12.5px;margin-bottom:3mm;}
     #sheet.spec-mode .sign{margin-top:6mm;padding-top:5mm;}
     #sheet.spec-mode .sign .box{min-height:22mm;padding:5px 9px;font-size:12px;}
-    /* === 建具表（tategu-mode）：A3 横向き、カードを横長に（画像大・右カラム広め） === */
-    /* 左カラム比を狭めて右カラム（カード3列）の幅を確保。画像をしっかり大きく
-       して右の attrs（縦5行）と高さを揃え、カードが縦長にならないようにする。 */
-    #sheet.tategu-mode .tg-floor-page{grid-template-columns:0.5fr 1fr!important;gap:6mm!important;margin-top:5mm!important;align-items:start!important;}
+    /* === 建具表（tategu-mode）：A3 横向き、左カラムも大きく＆カードも横長に === */
+    /* 左カラム比を 0.55fr に少し広げて間取り図＋仕様欄を大きく見せ、
+       カード側は画像をさらに大きく（130x130）して attrs（縦5行）と高さを揃え、
+       カード内 padding を縮めて横長フィルムに見せる。 */
+    #sheet.tategu-mode .tg-floor-page{grid-template-columns:0.55fr 1fr!important;gap:6mm!important;margin-top:5mm!important;align-items:start!important;}
     #sheet.tategu-mode .tg-cards{grid-template-columns:repeat(3,1fr)!important;gap:4mm!important;margin:3px 0 4mm!important;}
-    #sheet.tategu-mode .tg-card-head{font-size:13px!important;}
-    #sheet.tategu-mode .tg-card-head .no{padding:3px 8px;min-width:62px;}
-    #sheet.tategu-mode .tg-card-head .room{padding:3px 8px;}
-    #sheet.tategu-mode .tg-card-img-wrap{width:118px;padding:5px;}
-    #sheet.tategu-mode .tg-card-img{width:108px;height:108px;}
-    #sheet.tategu-mode .tg-card-attrs .row{font-size:12px;}
+    #sheet.tategu-mode .tg-card-head{font-size:13.5px!important;}
+    #sheet.tategu-mode .tg-card-head .no{padding:3px 9px;min-width:66px;}
+    #sheet.tategu-mode .tg-card-head .room{padding:3px 9px;}
+    #sheet.tategu-mode .tg-card-img-wrap{width:140px;padding:5px;}
+    #sheet.tategu-mode .tg-card-img{width:130px;height:130px;}
+    #sheet.tategu-mode .tg-card-attrs .row{font-size:13px;}
+    #sheet.tategu-mode .tg-card-attrs .row .k{padding:3px 5px;font-size:12px;}
+    #sheet.tategu-mode .tg-card-attrs .row .v{padding:3px 6px;font-size:12.5px;}
     #sheet.tategu-mode .tg-card-attrs .note{padding:3px 6px;font-size:10.5px;}
-    #sheet.tategu-mode .tg-card .row .k{width:86px;padding:4px 6px;font-size:11.5px;}
-    #sheet.tategu-mode .tg-card .row .v{padding:4px 7px;font-size:12.5px;}
-    #sheet.tategu-mode .tg-card .row .v .acc-img{width:30px;height:30px;}
-    #sheet.tategu-mode .tg-card-spec .row{font-size:11.5px;}
-    #sheet.tategu-mode .tg-floor-title{font-size:13.5px!important;margin-bottom:3px!important;}
+    #sheet.tategu-mode .tg-card-spec .row{font-size:12.5px;}
+    #sheet.tategu-mode .tg-card-spec .row .k{width:86px;padding:4px 6px;font-size:12px;}
+    #sheet.tategu-mode .tg-card-spec .row .v{padding:4px 7px;font-size:13px;}
+    #sheet.tategu-mode .tg-card .row .v .acc-img{width:32px;height:32px;}
+    #sheet.tategu-mode .tg-floor-title{font-size:14.5px!important;margin-bottom:4px!important;}
     /* 左カラム（仕様/床）も A3 サイズに見合うゆったりサイズに */
-    #sheet.tategu-mode .tg-floor-left{gap:4mm!important;}
-    #sheet.tategu-mode .tg-floor-left .sec-h{font-size:13px!important;padding:3px 9px!important;}
-    #sheet.tategu-mode .tg-floor-left .sec-b{padding:4px 10px!important;}
-    #sheet.tategu-mode .tg-floor-left .kv{font-size:11.5px!important;padding:2px 0!important;}
-    #sheet.tategu-mode .tg-floor-left .kv .k{width:100px!important;}
+    #sheet.tategu-mode .tg-floor-left{gap:5mm!important;}
+    #sheet.tategu-mode .tg-floor-left .sec-h{font-size:14px!important;padding:4px 10px!important;}
+    #sheet.tategu-mode .tg-floor-left .sec-b{padding:5px 11px!important;}
+    #sheet.tategu-mode .tg-floor-left .kv{font-size:12.5px!important;padding:2.5px 0!important;}
+    #sheet.tategu-mode .tg-floor-left .kv .k{width:120px!important;}
     /* 間取り図は A3 サイズに合わせて大きく */
-    #sheet.tategu-mode .tg-floor-plan{height:auto!important;max-height:95mm;}
-    #sheet.tategu-mode .tg-floor-plan .ph{padding:3px 9px;font-size:12.5px;}
+    #sheet.tategu-mode .tg-floor-plan{height:auto!important;max-height:115mm;}
+    #sheet.tategu-mode .tg-floor-plan .ph{padding:4px 10px;font-size:13.5px;}
     #sheet.tategu-mode .tg-floor-plan .pbody{padding:2mm;}
-    #sheet.tategu-mode .tg-floor-plan .pbody img{max-height:85mm;}
+    #sheet.tategu-mode .tg-floor-plan .pbody img{max-height:103mm;}
     /* === クロス図面（kurosu-mode）：A3 横向き＝左右半々レイアウトで間取り図をしっかり大きく === */
     #sheet.kurosu-mode .kr-floor-page{grid-template-columns:1fr 1fr!important;gap:8mm!important;margin-top:5mm!important;align-items:start!important;}
     #sheet.kurosu-mode .kr-floor-plan{height:auto!important;max-height:230mm!important;}
