@@ -391,16 +391,15 @@
     .wiring-mode .foot{font-size:8.5px!important;margin-top:3px!important;padding-top:2px!important;}
 
     /* 照明カードは A3 横で 8列×4行 = 32個 入るように小さく整える（lighting-mode のみ） */
-    /* A3 横向き想定。1階+2階で計20カード（8列×3行）が余裕で入るので、A3 に見合った
-       読みやすい大きさに。 */
-    .lighting-mode .lt-cards{grid-template-columns:repeat(8, 1fr)!important;gap:2.5mm!important;}
-    .lighting-mode .lt-card{height:62mm;overflow:hidden;border-radius:3px;}
-    .lighting-mode .lt-card-head{padding:1.5mm 2mm!important;font-size:10px!important;line-height:1.25!important;}
+    /* A3 横向き想定。8列×3行 = 24枠で20カードを配置。画像と金額が読みやすい大きさに。 */
+    .lighting-mode .lt-cards{grid-template-columns:repeat(8, 1fr)!important;gap:2mm!important;}
+    .lighting-mode .lt-card{height:74mm;overflow:hidden;border-radius:3px;}
+    .lighting-mode .lt-card-head{padding:1.5mm 2mm!important;font-size:10.5px!important;line-height:1.25!important;}
     .lighting-mode .lt-card-head .room{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
     .lighting-mode .lt-card-head .qty{font-size:9.5px!important;padding:0.5mm 2mm!important;border-radius:8px;}
-    .lighting-mode .lt-card-img{height:26mm!important;}
-    .lighting-mode .lt-card-body{padding:1.5mm 2mm!important;font-size:9px!important;line-height:1.35!important;}
-    .lighting-mode .lt-card-body .meta{margin-top:0.8mm!important;}
+    .lighting-mode .lt-card-img{height:38mm!important;}
+    .lighting-mode .lt-card-body{padding:2mm 2.5mm!important;font-size:9.8px!important;line-height:1.4!important;}
+    .lighting-mode .lt-card-body .meta{margin-top:1mm!important;}
     /* 階見出し（1階・2階）が次ページに飛ばされないよう抑制 */
     .lighting-mode .lt-floor-title{font-size:13px!important;padding:3px 10px!important;margin:5px 0 4px!important;break-before:avoid!important;page-break-before:avoid!important;break-after:avoid!important;page-break-after:avoid!important;}
     .lighting-mode .lt-grand{padding:5px 12px!important;margin:6px 0!important;}
