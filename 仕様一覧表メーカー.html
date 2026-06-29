@@ -391,15 +391,18 @@
     .wiring-mode .foot{font-size:8.5px!important;margin-top:3px!important;padding-top:2px!important;}
 
     /* 照明カードは A3 横で 8列×4行 = 32個 入るように小さく整える（lighting-mode のみ） */
-    /* A3 横向き想定。8列×3行=24枠で20カード配置。グランド／フッターまで1ページ内に収める。 */
+    /* A3 横向き想定。8列×3行=24枠で20カード配置。グランド／フッターまで1ページ内に収める。
+       カード body の下余白を削って、その分を画像に回し品番が読みやすいサイズへ。 */
     .lighting-mode .lt-cards{grid-template-columns:repeat(8, 1fr)!important;gap:1.5mm!important;}
-    .lighting-mode .lt-card{height:66mm;overflow:hidden;border-radius:3px;}
-    .lighting-mode .lt-card-head{padding:1mm 1.5mm!important;font-size:9.8px!important;line-height:1.2!important;}
+    .lighting-mode .lt-card{height:66mm;overflow:hidden;border-radius:3px;display:flex;flex-direction:column;}
+    .lighting-mode .lt-card-head{padding:1mm 1.5mm!important;font-size:9.8px!important;line-height:1.2!important;flex-shrink:0;}
     .lighting-mode .lt-card-head .room{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
     .lighting-mode .lt-card-head .qty{font-size:9px!important;padding:0.3mm 1.8mm!important;border-radius:7px;}
-    .lighting-mode .lt-card-img{height:34mm!important;}
-    .lighting-mode .lt-card-body{padding:1.2mm 2mm!important;font-size:9.2px!important;line-height:1.3!important;}
-    .lighting-mode .lt-card-body .meta{margin-top:0.6mm!important;}
+    /* 画像エリアを flex:1 で残りスペースを使い切り、品番が読みやすい大きさに。 */
+    .lighting-mode .lt-card-img{flex:1;min-height:38mm!important;height:auto!important;}
+    /* body は内容高さに合わせて縮める（下に空白を作らない）。 */
+    .lighting-mode .lt-card-body{padding:1mm 2mm!important;font-size:9.2px!important;line-height:1.3!important;flex-shrink:0;}
+    .lighting-mode .lt-card-body .meta{margin-top:0.4mm!important;}
     /* 階見出し（1階・2階）が次ページに飛ばされないよう抑制 */
     .lighting-mode .lt-floor-title{font-size:11.5px!important;padding:2px 9px!important;margin:3px 0 2.5px!important;break-before:avoid!important;page-break-before:avoid!important;break-after:avoid!important;page-break-after:avoid!important;}
     .lighting-mode .lt-grand{padding:3.5px 10px!important;margin:4px 0!important;}
