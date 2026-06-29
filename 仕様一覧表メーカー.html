@@ -1709,7 +1709,11 @@ function formatYen(n){
 const WIRING_MASTER = {
   meta:{
     title:"配線数量表",
-    note:"※UBの照明は電気工事に含んでいるため、電灯数の数値に含めておりません。"
+    note:"※UBの照明は電気工事に含んでいるため、電灯数の数値に含めておりません。",
+    pm_name:"",  // 施工管理担当者 氏名
+    pm_tel:"",   // 施工管理担当者 電話番号
+    ic_name:"",  // IC（インテリアコーディネーター）氏名
+    ic_tel:""    // IC 電話番号
   },
   tsubo:        0,      // 坪数（手入力）
   tsubo_image:  "",     // 坪数の根拠資料（data:URI 画像。プラン図など）
@@ -1787,6 +1791,7 @@ function normalizeWR(w){
   if(!w || typeof w!=='object') return base;
   if(!w.meta) w.meta = base.meta;
   ['title','note'].forEach(k=>{ if(w.meta[k]==null) w.meta[k]=base.meta[k]; });
+  ['pm_name','pm_tel','ic_name','ic_tel'].forEach(k=>{ if(typeof w.meta[k]!=='string') w.meta[k]=''; });
   w.tsubo       = Number(w.tsubo)||0;
   w.tsubo_image = String(w.tsubo_image || '');
   w.base_price  = Number(w.base_price)||8000;
@@ -3111,6 +3116,14 @@ function renderWiringEditor(){
      <div class="field"><label>基本金額</label>
        <select onchange="wrSet('base_price',this.value)" style="max-width:200px;">${baseOpts}</select>
        <span class="hint" style="margin:0 0 0 8px;">坪×基本金額で定価</span></div>
+     <div class="field"><label>施工管理担当者</label>
+       <input value="${esc(m.meta.pm_name||'')}" oninput="wrMeta('pm_name',this.value)" placeholder="氏名" style="max-width:180px;">
+       <input value="${esc(m.meta.pm_tel||'')}" oninput="wrMeta('pm_tel',this.value)" placeholder="電話番号" style="max-width:180px;margin-left:6px;">
+     </div>
+     <div class="field"><label>IC（コーディネーター）</label>
+       <input value="${esc(m.meta.ic_name||'')}" oninput="wrMeta('ic_name',this.value)" placeholder="氏名" style="max-width:180px;">
+       <input value="${esc(m.meta.ic_tel||'')}" oninput="wrMeta('ic_tel',this.value)" placeholder="電話番号" style="max-width:180px;margin-left:6px;">
+     </div>
 
      <div style="margin-top:12px;padding:10px 12px;border:1px solid #c8cfd6;border-radius:6px;background:#f4f7fa;">
        <div style="display:grid;grid-template-columns:120px 1fr;gap:8px 12px;font-size:13px;align-items:center;">
@@ -3408,6 +3421,20 @@ function renderWiringSheet(){
       <div><div class="title">${esc(m.meta.title)}</div>
         <div class="proj">${esc(p.name)}</div></div>
       <div class="meta">決定日：${esc(p.decided_date)||'　　　年　　月　　日'}<br>作成者：${esc(p.author)}</div>
+    </div>`;
+
+  // 担当者欄（施工管理／IC）— 配線数量表のヘッダ直下にコンパクトに配置
+  h += `<div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+      <div style="border:1px solid #888;border-radius:3px;padding:5px 10px;font-size:12px;background:#f8fafc;">
+        <span style="color:#555;font-weight:bold;margin-right:8px;">施工管理担当者</span>
+        <span style="font-weight:bold;color:#222;">${esc(m.meta.pm_name||'')}</span>
+        ${m.meta.pm_tel?`<span style="color:#666;margin-left:10px;font-size:11px;">TEL ${esc(m.meta.pm_tel)}</span>`:''}
+      </div>
+      <div style="border:1px solid #888;border-radius:3px;padding:5px 10px;font-size:12px;background:#f8fafc;">
+        <span style="color:#555;font-weight:bold;margin-right:8px;">IC（コーディネーター）</span>
+        <span style="font-weight:bold;color:#222;">${esc(m.meta.ic_name||'')}</span>
+        ${m.meta.ic_tel?`<span style="color:#666;margin-left:10px;font-size:11px;">TEL ${esc(m.meta.ic_tel)}</span>`:''}
+      </div>
     </div>`;
 
   h += `<table style="width:100%;border-collapse:collapse;font-size:13px;margin-top:10px;">
