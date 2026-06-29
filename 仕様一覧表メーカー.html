@@ -359,32 +359,36 @@
     #sheet.kurosu-mode .kr-meta .row{font-size:13px!important;padding:2px 0!important;}
     #sheet.kurosu-mode .kr-meta .row .k{width:125px!important;}
     #sheet.kurosu-mode .kr-meta .note{font-size:12px!important;margin-top:5px!important;line-height:1.6!important;}
-    /* === 配線数量表（wiring-mode）：A3 横1ページに収めるためコンパクトに === */
-    .wiring-mode{font-size:10.5px;}
-    .wiring-mode .sheet-head{margin-bottom:2mm;padding-bottom:3px;}
-    .wiring-mode .sheet-head .title{font-size:16px;}
-    .wiring-mode .sheet-head .proj{font-size:11px;}
-    .wiring-mode .sheet-head .meta{font-size:9.5px;line-height:1.35;}
+    /* === 配線数量表（wiring-mode）：A3 横1ページに確実に収める更にコンパクトに === */
+    .wiring-mode{font-size:10px;}
+    .wiring-mode .sheet-head{margin-bottom:1.5mm;padding-bottom:2px;}
+    .wiring-mode .sheet-head .title{font-size:15px;}
+    .wiring-mode .sheet-head .proj{font-size:10.5px;}
+    .wiring-mode .sheet-head .meta{font-size:9px;line-height:1.3;}
     /* 坪数表・集計部・基本数量・追加配線の各テーブル */
-    .wiring-mode table{font-size:9.5px!important;margin-top:3px!important;}
-    .wiring-mode table th{padding:2px 4px!important;font-size:9px!important;}
-    .wiring-mode table td{padding:2px 4px!important;font-size:9.5px!important;}
+    .wiring-mode table{font-size:9px!important;margin-top:2px!important;}
+    .wiring-mode table th{padding:1.5px 3px!important;font-size:8.5px!important;}
+    .wiring-mode table td{padding:1.5px 3px!important;font-size:9px!important;line-height:1.3!important;}
     /* 坪数の根拠資料：A3 ではコンパクトに */
-    .wiring-mode img[src^="data:image"]{max-height:24mm!important;}
+    .wiring-mode img[src^="data:image"]{max-height:18mm!important;}
     /* 集計部の ③ をやや大きく強調維持 */
-    .wiring-mode table tr td[style*="font-size:17px"]{font-size:12px!important;}
-    .wiring-mode table tr td[style*="font-size:14px"]{font-size:10.5px!important;}
+    .wiring-mode table tr td[style*="font-size:17px"]{font-size:11px!important;}
+    .wiring-mode table tr td[style*="font-size:14px"]{font-size:9.5px!important;}
     /* テーブル間の見出しバー（基本数量追加表／追加配線等 数量表）を縮める */
-    .wiring-mode div[style*="background:#3b4a5c"][style*="padding:4px 12px"]{padding:1.5px 7px!important;font-size:10.5px!important;margin:4px 0 2px!important;}
+    .wiring-mode div[style*="background:#3b4a5c"][style*="padding:4px 12px"]{padding:1px 6px!important;font-size:10px!important;margin:3px 0 1px!important;}
     /* 坪数根拠資料の枠も圧縮 */
-    .wiring-mode div[style*="background:#f8fafc"]{padding:3px 6px!important;margin-top:3px!important;}
+    .wiring-mode div[style*="background:#f8fafc"]{padding:2px 5px!important;margin-top:2px!important;}
+    .wiring-mode div[style*="background:#f8fafc"] > div:first-child{font-size:9px!important;margin-bottom:1px!important;}
     /* テーブル行は1ページ内で行単位の改ページを許可（テーブル丸ごと送りで上に大空白ができるのを防ぐ） */
     .wiring-mode table{break-inside:auto!important;page-break-inside:auto!important;}
     .wiring-mode tr{break-inside:avoid!important;page-break-inside:avoid!important;}
+    /* セクション見出し（追加配線等 数量表 など）が次ページに送られないよう、
+       見出しと直後のテーブルを一緒に保持する */
+    .wiring-mode div[style*="background:#3b4a5c"]{break-after:avoid!important;page-break-after:avoid!important;}
     /* 備考欄・hint・margin も縮める */
-    .wiring-mode .hint{font-size:8.5px!important;}
+    .wiring-mode .hint{font-size:8px!important;}
     /* フッター・備考欄も省スペース化 */
-    .wiring-mode .foot{font-size:9px!important;margin-top:5px!important;padding-top:3px!important;}
+    .wiring-mode .foot{font-size:8.5px!important;margin-top:3px!important;padding-top:2px!important;}
 
     /* 照明カードは A3 横で 8列×4行 = 32個 入るように小さく整える（lighting-mode のみ） */
     .lighting-mode .lt-cards{grid-template-columns:repeat(8, 1fr)!important;gap:2mm!important;}
