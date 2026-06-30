@@ -2788,12 +2788,14 @@ function renderTateguSheet(){
     s+=`</div></div>`;
     return s;
   };
-  const signHtml = () => `
-    <div class="note" style="margin-top:4mm;">※ 安全性・デザイン性・施工性を優先する場合、仕様詳細図面通りの施工とならない場合がございます。</div>
+  // 各階ページの下に出すフッター（ちかさん指定：1F/2F それぞれ別のフォルダに入れるため各階に必要）
+  // 注意書きは各階に毎回出すと冗長なので最終階のみに付ける。
+  const pageFooter = (isLast) => `
+    ${isLast ? `<div class="note" style="margin-top:4mm;">※ 安全性・デザイン性・施工性を優先する場合、仕様詳細図面通りの施工とならない場合がございます。</div>` : ''}
     ${renderProjectFooterHtml(m.meta.title, /*compact*/false)}`;
 
   // 階ごとに A3横の1ページ：左に[間取り図＋共通仕様＋床仕様]、右に建具カード。
-  // 署名は最後の階の grid の「下」に出す（左カラムではなく、建具表の下まで全幅）
+  // 各階の grid の下にそれぞれフッター（タイトル枠）を出す。
   const floors=[...new Set(m.doors.map(d=>d.floor||''))].filter(Boolean);
   floors.forEach((fl,fi)=>{
     const list=m.doors.filter(d=>(d.floor||'')===fl);
@@ -2814,8 +2816,8 @@ function renderTateguSheet(){
         <div class="tg-cards">${list.map(cardHtml).join('')}</div>
       </div>
     </div>`;
-    // 最後の階のページ末尾に署名（grid 外に出して建具表の下に全幅で表示）
-    if(isLast) h += signHtml();
+    // 各階のページ末尾にフッター枠（grid 外に出して建具表の下に全幅で表示）
+    h += pageFooter(isLast);
   });
   // ※ 設計仕様詳細の画像は「入力画面のみ」表示。印刷シートには載せない。
   document.getElementById('sheet').innerHTML=h;
@@ -2996,6 +2998,7 @@ function renderKurosuSheet(){
   };
 
   // 階ごとに A3横の1ページ：左に間取り図、右にクロスカード。下に基本クロス・注記。
+  // 各階ページの下に Excel ライク枠（フッター）を出す（ちかさん：1F/2F それぞれ別フォルダに入れるため各階に必要）。
   const floors=[...new Set(m.rooms.map(r=>r.floor||''))].filter(Boolean);
   if(!floors.length) floors.push('1階','2階'); // データ未入力でも間取りページは出す
   floors.forEach((fl, fi)=>{
@@ -3021,10 +3024,9 @@ function renderKurosuSheet(){
           : `<div class="empty" style="padding:20px;color:#999;text-align:center;font-size:12px;border:1px dashed #ccc;border-radius:4px;">この階には基本クロス以外のエントリがありません</div>`}
       </div>
     </div>`;
+    // 各階ページの下にフッター枠（タイトル＋物件名）— ちかさん指定で 1F／2F ともに必要
+    h += renderProjectFooterHtml(m.meta.title, /*compact*/false);
   });
-
-  // フッター（Excel ライク枠）— 最終ページの末尾
-  h += renderProjectFooterHtml(m.meta.title, /*compact*/false);
 
   document.getElementById('sheet').innerHTML=h;
 }
