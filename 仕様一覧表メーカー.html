@@ -388,7 +388,15 @@
     #sheet.kurosu-mode .kr-meta .row{font-size:13px!important;padding:2px 0!important;}
     #sheet.kurosu-mode .kr-meta .row .k{width:125px!important;}
     #sheet.kurosu-mode .kr-meta .note{font-size:12px!important;margin-top:5px!important;line-height:1.6!important;}
-    /* === 配線数量表（wiring-mode）：A3 横1ページに確実に収める更にコンパクトに === */
+    /* === 配線数量表（wiring-mode）：A3 横1ページに確実に収める更にコンパクトに ===
+       ただしフッター枠（.proj-footer-tbl）は除外して、各 td の inline style サイズを尊重。 */
+    .wiring-mode .proj-footer-tbl,
+    .wiring-mode .proj-footer-tbl td,
+    .wiring-mode .proj-footer-tbl th{
+      font-size:revert!important;
+      padding:revert!important;
+      line-height:revert!important;
+    }
     .wiring-mode{font-size:10px;}
     .wiring-mode .sheet-head{margin-bottom:1.5mm;padding-bottom:2px;}
     .wiring-mode .sheet-head .title{font-size:15px;}
@@ -1068,8 +1076,10 @@ function renderProjectFooterHtml(docTitle, compact){
   const F = compact
     ? { name:17, title:14, addr:9.5, info:9, logoH:24, logoW:80, pad:'2mm 4mm', padSm:'2px 5px', mt:'3mm' }
     : { name:23, title:19, addr:12, info:11, logoH:34, logoW:115, pad:'7px 14px', padSm:'4px 8px', mt:'6mm' };
+  // table に class="proj-footer-tbl" を付けて、wiring-mode 等の table 圧縮CSS が
+  // フッター枠まで波及しないように除外できるようにする。
   return `<div class="proj-footer" style="margin-top:${F.mt};">
-      <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
+      <table class="proj-footer-tbl" style="width:100%;border-collapse:collapse;table-layout:fixed;">
         <colgroup>
           <col style="width:18%;"><col style="width:40%;"><col style="width:25%;"><col style="width:17%;">
         </colgroup>
