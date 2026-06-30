@@ -388,11 +388,14 @@
     #sheet.kurosu-mode .kr-meta .row{font-size:13px!important;padding:2px 0!important;}
     #sheet.kurosu-mode .kr-meta .row .k{width:125px!important;}
     #sheet.kurosu-mode .kr-meta .note{font-size:12px!important;margin-top:5px!important;line-height:1.6!important;}
-    /* === 配線数量表（wiring-mode）：A3 横1ページに確実に収める更にコンパクトに ===
-       ただしフッター枠（.proj-footer-tbl）は除外して、各 td の inline style サイズを尊重。 */
+    /* === フッター枠（.proj-footer-tbl）は wiring-mode/lighting-mode の table 圧縮CSS
+       から除外して、各 td の inline style サイズを尊重する === */
     .wiring-mode .proj-footer-tbl,
     .wiring-mode .proj-footer-tbl td,
-    .wiring-mode .proj-footer-tbl th{
+    .wiring-mode .proj-footer-tbl th,
+    .lighting-mode .proj-footer-tbl,
+    .lighting-mode .proj-footer-tbl td,
+    .lighting-mode .proj-footer-tbl th{
       font-size:revert!important;
       padding:revert!important;
       line-height:revert!important;
@@ -3411,9 +3414,9 @@ function renderLightingSheet(){
     h += `<div class="empty" style="padding:30px;color:#999;text-align:center;font-size:13px;border:1px dashed #ccc;border-radius:4px;margin:20px 0;">照明エントリが未登録です。編集画面で「＋ 照明を追加」してください。</div>`;
   }
 
-  // フッター（Excel ライク枠）
+  // フッター（Excel ライク枠）— 配線表と同じく compact=false で物件名を大きく揃える
   h += `<div class="note" style="margin-top:10px;">${esc(m.meta.note||'')}</div>`;
-  h += renderProjectFooterHtml(m.meta.title, /*compact*/true);
+  h += renderProjectFooterHtml(m.meta.title, /*compact*/false);
 
   document.getElementById('sheet').innerHTML = h;
 }
