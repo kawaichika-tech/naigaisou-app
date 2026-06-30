@@ -388,27 +388,17 @@
     #sheet.kurosu-mode .kr-meta .row{font-size:13px!important;padding:2px 0!important;}
     #sheet.kurosu-mode .kr-meta .row .k{width:125px!important;}
     #sheet.kurosu-mode .kr-meta .note{font-size:12px!important;margin-top:5px!important;line-height:1.6!important;}
-    /* === フッター枠（.proj-footer-tbl）は wiring-mode/lighting-mode の table 圧縮CSS
-       から除外して、各 td の inline style サイズを尊重する === */
-    .wiring-mode .proj-footer-tbl,
-    .wiring-mode .proj-footer-tbl td,
-    .wiring-mode .proj-footer-tbl th,
-    .lighting-mode .proj-footer-tbl,
-    .lighting-mode .proj-footer-tbl td,
-    .lighting-mode .proj-footer-tbl th{
-      font-size:revert!important;
-      padding:revert!important;
-      line-height:revert!important;
-    }
     .wiring-mode{font-size:10px;}
     .wiring-mode .sheet-head{margin-bottom:1.5mm;padding-bottom:2px;}
     .wiring-mode .sheet-head .title{font-size:15px;}
     .wiring-mode .sheet-head .proj{font-size:15px;}
     .wiring-mode .sheet-head .meta{font-size:9px;line-height:1.3;}
-    /* 坪数表・集計部・基本数量・追加配線の各テーブル */
-    .wiring-mode table{font-size:9px!important;margin-top:2px!important;}
-    .wiring-mode table th{padding:1.5px 3px!important;font-size:8.5px!important;}
-    .wiring-mode table td{padding:1.5px 3px!important;font-size:9px!important;line-height:1.3!important;}
+    /* 坪数表・集計部・基本数量・追加配線の各テーブル。
+       ★フッター枠の table（.proj-footer-tbl）はこの圧縮対象から除外して、
+       各 td の inline style サイズ（物件名30px等）を尊重する。 */
+    .wiring-mode table:not(.proj-footer-tbl){font-size:9px!important;margin-top:2px!important;}
+    .wiring-mode table:not(.proj-footer-tbl) th{padding:1.5px 3px!important;font-size:8.5px!important;}
+    .wiring-mode table:not(.proj-footer-tbl) td{padding:1.5px 3px!important;font-size:9px!important;line-height:1.3!important;}
     /* 坪数の根拠資料：A3 ではコンパクトに（小さくてOK） */
     .wiring-mode img[src^="data:image"]{max-height:13mm!important;}
     /* 集計部の ③ をやや大きく強調維持 */
@@ -1077,8 +1067,8 @@ function setPresent(si,val){ DATA.sections[si].present=val; renderEditor(); sync
 function renderProjectFooterHtml(docTitle, compact){
   const p = DATA.project;
   const F = compact
-    ? { name:17, title:14, addr:9.5, info:9, logoH:24, logoW:80, pad:'2mm 4mm', padSm:'2px 5px', mt:'3mm' }
-    : { name:23, title:19, addr:12, info:11, logoH:34, logoW:115, pad:'7px 14px', padSm:'4px 8px', mt:'6mm' };
+    ? { name:22, title:16, addr:10, info:10, logoH:26, logoW:85, pad:'3mm 5mm', padSm:'3px 6px', mt:'3mm' }
+    : { name:30, title:22, addr:13, info:12, logoH:38, logoW:125, pad:'8px 16px', padSm:'5px 10px', mt:'6mm' };
   // table に class="proj-footer-tbl" を付けて、wiring-mode 等の table 圧縮CSS が
   // フッター枠まで波及しないように除外できるようにする。
   return `<div class="proj-footer" style="margin-top:${F.mt};">
