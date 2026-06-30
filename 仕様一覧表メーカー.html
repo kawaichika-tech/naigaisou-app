@@ -290,13 +290,15 @@
     .wiring-mode,
     #sheet.harimake-mode{width:auto!important;max-width:none!important;box-shadow:none;margin:0!important;padding:5mm!important;}
     @page{size:A3 landscape;margin:0;}
-    /* 照明・配線シート全体を flex column にして、最後の子（フッター枠）が
+    /* 照明・配線・貼り分けシート全体を flex column にして、最後の子（フッター枠）が
        A3 ページの最下部に固定されるようにする。複数階・複数テーブルあっても、
        メインコンテンツが flex 伸びてフッターが下に張り付く。 */
     .lighting-mode,
-    .wiring-mode{display:flex!important;flex-direction:column!important;min-height:283mm!important;}
+    .wiring-mode,
+    #sheet.harimake-mode{display:flex!important;flex-direction:column!important;min-height:283mm!important;}
     .lighting-mode > .proj-footer,
-    .wiring-mode > .proj-footer{margin-top:auto!important;}
+    .wiring-mode > .proj-footer,
+    #sheet.harimake-mode > .proj-footer{margin-top:auto!important;}
     /* === 仕様一覧表（spec モード）：A3横で読みやすい2列レイアウト === */
     /* 現場の人が見ながら作業するため、フォント読みやすさ優先 */
     /* 1枚目=外部、2枚目=内部 で綺麗に分割。各area-block 内で2列グリッド */
