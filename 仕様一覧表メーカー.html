@@ -807,11 +807,7 @@ function renderWiringCheckSheet(){
   Object.values(SHEET_MODE_MAP).forEach(c => sheet.classList.remove(c));
   sheet.classList.add('wiring-mode');
 
-  let h = `<div class="sheet-head">
-      <div><div class="title">${esc(m.meta.title)}（チェック用）</div>
-        <div class="proj">${esc(p.name)}</div></div>
-      <div class="meta">決定日：${esc(p.decided_date)||'　　　年　　月　　日'}<br>作成者：${esc(p.author)}</div>
-    </div>`;
+  let h = renderProjectHeaderHtml(m.meta.title + '（チェック用）', '', /*compact*/true);
 
   // 担当者欄
   h += `<div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:6px;">
@@ -1031,17 +1027,21 @@ function setPresent(si,val){ DATA.sections[si].present=val; renderEditor(); sync
 /* ============================================================
    プレビュー（印刷シート）描画
    ============================================================ */
-function renderSpecSheet(){
-  // 区域（防火）→ 玄関ドア種別の自動同期（ロード時の保存値にも対応）
-  applyDoorFireSpec();
+/* 全図面で共通の『Excel ライクな統合ヘッダー枠』を生成する。
+   - docTitle：右側大セルに出すタイトル（『外部・内部仕様一覧表』『建具・床図面』など）
+   - extraNote：ヘッダー直下に1行で出す補助情報（『指定区域：…』『建具：…』等、無ければ空文字）
+   現場で見慣れた『ainico ロゴ＋電話／物件名＋会社名／署名・承認／タイトル／決定日・作成者』
+   の5列構成。物件名（21px紺色）が一目で見えて、複数物件の取り違えを防ぐ。 */
+function renderProjectHeaderHtml(docTitle, extraNote, compact){
   const p = DATA.project;
-  // 既存の sheet-head の枠線を消すため、空コンテナだけ残す（後続CSSの areaTitle 等を壊さない）
+  // compact=true で照明・配線など『中身が多い図面』向けに一回り小さい版を返す。
+  // 仕様一覧表・建具表・クロス・貼り分けは通常版（compact=false）でゆったり表示。
+  const F = compact
+    ? { warn:8.5, name:14, title:14, addr:9.5, sig:8.5, info:8.5, note:9, logoH:24, logoW:80, padCell:'2mm 4mm', padCellSm:'2px 5px', mb:'2mm' }
+    : { warn:10, name:21, title:20, addr:13, sig:11, info:11, note:11, logoH:36, logoW:120, padCell:'8px 14px', padCellSm:'4px 8px', mb:'4mm' };
   let h = `<div class="sheet-head" style="display:none;"></div>`;
-  // ── Excel ライクな統合ヘッダー枠 ──
-  // 上部の注意書き＋下の5列構成のテーブルで、現場で見慣れた形を再現。
-  // ロゴ画像 ainico_logo.png は無くても枠は崩れない（onerror で非表示）。
-  h += `<div class="proj-header" style="margin-bottom:6mm;">
-      <div style="text-align:right;font-size:10px;color:#c0392b;padding:2px 10px;border:1px solid #888;border-bottom:none;background:#fff;">
+  h += `<div class="proj-header" style="margin-bottom:${F.mb};">
+      <div style="text-align:right;font-size:${F.warn}px;color:#c0392b;padding:2px 10px;border:1px solid #888;border-bottom:none;background:#fff;">
         ※ 安全性・デザイン性・施工性を優先する場合、仕様詳細図面通りの施工とならない場合がございます。
       </div>
       <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
@@ -1049,24 +1049,32 @@ function renderSpecSheet(){
           <col style="width:13%;"><col style="width:31%;"><col style="width:13%;"><col style="width:27%;"><col style="width:16%;">
         </colgroup>
         <tr>
-          <td rowspan="2" style="border:1px solid #888;padding:6px 8px;text-align:center;vertical-align:middle;background:#fff;">
-            <img src="${imgSrc('ainico_logo.png')}" onerror="this.style.display='none'" style="max-width:120px;max-height:36px;display:block;margin:0 auto 4px;">
-            <div style="font-size:10.5px;color:#1a4a7a;font-weight:bold;line-height:1.5;">☎ 0742-71-9990<br>FAX 0742-71-9980</div>
+          <td rowspan="2" style="border:1px solid #888;padding:4px 6px;text-align:center;vertical-align:middle;background:#fff;">
+            <img src="${imgSrc('ainico_logo.png')}" onerror="this.style.display='none'" style="max-width:${F.logoW}px;max-height:${F.logoH}px;display:block;margin:0 auto 3px;">
+            <div style="font-size:${F.addr-2.5}px;color:#1a4a7a;font-weight:bold;line-height:1.4;">☎ 0742-71-9990<br>FAX 0742-71-9980</div>
           </td>
-          <td style="border:1px solid #888;padding:8px 14px;font-size:21px;font-weight:bold;color:#1a4a7a;text-align:center;vertical-align:middle;">${esc(p.name)}</td>
-          <td style="border:1px solid #888;padding:4px;text-align:center;font-size:11px;color:#555;vertical-align:middle;">お客様ご署名</td>
-          <td rowspan="2" style="border:1px solid #888;padding:6px;text-align:center;vertical-align:middle;font-size:20px;font-weight:bold;background:#fafaf6;">${esc(p.title)}</td>
-          <td style="border:1px solid #888;padding:4px 8px;text-align:center;font-size:11px;color:#555;">決定日</td>
+          <td style="border:1px solid #888;padding:${F.padCell};font-size:${F.name}px;font-weight:bold;color:#1a4a7a;text-align:center;vertical-align:middle;">${esc(p.name)}</td>
+          <td style="border:1px solid #888;padding:3px;text-align:center;font-size:${F.sig}px;color:#555;vertical-align:middle;">お客様ご署名</td>
+          <td rowspan="2" style="border:1px solid #888;padding:4px;text-align:center;vertical-align:middle;font-size:${F.title}px;font-weight:bold;background:#fafaf6;">${esc(docTitle||'')}</td>
+          <td style="border:1px solid #888;padding:${F.padCellSm};text-align:center;font-size:${F.info}px;color:#555;">決定日</td>
         </tr>
         <tr>
-          <td style="border:1px solid #888;padding:6px 14px;font-size:13px;color:#333;text-align:center;vertical-align:middle;">アイニコグループ株式会社　一級建築士事務所</td>
-          <td style="border:1px solid #888;padding:4px;text-align:center;font-size:11px;color:#555;vertical-align:middle;">承認書提出</td>
-          <td style="border:1px solid #888;padding:4px 8px;text-align:center;font-size:11px;color:#222;">${esc(p.decided_date)||'　年　月　日'}<br>作成者　${esc(p.author)}<br><span style="color:#555;">コピー捺印欄</span></td>
+          <td style="border:1px solid #888;padding:${F.padCell};font-size:${F.addr}px;color:#333;text-align:center;vertical-align:middle;">アイニコグループ株式会社　一級建築士事務所</td>
+          <td style="border:1px solid #888;padding:3px;text-align:center;font-size:${F.sig}px;color:#555;vertical-align:middle;">承認書提出</td>
+          <td style="border:1px solid #888;padding:${F.padCellSm};text-align:center;font-size:${F.info}px;color:#222;">${esc(p.decided_date)||'　年　月　日'}<br>作成者　${esc(p.author)}<br><span style="color:#555;">コピー捺印欄</span></td>
         </tr>
       </table>
+      ${extraNote ? `<div style="font-size:${F.note}px;color:#444;margin-top:2mm;padding:2px 4px;">${extraNote}</div>` : ''}
     </div>`;
-  // 補足：指定区域・色彩規制（旧ヘッダー meta の内容）はヘッダー下に1行で
-  h += `<div style="font-size:11px;color:#444;margin:-3mm 0 3mm;">指定区域：${esc(p.area_designation)}${p.reg.on?'　／　色彩規制：'+esc(p.reg.label):''}</div>`;
+  return h;
+}
+
+function renderSpecSheet(){
+  // 区域（防火）→ 玄関ドア種別の自動同期（ロード時の保存値にも対応）
+  applyDoorFireSpec();
+  const p = DATA.project;
+  const _spcExtra = `指定区域：${esc(p.area_designation)}${p.reg.on?'　／　色彩規制：'+esc(p.reg.label):''}`;
+  let h = renderProjectHeaderHtml(p.title, _spcExtra);
 
   // 景観・風致：決定済みの外部色を判定。新方式（区域・地区）優先、旧reg.onはフォールバック。
   const _apps = applicableKeikanBases();
@@ -2661,11 +2669,7 @@ function tgDelDoor(i){ if(confirm('この建具を削除しますか？')){ TG.d
 /* 建具表：印刷シート */
 function renderTateguSheet(){
   const p=DATA.project, m=TG;
-  let h=`<div class="sheet-head">
-      <div><div class="title">${esc(m.meta.title)}</div>
-        <div class="proj">${esc(p.name)}</div></div>
-      <div class="meta">建具：${esc(m.meta.maker)}<br>決定日：${esc(p.decided_date)||'　　　年　　月　　日'}<br>作成者：${esc(p.author)}</div>
-    </div>`;
+  let h = renderProjectHeaderHtml(m.meta.title, `建具：${esc(m.meta.maker)}`);
   // 建具カードHTML生成（階ごとページから共用）
   const cardHtml = d => {
     const size=(d.w||d.h)?`W${esc(d.w)} × H${esc(d.h)}`:'';
@@ -2929,11 +2933,7 @@ function krPlanImgClear(floor){
 }
 function renderKurosuSheet(){
   const p=DATA.project, m=KR;
-  let h=`<div class="sheet-head">
-      <div><div class="title">${esc(m.meta.title)}</div>
-        <div class="proj">${esc(p.name)}</div></div>
-      <div class="meta">${esc(m.meta.base_cloth_label)}：${esc(m.meta.base_cloth_hinban)}<br>決定日：${esc(p.decided_date)||'　　　年　　月　　日'}<br>作成者：${esc(p.author)}</div>
-    </div>`;
+  let h = renderProjectHeaderHtml(m.meta.title, `${esc(m.meta.base_cloth_label||'基本クロス')}：${esc(m.meta.base_cloth_hinban||'')}`);
 
   // クロスカードHTML生成（ヘッダーは室名のみ・帯に部位（壁/床/天井）を表示・画像はcontainで全体表示）
   const cardHtml = r => {
@@ -3273,11 +3273,7 @@ function ltAdd(floor){
 function ltDel(i){ if(confirm('この照明エントリを削除しますか？')){ LT.entries.splice(i,1); renderEditor(); sync(); } }
 function renderLightingSheet(){
   const p=DATA.project, m=LT;
-  let h = `<div class="sheet-head">
-      <div><div class="title">${esc(m.meta.title)}</div>
-        <div class="proj">${esc(p.name)}</div></div>
-      <div class="meta">決定日：${esc(p.decided_date)||'　　　年　　月　　日'}<br>作成者：${esc(p.author)}</div>
-    </div>`;
+  let h = renderProjectHeaderHtml(m.meta.title, '', /*compact*/true);
 
   /* エントリーごとに1カード（同じ商品でもまとめず、行ごとに別カード）。
      並びは編集画面の表示順をそのまま使う（編集側で 階→室名 でソート済み）。 */
@@ -3661,11 +3657,7 @@ function renderWiringSheet(){
   const lighting = std ? std.lighting : '-';
   const outlet   = std ? std.outlet   : '-';
 
-  let h = `<div class="sheet-head">
-      <div><div class="title">${esc(m.meta.title)}</div>
-        <div class="proj">${esc(p.name)}</div></div>
-      <div class="meta">決定日：${esc(p.decided_date)||'　　　年　　月　　日'}<br>作成者：${esc(p.author)}</div>
-    </div>`;
+  let h = renderProjectHeaderHtml(m.meta.title, '', /*compact*/true);
 
   // 担当者欄（施工管理／IC）— 配線数量表のヘッダ直下にコンパクトに配置
   h += `<div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:6px;">
@@ -4089,12 +4081,8 @@ function renderHarimakeSheet(){
   const variants = getSidingVariants();
   let h = '';
 
-  // ヘッダー
-  h += `<div class="sheet-head">
-      <div><div class="title">${esc(m.meta.title)}</div>
-        <div class="proj">${esc(p.name)}</div></div>
-      <div class="meta">決定日：${esc(p.decided_date)||'　　　年　　月　　日'}<br>作成者：${esc(p.author)}</div>
-    </div>`;
+  // ヘッダー（全図面共通の Excel ライク統合枠）
+  h += renderProjectHeaderHtml(m.meta.title, '');
 
   // 外壁メイン（カラー名／品番／メーカー すべて太字 14px・画像は 50x50 正方形 contain・1行表示）
   h += `<div style="margin-top:6px;border:1px solid #888;border-radius:4px;padding:6px 10px;display:grid;grid-template-columns:80px 50px 1fr;gap:6px 12px;font-size:12px;align-items:center;background:#f6f8fa;">
