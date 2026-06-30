@@ -812,11 +812,8 @@ function renderWiringCheckSheet(){
   Object.values(SHEET_MODE_MAP).forEach(c => sheet.classList.remove(c));
   sheet.classList.add('wiring-mode');
 
-  let h = `<div class="sheet-head">
-      <div><div class="title">${esc(m.meta.title)}（チェック用）</div>
-        <div class="proj">${esc(p.name)}</div></div>
-      <div class="meta">決定日：${esc(p.decided_date)||'　　　年　　月　　日'}<br>作成者：${esc(p.author)}</div>
-    </div>`;
+  // ちかさん指定：上部ヘッダー廃止。物件名・図面名は下のフッター枠（チェック用）に集約。
+  let h = '';
 
   // 担当者欄
   h += `<div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:6px;">
@@ -1113,18 +1110,9 @@ function renderSpecSheet(){
   // 区域（防火）→ 玄関ドア種別の自動同期（ロード時の保存値にも対応）
   applyDoorFireSpec();
   const p = DATA.project;
-  let h = `<div class="sheet-head">
-      <div>
-        <div class="title">${esc(p.title)}</div>
-        <div class="proj">${esc(p.name)}</div>
-      </div>
-      <div class="meta">
-        指定区域：${esc(p.area_designation)}<br>
-        ${p.reg.on?`色彩規制：${esc(p.reg.label)}<br>`:''}
-        決定日：${esc(p.decided_date)||'　　　年　　月　　日'}<br>
-        作成者：${esc(p.author)}
-      </div>
-    </div>`;
+  // ちかさん指定：上部のタイトル＋物件名＋決定日／作成者ヘッダーは廃止。
+  // 物件名・図面名・決定日・作成者は全部下のフッター枠に集約する。
+  let h = '';
 
   // 景観・風致：決定済みの外部色を判定。新方式（区域・地区）優先、旧reg.onはフォールバック。
   const _apps = applicableKeikanBases();
@@ -2715,11 +2703,8 @@ function tgDelDoor(i){ if(confirm('この建具を削除しますか？')){ TG.d
 /* 建具表：印刷シート */
 function renderTateguSheet(){
   const p=DATA.project, m=TG;
-  let h=`<div class="sheet-head">
-      <div><div class="title">${esc(m.meta.title)}</div>
-        <div class="proj">${esc(p.name)}</div></div>
-      <div class="meta">建具：${esc(m.meta.maker)}<br>決定日：${esc(p.decided_date)||'　　　年　　月　　日'}<br>作成者：${esc(p.author)}</div>
-    </div>`;
+  // ちかさん指定：上部ヘッダー廃止。物件名・図面名は各階下のフッター枠に集約。
+  let h='';
   // 建具カードHTML生成（階ごとページから共用）
   const cardHtml = d => {
     const size=(d.w||d.h)?`W${esc(d.w)} × H${esc(d.h)}`:'';
@@ -2989,11 +2974,8 @@ function krPlanImgClear(floor){
 }
 function renderKurosuSheet(){
   const p=DATA.project, m=KR;
-  let h=`<div class="sheet-head">
-      <div><div class="title">${esc(m.meta.title)}</div>
-        <div class="proj">${esc(p.name)}</div></div>
-      <div class="meta">${esc(m.meta.base_cloth_label||'基本クロス')}：${esc(m.meta.base_cloth_hinban||'')}<br>決定日：${esc(p.decided_date)||'　　　年　　月　　日'}<br>作成者：${esc(p.author)}</div>
-    </div>`;
+  // ちかさん指定：上部ヘッダー廃止。物件名・図面名は各階下のフッター枠に集約。
+  let h='';
 
   // クロスカードHTML生成（ヘッダーは室名のみ・帯に部位（壁/床/天井）を表示・画像はcontainで全体表示）
   const cardHtml = r => {
@@ -3342,11 +3324,8 @@ function ltAdd(floor){
 function ltDel(i){ if(confirm('この照明エントリを削除しますか？')){ LT.entries.splice(i,1); renderEditor(); sync(); } }
 function renderLightingSheet(){
   const p=DATA.project, m=LT;
-  let h = `<div class="sheet-head">
-      <div><div class="title">${esc(m.meta.title)}</div>
-        <div class="proj">${esc(p.name)}</div></div>
-      <div class="meta">決定日：${esc(p.decided_date)||'　　　年　　月　　日'}<br>作成者：${esc(p.author)}</div>
-    </div>`;
+  // ちかさん指定：上部ヘッダー廃止。物件名・図面名は下のフッター枠に集約。
+  let h = '';
 
   /* エントリーごとに1カード（同じ商品でもまとめず、行ごとに別カード）。
      並びは編集画面の表示順をそのまま使う（編集側で 階→室名 でソート済み）。 */
@@ -3730,11 +3709,8 @@ function renderWiringSheet(){
   const lighting = std ? std.lighting : '-';
   const outlet   = std ? std.outlet   : '-';
 
-  let h = `<div class="sheet-head">
-      <div><div class="title">${esc(m.meta.title)}</div>
-        <div class="proj">${esc(p.name)}</div></div>
-      <div class="meta">決定日：${esc(p.decided_date)||'　　　年　　月　　日'}<br>作成者：${esc(p.author)}</div>
-    </div>`;
+  // ちかさん指定：上部ヘッダー廃止。物件名・図面名は下のフッター枠に集約。
+  let h = '';
 
   // 担当者欄（施工管理／IC）— 配線数量表のヘッダ直下にコンパクトに配置
   h += `<div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:6px;">
@@ -4158,12 +4134,7 @@ function renderHarimakeSheet(){
   const variants = getSidingVariants();
   let h = '';
 
-  // ヘッダー
-  h += `<div class="sheet-head">
-      <div><div class="title">${esc(m.meta.title)}</div>
-        <div class="proj">${esc(p.name)}</div></div>
-      <div class="meta">決定日：${esc(p.decided_date)||'　　　年　　月　　日'}<br>作成者：${esc(p.author)}</div>
-    </div>`;
+  // ちかさん指定：上部ヘッダー廃止。物件名・図面名は下のフッター枠に集約。
 
   // 外壁メイン（カラー名／品番／メーカー すべて太字 14px・画像は 50x50 正方形 contain・1行表示）
   h += `<div style="margin-top:6px;border:1px solid #888;border-radius:4px;padding:6px 10px;display:grid;grid-template-columns:80px 50px 1fr;gap:6px 12px;font-size:12px;align-items:center;background:#f6f8fa;">
