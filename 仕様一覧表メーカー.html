@@ -807,7 +807,11 @@ function renderWiringCheckSheet(){
   Object.values(SHEET_MODE_MAP).forEach(c => sheet.classList.remove(c));
   sheet.classList.add('wiring-mode');
 
-  let h = renderProjectHeaderHtml(m.meta.title + '（チェック用）', '', /*compact*/true);
+  let h = `<div class="sheet-head">
+      <div><div class="title">${esc(m.meta.title)}（チェック用）</div>
+        <div class="proj">${esc(p.name)}</div></div>
+      <div class="meta">決定日：${esc(p.decided_date)||'　　　年　　月　　日'}<br>作成者：${esc(p.author)}</div>
+    </div>`;
 
   // 担当者欄
   h += `<div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:6px;">
@@ -987,7 +991,7 @@ function renderWiringCheckSheet(){
   }
 
   h += `<div class="hint" style="margin-top:10px;font-size:10px;color:#a26a1f;border:1px dashed #a26a1f;background:#fff7e0;padding:4px 8px;border-radius:3px;">⚠ このシートはチェック用です。お客様にはお渡ししないでください。</div>`;
-  h += `<div class="foot" style="margin-top:8px;"><div>${esc(p.company)}</div><div>TEL ${esc(p.tel)}　／　FAX ${esc(p.fax)}</div></div>`;
+  h += renderProjectFooterHtml(m.meta.title + '（チェック用）', /*compact*/true);
 
   sheet.innerHTML = h;
 }
@@ -1027,11 +1031,42 @@ function setPresent(si,val){ DATA.sections[si].present=val; renderEditor(); sync
 /* ============================================================
    プレビュー（印刷シート）描画
    ============================================================ */
-/* 全図面で共通の『Excel ライクな統合ヘッダー枠』を生成する。
-   - docTitle：右側大セルに出すタイトル（『外部・内部仕様一覧表』『建具・床図面』など）
-   - extraNote：ヘッダー直下に1行で出す補助情報（『指定区域：…』『建具：…』等、無ければ空文字）
-   現場で見慣れた『ainico ロゴ＋電話／物件名＋会社名／署名・承認／タイトル／決定日・作成者』
-   の5列構成。物件名（21px紺色）が一目で見えて、複数物件の取り違えを防ぐ。 */
+/* 全図面で共通の『Excel ライクな枠』を**ページ下部**に置くためのフッター枠を生成する。
+   ちかさん指定で『お客様ご署名／承認書提出／コピー捺印欄』は削除し、シンプルな
+   4列構成（ロゴ＋電話／物件名・会社名／図面タイトル／決定日・作成者）。
+   現場で見慣れた配置（各図面の下に書類タイトル枠）を再現する。
+   - docTitle：『外部・内部仕様一覧表』『建具・床図面』などの図面タイトル
+   - compact：true で照明・配線など中身が多い図面向けに一回り小さい版 */
+function renderProjectFooterHtml(docTitle, compact){
+  const p = DATA.project;
+  const F = compact
+    ? { name:13, title:13, addr:9.5, info:9, logoH:22, logoW:75, pad:'2mm 4mm', padSm:'2px 5px', mt:'3mm' }
+    : { name:18, title:18, addr:12, info:11, logoH:32, logoW:110, pad:'6px 12px', padSm:'4px 8px', mt:'6mm' };
+  return `<div class="proj-footer" style="margin-top:${F.mt};">
+      <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
+        <colgroup>
+          <col style="width:18%;"><col style="width:40%;"><col style="width:25%;"><col style="width:17%;">
+        </colgroup>
+        <tr>
+          <td rowspan="2" style="border:1px solid #888;padding:4px 6px;text-align:center;vertical-align:middle;background:#fff;">
+            <img src="${imgSrc('ainico_logo.png')}" onerror="this.style.display='none'" style="max-width:${F.logoW}px;max-height:${F.logoH}px;display:block;margin:0 auto 3px;">
+            <div style="font-size:${F.addr-1.5}px;color:#1a4a7a;font-weight:bold;line-height:1.4;">☎ ${esc(p.tel)}<br>FAX ${esc(p.fax)}</div>
+          </td>
+          <td style="border:1px solid #888;padding:${F.pad};font-size:${F.name}px;font-weight:bold;color:#1a4a7a;text-align:center;vertical-align:middle;">${esc(p.name)}</td>
+          <td rowspan="2" style="border:1px solid #888;padding:4px;text-align:center;vertical-align:middle;font-size:${F.title}px;font-weight:bold;background:#fafaf6;">${esc(docTitle||'')}</td>
+          <td style="border:1px solid #888;padding:${F.padSm};text-align:center;font-size:${F.info}px;color:#555;">決定日</td>
+        </tr>
+        <tr>
+          <td style="border:1px solid #888;padding:${F.pad};font-size:${F.addr}px;color:#333;text-align:center;vertical-align:middle;">${esc(p.company)}</td>
+          <td style="border:1px solid #888;padding:${F.padSm};text-align:center;font-size:${F.info}px;color:#222;">${esc(p.decided_date)||'　年　月　日'}<br>作成者　${esc(p.author)}</td>
+        </tr>
+      </table>
+    </div>`;
+}
+
+/* 全図面で共通の『Excel ライクな統合ヘッダー枠』を生成する（現在は使用していない）。
+   ちかさん要望により下に置く形に変更したため、上部はシンプルな sheet-head に戻している。
+   関数自体は保存・読込時の互換性のため残してある。 */
 function renderProjectHeaderHtml(docTitle, extraNote, compact){
   const p = DATA.project;
   // compact=true で照明・配線など『中身が多い図面』向けに一回り小さい版を返す。
@@ -1073,8 +1108,18 @@ function renderSpecSheet(){
   // 区域（防火）→ 玄関ドア種別の自動同期（ロード時の保存値にも対応）
   applyDoorFireSpec();
   const p = DATA.project;
-  const _spcExtra = `指定区域：${esc(p.area_designation)}${p.reg.on?'　／　色彩規制：'+esc(p.reg.label):''}`;
-  let h = renderProjectHeaderHtml(p.title, _spcExtra);
+  let h = `<div class="sheet-head">
+      <div>
+        <div class="title">${esc(p.title)}</div>
+        <div class="proj">${esc(p.name)}</div>
+      </div>
+      <div class="meta">
+        指定区域：${esc(p.area_designation)}<br>
+        ${p.reg.on?`色彩規制：${esc(p.reg.label)}<br>`:''}
+        決定日：${esc(p.decided_date)||'　　　年　　月　　日'}<br>
+        作成者：${esc(p.author)}
+      </div>
+    </div>`;
 
   // 景観・風致：決定済みの外部色を判定。新方式（区域・地区）優先、旧reg.onはフォールバック。
   const _apps = applicableKeikanBases();
@@ -1142,13 +1187,9 @@ function renderSpecSheet(){
     h += `</div></div>`;  // /sec-grid /area-block
   });
 
-  h += `<div class="sign">
-      <div class="box"><b>お客様ご署名</b></div>
-      <div class="box"><b>承認書提出</b></div>
-      <div class="box"><b>捺印欄</b></div>
-    </div>
-    <div class="note">※ 安全性・デザイン性・施工性を優先する場合、仕様詳細図面通りの施工とならない場合がございます。</div>
-    <div class="foot"><div>${esc(p.company)}</div><div>TEL ${esc(p.tel)}　／　FAX ${esc(p.fax)}</div></div>`;
+  // 注意書き＋下部 Excel ライク枠（仕様一覧表のタイトルは2枚目=内部の下に来る）
+  h += `<div class="note" style="margin-top:5mm;">※ 安全性・デザイン性・施工性を優先する場合、仕様詳細図面通りの施工とならない場合がございます。</div>`;
+  h += renderProjectFooterHtml(p.title, /*compact*/false);
 
   document.getElementById('sheet').innerHTML = h;
 }
@@ -2669,7 +2710,11 @@ function tgDelDoor(i){ if(confirm('この建具を削除しますか？')){ TG.d
 /* 建具表：印刷シート */
 function renderTateguSheet(){
   const p=DATA.project, m=TG;
-  let h = renderProjectHeaderHtml(m.meta.title, `建具：${esc(m.meta.maker)}`);
+  let h=`<div class="sheet-head">
+      <div><div class="title">${esc(m.meta.title)}</div>
+        <div class="proj">${esc(p.name)}</div></div>
+      <div class="meta">建具：${esc(m.meta.maker)}<br>決定日：${esc(p.decided_date)||'　　　年　　月　　日'}<br>作成者：${esc(p.author)}</div>
+    </div>`;
   // 建具カードHTML生成（階ごとページから共用）
   const cardHtml = d => {
     const size=(d.w||d.h)?`W${esc(d.w)} × H${esc(d.h)}`:'';
@@ -2744,9 +2789,8 @@ function renderTateguSheet(){
     return s;
   };
   const signHtml = () => `
-    <div class="sign"><div class="box"><b>お客様ご署名</b></div><div class="box"><b>承認書提出</b></div><div class="box"><b>捺印欄</b></div></div>
-    <div class="note">※ 安全性・デザイン性・施工性を優先する場合、仕様詳細図面通りの施工とならない場合がございます。</div>
-    <div class="foot"><div>${esc(p.company)}</div><div>TEL ${esc(p.tel)}　／　FAX ${esc(p.fax)}</div></div>`;
+    <div class="note" style="margin-top:4mm;">※ 安全性・デザイン性・施工性を優先する場合、仕様詳細図面通りの施工とならない場合がございます。</div>
+    ${renderProjectFooterHtml(m.meta.title, /*compact*/false)}`;
 
   // 階ごとに A3横の1ページ：左に[間取り図＋共通仕様＋床仕様]、右に建具カード。
   // 署名は最後の階の grid の「下」に出す（左カラムではなく、建具表の下まで全幅）
@@ -2933,7 +2977,11 @@ function krPlanImgClear(floor){
 }
 function renderKurosuSheet(){
   const p=DATA.project, m=KR;
-  let h = renderProjectHeaderHtml(m.meta.title, `${esc(m.meta.base_cloth_label||'基本クロス')}：${esc(m.meta.base_cloth_hinban||'')}`);
+  let h=`<div class="sheet-head">
+      <div><div class="title">${esc(m.meta.title)}</div>
+        <div class="proj">${esc(p.name)}</div></div>
+      <div class="meta">${esc(m.meta.base_cloth_label||'基本クロス')}：${esc(m.meta.base_cloth_hinban||'')}<br>決定日：${esc(p.decided_date)||'　　　年　　月　　日'}<br>作成者：${esc(p.author)}</div>
+    </div>`;
 
   // クロスカードHTML生成（ヘッダーは室名のみ・帯に部位（壁/床/天井）を表示・画像はcontainで全体表示）
   const cardHtml = r => {
@@ -2975,8 +3023,8 @@ function renderKurosuSheet(){
     </div>`;
   });
 
-  // フッター（会社情報）— 最終ページの末尾
-  h+=`<div class="foot" style="margin-top:18px;"><div>${esc(p.company)}</div><div>TEL ${esc(p.tel)}　／　FAX ${esc(p.fax)}</div></div>`;
+  // フッター（Excel ライク枠）— 最終ページの末尾
+  h += renderProjectFooterHtml(m.meta.title, /*compact*/false);
 
   document.getElementById('sheet').innerHTML=h;
 }
@@ -3273,7 +3321,11 @@ function ltAdd(floor){
 function ltDel(i){ if(confirm('この照明エントリを削除しますか？')){ LT.entries.splice(i,1); renderEditor(); sync(); } }
 function renderLightingSheet(){
   const p=DATA.project, m=LT;
-  let h = renderProjectHeaderHtml(m.meta.title, '', /*compact*/true);
+  let h = `<div class="sheet-head">
+      <div><div class="title">${esc(m.meta.title)}</div>
+        <div class="proj">${esc(p.name)}</div></div>
+      <div class="meta">決定日：${esc(p.decided_date)||'　　　年　　月　　日'}<br>作成者：${esc(p.author)}</div>
+    </div>`;
 
   /* エントリーごとに1カード（同じ商品でもまとめず、行ごとに別カード）。
      並びは編集画面の表示順をそのまま使う（編集側で 階→室名 でソート済み）。 */
@@ -3321,9 +3373,9 @@ function renderLightingSheet(){
     h += `<div class="empty" style="padding:30px;color:#999;text-align:center;font-size:13px;border:1px dashed #ccc;border-radius:4px;margin:20px 0;">照明エントリが未登録です。編集画面で「＋ 照明を追加」してください。</div>`;
   }
 
-  // フッター
-  h += `<div class="note" style="margin-top:10px;">${esc(m.meta.note||'')}</div>
-        <div class="foot" style="margin-top:8px;"><div>${esc(p.company)}</div><div>TEL ${esc(p.tel)}　／　FAX ${esc(p.fax)}</div></div>`;
+  // フッター（Excel ライク枠）
+  h += `<div class="note" style="margin-top:10px;">${esc(m.meta.note||'')}</div>`;
+  h += renderProjectFooterHtml(m.meta.title, /*compact*/true);
 
   document.getElementById('sheet').innerHTML = h;
 }
@@ -3657,7 +3709,11 @@ function renderWiringSheet(){
   const lighting = std ? std.lighting : '-';
   const outlet   = std ? std.outlet   : '-';
 
-  let h = renderProjectHeaderHtml(m.meta.title, '', /*compact*/true);
+  let h = `<div class="sheet-head">
+      <div><div class="title">${esc(m.meta.title)}</div>
+        <div class="proj">${esc(p.name)}</div></div>
+      <div class="meta">決定日：${esc(p.decided_date)||'　　　年　　月　　日'}<br>作成者：${esc(p.author)}</div>
+    </div>`;
 
   // 担当者欄（施工管理／IC）— 配線数量表のヘッダ直下にコンパクトに配置
   h += `<div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:6px;">
@@ -3830,8 +3886,8 @@ function renderWiringSheet(){
     h += `<div style="border:1px solid #888;padding:8px 12px;font-size:12px;white-space:pre-wrap;line-height:1.6;">${esc(m.memo)}</div>`;
   }
 
-  h += `<div class="note" style="margin-top:10px;">${esc(m.meta.note||'')}</div>
-        <div class="foot" style="margin-top:8px;"><div>${esc(p.company)}</div><div>TEL ${esc(p.tel)}　／　FAX ${esc(p.fax)}</div></div>`;
+  h += `<div class="note" style="margin-top:10px;">${esc(m.meta.note||'')}</div>`;
+  h += renderProjectFooterHtml(m.meta.title, /*compact*/true);
 
   document.getElementById('sheet').innerHTML = h;
 }
@@ -4081,8 +4137,12 @@ function renderHarimakeSheet(){
   const variants = getSidingVariants();
   let h = '';
 
-  // ヘッダー（全図面共通の Excel ライク統合枠）
-  h += renderProjectHeaderHtml(m.meta.title, '');
+  // ヘッダー
+  h += `<div class="sheet-head">
+      <div><div class="title">${esc(m.meta.title)}</div>
+        <div class="proj">${esc(p.name)}</div></div>
+      <div class="meta">決定日：${esc(p.decided_date)||'　　　年　　月　　日'}<br>作成者：${esc(p.author)}</div>
+    </div>`;
 
   // 外壁メイン（カラー名／品番／メーカー すべて太字 14px・画像は 50x50 正方形 contain・1行表示）
   h += `<div style="margin-top:6px;border:1px solid #888;border-radius:4px;padding:6px 10px;display:grid;grid-template-columns:80px 50px 1fr;gap:6px 12px;font-size:12px;align-items:center;background:#f6f8fa;">
@@ -4164,8 +4224,8 @@ function renderHarimakeSheet(){
 
   h += `</div>`; // /grid 2カラム
 
-  // フッター
-  h += `<div class="foot" style="margin-top:5mm;"><div>${esc(p.company)}</div><div>TEL ${esc(p.tel)}　／　FAX ${esc(p.fax)}</div></div>`;
+  // フッター（Excel ライク枠）
+  h += renderProjectFooterHtml(m.meta.title, /*compact*/false);
 
   document.getElementById('sheet').innerHTML = h;
 }
