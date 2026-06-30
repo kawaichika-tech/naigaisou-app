@@ -309,6 +309,10 @@
     #sheet.spec-mode .warnbar{padding:6px 12px;font-size:12.5px;margin-bottom:3mm;}
     #sheet.spec-mode .sign{margin-top:6mm;padding-top:5mm;}
     #sheet.spec-mode .sign .box{min-height:22mm;padding:5px 9px;font-size:12px;}
+    /* 各階を A3 1ページに広げる：tg-print-page が flex column で A3 縦サイズいっぱい使い、
+       中身 tg-floor-page を flex:1 で伸ばす。最下部にフッター枠が固定で来る。 */
+    #sheet.tategu-mode .tg-print-page{display:flex!important;flex-direction:column!important;height:283mm!important;break-inside:avoid!important;page-break-inside:avoid!important;}
+    #sheet.tategu-mode .tg-print-page > .tg-floor-page{flex:1!important;min-height:0!important;}
     /* === 建具表（tategu-mode）：A3 横向き、左カラムも大きく＆カードも横長に === */
     /* 左カラム比を 0.55fr に少し広げて間取り図＋仕様欄を大きく見せ、
        カード側は画像をさらに大きく（130x130）して attrs（縦5行）と高さを揃え、
@@ -338,11 +342,12 @@
     #sheet.tategu-mode .tg-floor-left .kv{font-size:12.5px!important;padding:2.5px 0!important;}
     /* 左カラム kv の k 幅も狭く（『ドア色』『キャッチャー』等は最長6文字） */
     #sheet.tategu-mode .tg-floor-left .kv .k{width:90px!important;}
-    /* 間取り図は A3 サイズに合わせて大きく */
-    #sheet.tategu-mode .tg-floor-plan{height:auto!important;max-height:115mm;}
+    /* 間取り図は A3 ページ内の残りスペースを flex で目一杯使う（max-height 制限なし） */
+    #sheet.tategu-mode .tg-floor-left{display:flex!important;flex-direction:column!important;}
+    #sheet.tategu-mode .tg-floor-plan{height:auto!important;max-height:none!important;flex:1!important;min-height:60mm!important;}
     #sheet.tategu-mode .tg-floor-plan .ph{padding:4px 10px;font-size:13.5px;}
     #sheet.tategu-mode .tg-floor-plan .pbody{padding:2mm;}
-    #sheet.tategu-mode .tg-floor-plan .pbody img{max-height:103mm;}
+    #sheet.tategu-mode .tg-floor-plan .pbody img{max-height:100%!important;max-width:100%!important;object-fit:contain;}
     /* === クロス図面（kurosu-mode）：A3 横向き＝左右半々レイアウトで間取り図をしっかり大きく === */
     /* 各階を A3 1ページに広げる：kr-print-page が flex column で A3 縦サイズいっぱい使い、
        中身 kr-floor-page を flex:1 で伸ばす。最下部にフッター枠が固定で来る。 */
@@ -2792,7 +2797,12 @@ function renderTateguSheet(){
     if(!list.length) return;
     const planImg=(m.meta.plan_images||{})[fl]||'';
     const isLast = fi===floors.length-1;
-    h+=`<div class="tg-floor-page">
+    // 各階を1つの『印刷ページ単位』でラップ。
+    // ・tg-print-page を flex column にして A3 縦サイズいっぱい使い、
+    //   中身（tg-floor-page）が残りスペースを伸ばして大きく見える
+    // ・フッター枠はその最下部に来る（画面の一番下にタイトル枠が固定）
+    h+=`<div class="tg-print-page">
+      <div class="tg-floor-page">
       <div class="tg-floor-left">
         ${planImg ? `<div class="tg-floor-plan">
           <div class="ph"><span>${esc(fl)}　間取り図</span></div>
@@ -2805,11 +2815,10 @@ function renderTateguSheet(){
         <div class="tg-floor-title">${esc(fl)}　建具表</div>
         <div class="tg-cards">${list.map(cardHtml).join('')}</div>
       </div>
+      </div>
+      ${pageFooter(isLast)}
     </div>`;
-    // 各階のページ末尾にフッター枠（grid 外に出して建具表の下に全幅で表示）
-    h += pageFooter(isLast);
-    // 階の間で確実に改ページ（フッターを挟んだことで .tg-floor-page+.tg-floor-page の
-    // 隣接セレクタが効かなくなるため、明示的に break-after:page を入れる）
+    // 階の間で確実に改ページ
     if(!isLast){
       h += `<div style="break-after:page;page-break-after:always;height:0;"></div>`;
     }
