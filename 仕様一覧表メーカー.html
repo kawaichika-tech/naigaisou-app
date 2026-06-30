@@ -3912,7 +3912,8 @@ function renderWiringSheet(){
   }
 
   h += `<div class="note" style="margin-top:10px;">${esc(m.meta.note||'')}</div>`;
-  h += renderProjectFooterHtml(m.meta.title, /*compact*/true);
+  // ちかさん要望：配線表の物件名も他図面と同じ大きさに → compact=false（通常版）で呼ぶ
+  h += renderProjectFooterHtml(m.meta.title, /*compact*/false);
 
   document.getElementById('sheet').innerHTML = h;
 }
