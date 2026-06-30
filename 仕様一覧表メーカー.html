@@ -4212,16 +4212,16 @@ function renderHarimakeSheet(){
     h += `</div></div>`;
   }
 
-  // 平面図と立面図を2カラムレイアウト：左=平面図（縦並び・コンパクト）、右=立面図
-  // A3横1ページに確実に収めるため、項目数に応じて画像高さを動的に
+  // 平面図と立面図を2カラムレイアウト：左=平面図（縦並び）、右=立面図
+  // A3横1ページにフッター込みで収まる範囲で、余白を減らして画像を最大化。
   const plans = m.plans || [];
   const elevs = m.elevations || [];
-  // 平面：1階2階でコンパクトに（A3横1ページに収まるように）
-  const planH = plans.length <= 2 ? 48 : Math.max(35, Math.floor(100 / plans.length));
-  // 立面：実物の立面図は横長（高さ:幅 ≒ 1:3）なので枠を低めにして contain の上下余白を削減
+  // 平面：1階2階なら大きめに（縦に積む、余白活用）
+  const planH = plans.length <= 2 ? 78 : Math.max(48, Math.floor(170 / plans.length));
+  // 立面：実物の立面図は横長（高さ:幅 ≒ 1:3）。2行なら余裕あるので大きく。
   const elevCols = elevs.length <= 4 ? 2 : 3;
   const elevRows = Math.ceil(elevs.length / elevCols);
-  const elevH = elevRows === 1 ? 65 : (elevRows === 2 ? 45 : Math.max(30, Math.floor(100 / elevRows)));
+  const elevH = elevRows === 1 ? 95 : (elevRows === 2 ? 72 : Math.max(45, Math.floor(165 / elevRows)));
 
   h += `<div style="display:grid;grid-template-columns:1fr 2fr;gap:5mm;margin-top:4mm;align-items:start;">`;
 
