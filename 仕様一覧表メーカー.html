@@ -1035,18 +1035,38 @@ function renderSpecSheet(){
   // 区域（防火）→ 玄関ドア種別の自動同期（ロード時の保存値にも対応）
   applyDoorFireSpec();
   const p = DATA.project;
-  let h = `<div class="sheet-head">
-      <div>
-        <div class="title">${esc(p.title)}</div>
-        <div class="proj">${esc(p.name)}　<span style="font-size:12px;color:#666;">［テイスト：${esc(p.taste)}］</span></div>
+  // 既存の sheet-head の枠線を消すため、空コンテナだけ残す（後続CSSの areaTitle 等を壊さない）
+  let h = `<div class="sheet-head" style="display:none;"></div>`;
+  // ── Excel ライクな統合ヘッダー枠 ──
+  // 上部の注意書き＋下の5列構成のテーブルで、現場で見慣れた形を再現。
+  // ロゴ画像 ainico_logo.png は無くても枠は崩れない（onerror で非表示）。
+  h += `<div class="proj-header" style="margin-bottom:6mm;">
+      <div style="text-align:right;font-size:10px;color:#c0392b;padding:2px 10px;border:1px solid #888;border-bottom:none;background:#fff;">
+        ※ 安全性・デザイン性・施工性を優先する場合、仕様詳細図面通りの施工とならない場合がございます。
       </div>
-      <div class="meta">
-        指定区域：${esc(p.area_designation)}<br>
-        ${p.reg.on?`色彩規制：${esc(p.reg.label)}<br>`:''}
-        決定日：${esc(p.decided_date)||'　　　年　　月　　日'}<br>
-        作成者：${esc(p.author)}
-      </div>
+      <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
+        <colgroup>
+          <col style="width:13%;"><col style="width:31%;"><col style="width:13%;"><col style="width:27%;"><col style="width:16%;">
+        </colgroup>
+        <tr>
+          <td rowspan="2" style="border:1px solid #888;padding:6px 8px;text-align:center;vertical-align:middle;background:#fff;">
+            <img src="${imgSrc('ainico_logo.png')}" onerror="this.style.display='none'" style="max-width:120px;max-height:36px;display:block;margin:0 auto 4px;">
+            <div style="font-size:10.5px;color:#1a4a7a;font-weight:bold;line-height:1.5;">☎ 0742-71-9990<br>FAX 0742-71-9980</div>
+          </td>
+          <td style="border:1px solid #888;padding:8px 14px;font-size:21px;font-weight:bold;color:#1a4a7a;text-align:center;vertical-align:middle;">${esc(p.name)}<span style="font-size:13px;color:#666;font-weight:normal;margin-left:8px;">［テイスト：${esc(p.taste)}］</span></td>
+          <td style="border:1px solid #888;padding:4px;text-align:center;font-size:11px;color:#555;vertical-align:middle;">お客様ご署名</td>
+          <td rowspan="2" style="border:1px solid #888;padding:6px;text-align:center;vertical-align:middle;font-size:20px;font-weight:bold;background:#fafaf6;">${esc(p.title)}</td>
+          <td style="border:1px solid #888;padding:4px 8px;text-align:center;font-size:11px;color:#555;">決定日</td>
+        </tr>
+        <tr>
+          <td style="border:1px solid #888;padding:6px 14px;font-size:13px;color:#333;text-align:center;vertical-align:middle;">アイニコグループ株式会社　一級建築士事務所</td>
+          <td style="border:1px solid #888;padding:4px;text-align:center;font-size:11px;color:#555;vertical-align:middle;">承認書提出</td>
+          <td style="border:1px solid #888;padding:4px 8px;text-align:center;font-size:11px;color:#222;">${esc(p.decided_date)||'　年　月　日'}<br>作成者　${esc(p.author)}<br><span style="color:#555;">コピー捺印欄</span></td>
+        </tr>
+      </table>
     </div>`;
+  // 補足：指定区域・色彩規制（旧ヘッダー meta の内容）はヘッダー下に1行で
+  h += `<div style="font-size:11px;color:#444;margin:-3mm 0 3mm;">指定区域：${esc(p.area_designation)}${p.reg.on?'　／　色彩規制：'+esc(p.reg.label):''}</div>`;
 
   // 景観・風致：決定済みの外部色を判定。新方式（区域・地区）優先、旧reg.onはフォールバック。
   const _apps = applicableKeikanBases();
