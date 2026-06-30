@@ -2818,6 +2818,11 @@ function renderTateguSheet(){
     </div>`;
     // 各階のページ末尾にフッター枠（grid 外に出して建具表の下に全幅で表示）
     h += pageFooter(isLast);
+    // 階の間で確実に改ページ（フッターを挟んだことで .tg-floor-page+.tg-floor-page の
+    // 隣接セレクタが効かなくなるため、明示的に break-after:page を入れる）
+    if(!isLast){
+      h += `<div style="break-after:page;page-break-after:always;height:0;"></div>`;
+    }
   });
   // ※ 設計仕様詳細の画像は「入力画面のみ」表示。印刷シートには載せない。
   document.getElementById('sheet').innerHTML=h;
@@ -3028,6 +3033,10 @@ function renderKurosuSheet(){
     // クロス図面はもともと左カラムの間取り＋kr-metaが縦に長く、A3 にフッターまで入れると
     // ぎりぎりなので compact 版（小さめ）で出す。
     h += renderProjectFooterHtml(m.meta.title, /*compact*/true);
+    // 階の間で確実に改ページ（1階ページ＋フッター ／ 2階ページ＋フッター を別ページに）
+    if(fi < floors.length-1){
+      h += `<div style="break-after:page;page-break-after:always;height:0;"></div>`;
+    }
   });
 
   document.getElementById('sheet').innerHTML=h;
