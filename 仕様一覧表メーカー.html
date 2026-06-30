@@ -276,10 +276,12 @@
     #previewWrap{padding:0;background:#fff;overflow:visible;}
     /* ページ余白を最小限に。@page margin を 0 にして、sheet 側 padding 5mm（左右均等）で
        物理印刷マージンを確保。これでブラウザ印刷ダイアログの『余白』設定がどれでも
-       左右対称な余白になる。 */
+       左右対称な余白になる。
+       ★重要：画面プレビュー用の max-width:1400px が印刷時にも効くと、A3横幅に対して
+       右側に余白が出るため、印刷時は max-width を完全に解除して紙幅いっぱい使う。 */
     body{margin:0!important;}
     #previewWrap{margin:0!important;}
-    #sheet{width:auto;box-shadow:none;margin:0!important;padding:5mm!important;}
+    #sheet{width:auto!important;max-width:none!important;box-shadow:none;margin:0!important;padding:5mm!important;}
     @page{size:A3 landscape;margin:0;}
     /* === 仕様一覧表（spec モード）：A3横で読みやすい2列レイアウト === */
     /* 現場の人が見ながら作業するため、フォント読みやすさ優先 */
