@@ -1066,8 +1066,8 @@ function setPresent(si,val){ DATA.sections[si].present=val; renderEditor(); sync
 function renderProjectFooterHtml(docTitle, compact){
   const p = DATA.project;
   const F = compact
-    ? { name:13, title:13, addr:9.5, info:9, logoH:22, logoW:75, pad:'2mm 4mm', padSm:'2px 5px', mt:'3mm' }
-    : { name:18, title:18, addr:12, info:11, logoH:32, logoW:110, pad:'6px 12px', padSm:'4px 8px', mt:'6mm' };
+    ? { name:17, title:14, addr:9.5, info:9, logoH:24, logoW:80, pad:'2mm 4mm', padSm:'2px 5px', mt:'3mm' }
+    : { name:23, title:19, addr:12, info:11, logoH:34, logoW:115, pad:'7px 14px', padSm:'4px 8px', mt:'6mm' };
   return `<div class="proj-footer" style="margin-top:${F.mt};">
       <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
         <colgroup>
