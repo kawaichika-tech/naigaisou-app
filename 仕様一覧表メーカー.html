@@ -344,8 +344,8 @@
     #sheet.tategu-mode .tg-floor-plan .pbody{padding:2mm;}
     #sheet.tategu-mode .tg-floor-plan .pbody img{max-height:103mm;}
     /* === クロス図面（kurosu-mode）：A3 横向き＝左右半々レイアウトで間取り図をしっかり大きく === */
-    #sheet.kurosu-mode .kr-floor-page{grid-template-columns:1fr 1fr!important;gap:8mm!important;margin-top:5mm!important;align-items:start!important;}
-    #sheet.kurosu-mode .kr-floor-plan{height:auto!important;max-height:230mm!important;}
+    #sheet.kurosu-mode .kr-floor-page{grid-template-columns:1fr 1fr!important;gap:6mm!important;margin-top:3mm!important;align-items:start!important;}
+    #sheet.kurosu-mode .kr-floor-plan{height:auto!important;max-height:175mm!important;}
     #sheet.kurosu-mode .kr-floor-plan .ph{padding:4px 12px;font-size:14px;}
     #sheet.kurosu-mode .kr-floor-plan .pbody{padding:3mm;}
     #sheet.kurosu-mode .kr-floor-title{padding:5px 12px!important;font-size:15.5px!important;margin:0 0 5mm!important;}
@@ -3024,8 +3024,10 @@ function renderKurosuSheet(){
           : `<div class="empty" style="padding:20px;color:#999;text-align:center;font-size:12px;border:1px dashed #ccc;border-radius:4px;">この階には基本クロス以外のエントリがありません</div>`}
       </div>
     </div>`;
-    // 各階ページの下にフッター枠（タイトル＋物件名）— ちかさん指定で 1F／2F ともに必要
-    h += renderProjectFooterHtml(m.meta.title, /*compact*/false);
+    // 各階ページの下にフッター枠（タイトル＋物件名）— ちかさん指定で 1F／2F ともに必要。
+    // クロス図面はもともと左カラムの間取り＋kr-metaが縦に長く、A3 にフッターまで入れると
+    // ぎりぎりなので compact 版（小さめ）で出す。
+    h += renderProjectFooterHtml(m.meta.title, /*compact*/true);
   });
 
   document.getElementById('sheet').innerHTML=h;
