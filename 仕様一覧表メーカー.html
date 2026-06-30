@@ -426,6 +426,7 @@
   <button class="tab" id="tabView" onclick="showTab('view')">プレビュー</button>
   <span class="spacer"></span>
   <button onclick="printDoc()">🖨 印刷 / PDF保存</button>
+  <button id="btnPrintCheck" onclick="printWiringCheck()" style="display:none;background:#a26a1f;color:#fff;">🔍 チェック用印刷</button>
   <button class="ghost" onclick="saveJson()">💾 物件を保存</button>
   <button class="ghost" onclick="document.getElementById('loadFile').click()">📂 読込</button>
   <button class="ghost" onclick="if(confirm('新しい物件として候補をリセットします。よろしいですか？'))resetProject()">🆕 新規</button>
@@ -774,6 +775,227 @@ function printDoc(){
     window.print();
   }
 }
+
+/* 配線数量表のチェック用印刷：階別（1F/2F/その他）の内訳まで含めた根拠資料として、
+   チェッカーさんが入力ミスや配分ミスを確認できる詳細版を生成して印刷する。
+   通常の renderWiringSheet（お客様向け）とは別物。 */
+function printWiringCheck(){
+  const origDoc = DOC;
+  const sheet = document.getElementById('sheet');
+  renderWiringCheckSheet();
+  const restore = ()=>{
+    window.removeEventListener('afterprint', restore);
+    DOC = origDoc;
+    setSheetMode(origDoc);
+    renderSheet();
+  };
+  window.addEventListener('afterprint', restore);
+  window.print();
+}
+
+/* チェック用シートの中身を #sheet に描画する。
+   - 通常版との違い：基本数量／追加配線等の表に『1F』『2F』『その他』の階別列を追加
+   - 『いる物だけ』フィルタは適用せず、全項目を出す（チェッカーが見落としを確認できる） */
+function renderWiringCheckSheet(){
+  const p = DATA.project, m = WR;
+  const teika = wrTeika();
+  const mochibun = wrMochibun();
+  const sum = wrSummary();
+  const std = wrStandardForTsubo(m.tsubo);
+  const sheet = document.getElementById('sheet');
+  // モードクラスは wiring-mode に固定（既存の wiring-mode 印刷CSSを流用してA3に収める）
+  Object.values(SHEET_MODE_MAP).forEach(c => sheet.classList.remove(c));
+  sheet.classList.add('wiring-mode');
+
+  let h = `<div class="sheet-head">
+      <div><div class="title">${esc(m.meta.title)}（チェック用）</div>
+        <div class="proj">${esc(p.name)}</div></div>
+      <div class="meta">決定日：${esc(p.decided_date)||'　　　年　　月　　日'}<br>作成者：${esc(p.author)}</div>
+    </div>`;
+
+  // 担当者欄
+  h += `<div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+      <div style="border:1px solid #888;border-radius:3px;padding:5px 10px;font-size:12px;background:#f8fafc;">
+        <span style="color:#555;font-weight:bold;margin-right:8px;">施工管理担当者</span>
+        <span style="font-weight:bold;color:#222;">${esc(m.meta.pm_name||'')}</span>
+        ${m.meta.pm_tel?`<span style="color:#666;margin-left:10px;font-size:11px;">TEL ${esc(m.meta.pm_tel)}</span>`:''}
+      </div>
+      <div style="border:1px solid #888;border-radius:3px;padding:5px 10px;font-size:12px;background:#f8fafc;">
+        <span style="color:#555;font-weight:bold;margin-right:8px;">IC（コーディネーター）</span>
+        <span style="font-weight:bold;color:#222;">${esc(m.meta.ic_name||'')}</span>
+        ${m.meta.ic_tel?`<span style="color:#666;margin-left:10px;font-size:11px;">TEL ${esc(m.meta.ic_tel)}</span>`:''}
+      </div>
+    </div>`;
+
+  // 坪数表
+  h += `<table style="width:100%;border-collapse:collapse;font-size:13px;margin-top:10px;">
+      <thead><tr>
+        <th style="border:1px solid #888;background:#eef2f6;padding:6px 10px;width:18%;">坪数</th>
+        <th style="border:1px solid #888;background:#eef2f6;padding:6px 10px;width:18%;">基本金額</th>
+        <th style="border:1px solid #888;background:#eef2f6;padding:6px 10px;width:32%;">定価<br><span style="font-size:10px;font-weight:normal;color:#666;">（坪 × 基本金額）</span></th>
+        <th style="border:1px solid #888;background:#eef2f6;padding:6px 10px;width:32%;">持ち分<br><span style="font-size:10px;font-weight:normal;color:#666;">（定価 × 0.8）</span></th>
+      </tr></thead>
+      <tbody><tr style="text-align:center;">
+        <td style="border:1px solid #888;padding:8px 10px;">${esc(String(m.tsubo||0))} 坪</td>
+        <td style="border:1px solid #888;padding:8px 10px;">${formatYen(m.base_price)}</td>
+        <td style="border:1px solid #888;padding:8px 10px;font-weight:bold;color:#1a4a7a;font-size:15px;">${formatYen(teika)}</td>
+        <td style="border:1px solid #888;padding:8px 10px;font-weight:bold;color:#a26a1f;font-size:15px;">${formatYen(mochibun)}</td>
+      </tr></tbody>
+    </table>`;
+
+  // 坪数の根拠資料（あれば）
+  if(m.tsubo_image){
+    h += `<div style="margin-top:8px;border:1px solid #c8cfd6;border-radius:4px;background:#f8fafc;padding:6px 8px;">
+      <div style="font-size:11px;color:#555;font-weight:bold;margin-bottom:4px;">坪数の根拠資料</div>
+      <img src="${esc(m.tsubo_image)}" style="max-width:100%;max-height:120mm;display:block;border:1px solid #ddd;border-radius:3px;">
+    </div>`;
+  }
+
+  // 坪数別 標準値（参考）— チェック時に基準が分かるよう小さく表示
+  if(std){
+    h += `<div style="margin-top:6px;border:1px solid #ddd;border-radius:3px;background:#fafaf6;padding:4px 8px;font-size:11px;color:#666;">
+      <b style="color:#a26a1f;">坪数別 標準個数（${m.tsubo}坪の基準）</b>
+      電灯数：<b>${std.lighting}</b> 個　／　2口コンセント：<b>${std.outlet}</b> 個
+    </div>`;
+  }
+
+  // 集計部
+  h += `<table style="width:100%;border-collapse:collapse;font-size:13px;margin-top:10px;">
+      <tbody>
+        <tr>
+          <td style="border:1px solid #888;background:#eef2f6;padding:6px 12px;width:55%;font-weight:bold;">① 差額（お客様だし金額合計 − 持ち分）</td>
+          <td style="border:1px solid #888;padding:6px 12px;text-align:right;font-weight:bold;color:${sum.diff>0?'#c0392b':'#a26a1f'};font-size:14px;">${sum.diff>0?'+':''}${formatYen(sum.diff)}${sum.diff>0?' （お客様だし超過）':''}</td>
+        </tr>
+        <tr>
+          <td style="border:1px solid #888;background:#f5f6f8;padding:5px 12px;color:#666;font-size:12px;">お客様だし金額合計（税抜）<span style="color:#999;font-size:10px;margin-left:6px;">参考</span></td>
+          <td style="border:1px solid #888;padding:5px 12px;text-align:right;color:#666;font-size:12px;">${formatYen(sum.okyakuTotal)}</td>
+        </tr>
+        <tr>
+          <td style="border:1px solid #888;background:#f5f6f8;padding:5px 12px;color:#666;font-size:12px;">照明器具代金定価合計（税抜）<span style="color:#999;font-size:10px;margin-left:6px;">参考</span></td>
+          <td style="border:1px solid #888;padding:5px 12px;text-align:right;color:#666;font-size:12px;">${formatYen(sum.teikaTotal)}</td>
+        </tr>
+        <tr>
+          <td style="border:1px solid #888;background:#f5f6f8;padding:5px 12px;color:#666;font-size:12px;">持ち分（税抜）<span style="color:#999;font-size:10px;margin-left:6px;">参考</span></td>
+          <td style="border:1px solid #888;padding:5px 12px;text-align:right;color:#666;font-size:12px;">${formatYen(mochibun)}</td>
+        </tr>
+        <tr>
+          <td style="border:1px solid #888;background:#eef2f6;padding:6px 12px;">計上商品個数合計</td>
+          <td style="border:1px solid #888;padding:6px 12px;text-align:right;font-weight:bold;font-size:14px;">${sum.qtyTotal} 個</td>
+        </tr>
+        <tr>
+          <td style="border:1px solid #888;background:#eef2f6;padding:6px 12px;">② 基本数量 追加表 及び 追加配線等数量表 ご請求代金合計（税抜）</td>
+          <td style="border:1px solid #888;padding:6px 12px;text-align:right;font-weight:bold;color:#1a4a7a;font-size:14px;">${formatYen(sum.wiringTotal)}</td>
+        </tr>
+        <tr style="background:#fff7e0;">
+          <td style="border:2px solid #a26a1f;padding:8px 12px;font-weight:bold;">③ ①＋② 追加電気工事等合計（税抜）</td>
+          <td style="border:2px solid #a26a1f;padding:8px 12px;text-align:right;font-weight:bold;color:#a26a1f;font-size:17px;">${formatYen(sum.grandTotal)}</td>
+        </tr>
+      </tbody>
+    </table>`;
+
+  // 基本数量追加表（チェック用：階別列付き＋全項目）
+  h += `<div style="background:#3b4a5c;color:#fff;padding:4px 12px;font-weight:bold;font-size:14px;border-radius:3px;margin:14px 0 6px;">基本数量 追加表（階別内訳付き）</div>`;
+  h += `<table style="width:100%;border-collapse:collapse;font-size:12px;">
+      <thead><tr style="background:#eef2f6;">
+        <th style="border:1px solid #888;padding:5px 6px;">内容</th>
+        <th style="border:1px solid #888;padding:5px 6px;">備考</th>
+        <th style="border:1px solid #888;padding:5px 6px;width:54px;">基本</th>
+        <th style="border:1px solid #888;padding:5px 6px;width:50px;background:#e8eef5;">1F</th>
+        <th style="border:1px solid #888;padding:5px 6px;width:50px;background:#e8eef5;">2F</th>
+        <th style="border:1px solid #888;padding:5px 6px;width:54px;background:#e8eef5;">その他</th>
+        <th style="border:1px solid #888;padding:5px 6px;width:58px;">現状</th>
+        <th style="border:1px solid #888;padding:5px 6px;width:86px;">工事代金/1ヶ所</th>
+        <th style="border:1px solid #888;padding:5px 6px;width:60px;">追加</th>
+        <th style="border:1px solid #888;padding:5px 6px;width:96px;">総額</th>
+      </tr></thead>
+      <tbody>`;
+  m.items.forEach(it=>{
+    const base = wrItemBase(it);
+    const add  = wrItemAdditional(it);
+    const sub  = wrItemSubtotal(it);
+    const skip = it.calc==='skip';
+    const placeCell = (it.place||'').trim() ? `<div style="font-size:10px;color:#1a4a7a;margin-top:2px;">📍 ${esc(it.place)}</div>` : '';
+    h += `<tr>
+        <td style="border:1px solid #888;padding:5px 6px;"><div style="font-weight:bold;">${esc(it.name)}</div>${placeCell}</td>
+        <td style="border:1px solid #888;padding:5px 6px;color:#666;font-size:11px;">${esc(it.note||'-')}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:center;">${skip?'-':base}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:center;background:#fafbfd;">${it.floor1||0}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:center;background:#fafbfd;">${it.floor2||0}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:center;background:#fafbfd;">${it.other||0}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:center;font-weight:bold;">${it.current||0}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:right;">${skip?'-':formatYen(it.unit)}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:center;font-weight:bold;color:${(add||0)>0?'#a26a1f':'#222'};">${skip?'-':add}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:right;font-weight:bold;color:${(sub||0)>0?'#1a4a7a':'#222'};">${skip?'-':formatYen(sub)}</td>
+      </tr>`;
+  });
+  const itemsSum = m.items.reduce((s,it)=>s + (wrItemSubtotal(it)||0), 0);
+  h += `<tr style="background:#fff7e0;font-weight:bold;">
+       <td colspan="9" style="border:1px solid #888;padding:6px 8px;text-align:right;">合計</td>
+       <td style="border:1px solid #888;padding:6px 8px;text-align:right;color:#1a4a7a;font-size:14px;">${formatYen(itemsSum)}</td>
+     </tr>`;
+  h += `</tbody></table>`;
+
+  // 追加配線等 数量表（チェック用：階別＋全項目）
+  h += `<div style="background:#3b4a5c;color:#fff;padding:4px 12px;font-weight:bold;font-size:14px;border-radius:3px;margin:14px 0 6px;">追加配線等 数量表（階別内訳付き）</div>`;
+  h += `<table style="width:100%;border-collapse:collapse;font-size:12px;">
+      <thead><tr style="background:#eef2f6;">
+        <th style="border:1px solid #888;padding:5px 6px;">内容</th>
+        <th style="border:1px solid #888;padding:5px 6px;">備考</th>
+        <th style="border:1px solid #888;padding:5px 6px;width:54px;">基本</th>
+        <th style="border:1px solid #888;padding:5px 6px;width:50px;background:#e8eef5;">1F</th>
+        <th style="border:1px solid #888;padding:5px 6px;width:50px;background:#e8eef5;">2F</th>
+        <th style="border:1px solid #888;padding:5px 6px;width:54px;background:#e8eef5;">その他</th>
+        <th style="border:1px solid #888;padding:5px 6px;width:58px;">現状</th>
+        <th style="border:1px solid #888;padding:5px 6px;width:86px;">工事代金/1ヶ所</th>
+        <th style="border:1px solid #888;padding:5px 6px;width:60px;">追加</th>
+        <th style="border:1px solid #888;padding:5px 6px;width:96px;">総額</th>
+      </tr></thead>
+      <tbody>`;
+  let lastCat = null;
+  (m.extraItems||[]).forEach(it=>{
+    if(it.category !== lastCat){
+      h += `<tr style="background:#e8eef5;"><td colspan="10" style="border:1px solid #888;padding:4px 8px;font-weight:bold;color:#1a4a7a;font-size:11px;">${esc(WR_CATEGORY_LABEL[it.category]||'')}</td></tr>`;
+      lastCat = it.category;
+    }
+    const base = wrItemBase(it);
+    const add  = wrItemAdditional(it);
+    const sub  = wrItemSubtotal(it);
+    const skip = it.calc==='skip';
+    const placeCellE = (it.place||'').trim() ? `<div style="font-size:10px;color:#1a4a7a;margin-top:2px;">📍 ${esc(it.place)}</div>` : '';
+    h += `<tr>
+        <td style="border:1px solid #888;padding:5px 6px;"><div style="font-weight:bold;">${esc(it.name)}</div>${placeCellE}</td>
+        <td style="border:1px solid #888;padding:5px 6px;color:#666;font-size:11px;">${esc(it.note||'-')}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:center;">${skip?'-':base}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:center;background:#fafbfd;">${it.floor1||0}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:center;background:#fafbfd;">${it.floor2||0}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:center;background:#fafbfd;">${it.other||0}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:center;font-weight:bold;">${it.current||0}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:right;">${skip?'-':formatYen(it.unit)}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:center;font-weight:bold;color:${(add||0)>0?'#a26a1f':'#222'};">${skip?'-':add}</td>
+        <td style="border:1px solid #888;padding:5px 6px;text-align:right;font-weight:bold;color:${(sub||0)>0?'#1a4a7a':'#222'};">${skip?'-':formatYen(sub)}</td>
+      </tr>`;
+  });
+  const extraSum = (m.extraItems||[]).reduce((s,it)=>s + (wrItemSubtotal(it)||0), 0);
+  h += `<tr style="background:#fff7e0;font-weight:bold;">
+       <td colspan="9" style="border:1px solid #888;padding:6px 8px;text-align:right;">合計</td>
+       <td style="border:1px solid #888;padding:6px 8px;text-align:right;color:#1a4a7a;font-size:14px;">${formatYen(extraSum)}</td>
+     </tr>`;
+  h += `</tbody></table>`;
+
+  // 備考欄
+  if((m.memo||'').trim()){
+    h += `<div style="margin-top:14px;border:1px solid #888;border-radius:4px;overflow:hidden;">
+      <div style="background:#6b7a8c;color:#fff;padding:4px 12px;font-weight:bold;font-size:12px;">備考</div>
+      <div style="padding:8px 12px;font-size:12px;white-space:pre-wrap;background:#fff;">${esc(m.memo)}</div>
+    </div>`;
+  }
+
+  h += `<div class="hint" style="margin-top:10px;font-size:10px;color:#a26a1f;border:1px dashed #a26a1f;background:#fff7e0;padding:4px 8px;border-radius:3px;">⚠ このシートはチェック用です。お客様にはお渡ししないでください。</div>`;
+  h += `<div class="foot" style="margin-top:8px;"><div>${esc(p.company)}</div><div>TEL ${esc(p.tel)}　／　FAX ${esc(p.fax)}</div></div>`;
+
+  sheet.innerHTML = h;
+}
+
 function pf(label,key){return `<div class="field"><label>${label}</label><input value="${esc(DATA.project[key]||'')}" oninput="setProj('${key}',this.value)"></div>`;}
 /* テイスト（A/B/C）プルダウン。A=GE / B=LC / C=CL。想定外の保存値も先頭に温存 */
 function tasteField(){
@@ -3984,6 +4206,9 @@ function switchDoc(d){
   document.getElementById('docLighting').classList.toggle('active',d==='lighting');
   document.getElementById('docWiring').classList.toggle('active',d==='wiring');
   document.getElementById('docHarimake').classList.toggle('active',d==='harimake');
+  // チェック用印刷ボタンは配線数量表タブの時だけ表示
+  const btnCheck = document.getElementById('btnPrintCheck');
+  if(btnCheck) btnCheck.style.display = (d==='wiring') ? '' : 'none';
   document.getElementById('h1title').textContent =
     d==='tategu'   ? '🚪 建具・床図面メーカー' :
     d==='kurosu'   ? '🎨 クロス図面メーカー' :
@@ -4046,6 +4271,7 @@ function loadHaibanDb(){
 /* 起動 */
 loadLocal();
 setSheetMode(DOC); // 初期表示でも各図面ごとの独立モードクラスを付与
+{ const _b=document.getElementById('btnPrintCheck'); if(_b) _b.style.display=(DOC==='wiring')?'':'none'; }
 renderEditor();
 renderSheet();
 showTab('edit');
