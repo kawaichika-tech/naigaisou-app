@@ -2309,7 +2309,14 @@ function migrateFloor(arr, is2f){
 /* 建具表：編集パネル */
 function renderTateguEditor(){
   const m=TG;
-  const tf=(i,key,label,list)=>{ const v=m.doors[i][key]||''; return `<div class="f"><label>${label}</label><input value="${esc(v)}" ${list?`list="${list}"`:''} oninput="tgDoor(${i},'${key}',this.value)"></div>`; };
+  const tf=(i,key,label,list,required)=>{
+    const v=m.doors[i][key]||'';
+    // required=true で空欄なら『必須』警告を出す（ちかさん要望：室名の入力忘れを防ぐ）
+    const isEmpty = required && !String(v).trim();
+    const inputStyle = isEmpty ? 'style="border:2px solid #c0392b;background:#fff5f5;"' : '';
+    const warn = isEmpty ? '<span style="color:#c0392b;font-size:10px;font-weight:bold;margin-left:6px;">※ 入力必須</span>' : '';
+    return `<div class="f"><label>${label}${warn}</label><input value="${esc(v)}" ${inputStyle} ${list?`list="${list}"`:''} oninput="tgDoor(${i},'${key}',this.value)"></div>`;
+  };
   const tff=(i,key,label)=>{ const v=m.doors[i][key]||''; return `<div class="f full"><label>${label}</label><input value="${esc(v)}" oninput="tgDoor(${i},'${key}',this.value)"></div>`; };
   /* プルダウン生成（未選択＋選択肢。保存済みの想定外の値も保持して表示） */
   const tgSel=(opts,val,handler)=>{ let o=opts.slice(); if(val && !o.includes(val)) o.unshift(val);
@@ -2415,19 +2422,25 @@ function renderTateguEditor(){
     });
     h+=`</div></details>`;
   });
-  // 建具リスト
-  h+=`<details class="card" open><summary><span class="area" style="background:#3b4a5c">建具</span>建具リスト（${m.doors.length}件）</summary><div class="body">`;
+  // 建具リスト（室名未入力件数バッジ付き）
+  const _emptyRoomCnt = m.doors.filter(d=>!String(d.room||'').trim()).length;
+  const _emptyBadge = _emptyRoomCnt ? `<span style="background:#c0392b;color:#fff;font-size:10px;font-weight:bold;padding:2px 8px;border-radius:9px;margin-left:8px;">⚠ 室名未入力 ${_emptyRoomCnt}件</span>` : '';
+  h+=`<details class="card" open><summary><span class="area" style="background:#3b4a5c">建具</span>建具リスト（${m.doors.length}件）${_emptyBadge}</summary><div class="body">`;
   m.doors.forEach((d,i)=>{
     const dsrc=doorImgSrc(d), isManual=!!d.img;
     const thumb = dsrc ? `<div class="dthumb" style="background:${swStyle(dsrc,'contain')}"></div>` : '';
     const imgNote = isManual ? '📷取り込み画像を使用中'
       : (d.color&&d.type ? `自動：建具/${esc(d.color)}/${esc(d.type)}.jpg` : '種類・色を入れると自動表示');
+    // dhead の室名表示：空なら『(室名未入力)』を赤字で
+    const _roomLabel = String(d.room||'').trim()
+      ? esc(d.room)
+      : `<span style="color:#c0392b;font-weight:bold;">(室名未入力)</span>`;
     h+=`<div class="dcard">
-       <div class="dhead"><span class="dno">${esc(d.floor)}　${esc(d.no)}　${esc(d.room)}</span>
+       <div class="dhead"><span class="dno">${esc(d.floor)}　${esc(d.no)}　${_roomLabel}</span>
          <button class="btn-sm btn-del" onclick="tgDelDoor(${i})">削除</button></div>
        <div class="dgrid">
          ${tf(i,'floor','階','tgFloor')} ${tf(i,'no','番号')}
-         ${tf(i,'room','室名','tgRoom')}
+         ${tf(i,'room','室名','tgRoom',/*required*/true)}
          <div class="f"><label>種類</label>${tgSel(TG_OPTS.type,d.type||'',`tgDoor(${i},'type',this.value)`)}</div>
          ${tf(i,'hinban','品番','tgHinban')} ${ d.type==='引違い戸'
             ? `<div class="f"><label>色</label>${tgSel(colorOptionsForType(d.type, DATA.project.taste), d.color||'', `tgDoor(${i},'color',this.value)`)}</div>`
@@ -2744,7 +2757,7 @@ function renderTateguSheet(){
     const size=(d.w||d.h)?`W${esc(d.w)} × H${esc(d.h)}`:'';
     const hinbanColor=[d.hinban,d.color].filter(Boolean).map(esc).join('　');
     return `<div class="tg-card">
-      <div class="tg-card-head"><span class="no">${esc(d.no)}</span><span class="room">${esc(d.room)}</span></div>
+      <div class="tg-card-head"><span class="no">${esc(d.no)}</span><span class="room"${!String(d.room||'').trim()?' style="color:#ffcccc;"':''}>${String(d.room||'').trim()?esc(d.room):'⚠ 室名未入力'}</span></div>
       <div class="tg-card-body">
         <div class="tg-card-img-wrap"><div class="tg-card-img" style="background:${swStyle(doorImgSrc(d),'contain','#fff')}"></div></div>
         <div class="tg-card-attrs">
