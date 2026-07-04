@@ -2311,10 +2311,11 @@ function renderTateguEditor(){
   const m=TG;
   const tf=(i,key,label,list,required)=>{
     const v=m.doors[i][key]||'';
-    // required=true で空欄なら『必須』警告を出す（ちかさん要望：室名の入力忘れを防ぐ）
+    // required=true で空欄なら『必須』警告を出す（ちかさん要望：室名の入力忘れを防ぐ、
+    // 色は鮮やかな赤で目立たせる）
     const isEmpty = required && !String(v).trim();
-    const inputStyle = isEmpty ? 'style="border:2px solid #c0392b;background:#fff5f5;"' : '';
-    const warn = isEmpty ? '<span style="color:#c0392b;font-size:10px;font-weight:bold;margin-left:6px;">※ 入力必須</span>' : '';
+    const inputStyle = isEmpty ? 'style="border:3px solid #ff0000;background:#ffdede;"' : '';
+    const warn = isEmpty ? '<span style="color:#ff0000;font-size:11px;font-weight:bold;margin-left:6px;">⚠ 入力必須</span>' : '';
     return `<div class="f"><label>${label}${warn}</label><input value="${esc(v)}" ${inputStyle} ${list?`list="${list}"`:''} oninput="tgDoor(${i},'${key}',this.value)"></div>`;
   };
   const tff=(i,key,label)=>{ const v=m.doors[i][key]||''; return `<div class="f full"><label>${label}</label><input value="${esc(v)}" oninput="tgDoor(${i},'${key}',this.value)"></div>`; };
@@ -2424,7 +2425,7 @@ function renderTateguEditor(){
   });
   // 建具リスト（室名未入力件数バッジ付き）
   const _emptyRoomCnt = m.doors.filter(d=>!String(d.room||'').trim()).length;
-  const _emptyBadge = _emptyRoomCnt ? `<span style="background:#c0392b;color:#fff;font-size:10px;font-weight:bold;padding:2px 8px;border-radius:9px;margin-left:8px;">⚠ 室名未入力 ${_emptyRoomCnt}件</span>` : '';
+  const _emptyBadge = _emptyRoomCnt ? `<span style="background:#ff0000;color:#fff;font-size:12px;font-weight:bold;padding:3px 10px;border-radius:9px;margin-left:8px;box-shadow:0 0 0 2px #ffdede;">⚠ 室名未入力 ${_emptyRoomCnt}件</span>` : '';
   h+=`<details class="card" open><summary><span class="area" style="background:#3b4a5c">建具</span>建具リスト（${m.doors.length}件）${_emptyBadge}</summary><div class="body">`;
   m.doors.forEach((d,i)=>{
     const dsrc=doorImgSrc(d), isManual=!!d.img;
@@ -2434,7 +2435,7 @@ function renderTateguEditor(){
     // dhead の室名表示：空なら『(室名未入力)』を赤字で
     const _roomLabel = String(d.room||'').trim()
       ? esc(d.room)
-      : `<span style="color:#c0392b;font-weight:bold;">(室名未入力)</span>`;
+      : `<span style="background:#ff0000;color:#fff;font-weight:bold;padding:2px 8px;border-radius:4px;">⚠ 室名未入力</span>`;
     h+=`<div class="dcard">
        <div class="dhead"><span class="dno">${esc(d.floor)}　${esc(d.no)}　${_roomLabel}</span>
          <button class="btn-sm btn-del" onclick="tgDelDoor(${i})">削除</button></div>
@@ -2757,7 +2758,7 @@ function renderTateguSheet(){
     const size=(d.w||d.h)?`W${esc(d.w)} × H${esc(d.h)}`:'';
     const hinbanColor=[d.hinban,d.color].filter(Boolean).map(esc).join('　');
     return `<div class="tg-card">
-      <div class="tg-card-head"><span class="no">${esc(d.no)}</span><span class="room"${!String(d.room||'').trim()?' style="color:#ffcccc;"':''}>${String(d.room||'').trim()?esc(d.room):'⚠ 室名未入力'}</span></div>
+      <div class="tg-card-head"><span class="no">${esc(d.no)}</span><span class="room"${!String(d.room||'').trim()?' style="background:#ff0000;color:#fff;padding:0 6px;font-weight:bold;"':''}>${String(d.room||'').trim()?esc(d.room):'⚠ 室名未入力'}</span></div>
       <div class="tg-card-body">
         <div class="tg-card-img-wrap"><div class="tg-card-img" style="background:${swStyle(doorImgSrc(d),'contain','#fff')}"></div></div>
         <div class="tg-card-attrs">
