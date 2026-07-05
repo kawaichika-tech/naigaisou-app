@@ -459,8 +459,17 @@
   <span class="spacer"></span>
   <button onclick="printDoc()">🖨 印刷 / PDF保存</button>
   <button id="btnPrintCheck" onclick="printWiringCheck()" style="display:none;background:#a26a1f;color:#fff;">🔍 チェック用印刷</button>
-  <button class="ghost" onclick="saveJson()">💾 物件を保存</button>
-  <button class="ghost" onclick="document.getElementById('loadFile').click()">📂 読込</button>
+  <!-- 物件プルダウン切替（ブラウザ内保存の物件を選択で即切替） -->
+  <span style="display:inline-flex;align-items:center;gap:4px;margin-left:8px;padding-left:8px;border-left:1px solid #d0d0d0;">
+    <span style="font-size:11px;color:#555;font-weight:bold;">📚 物件</span>
+    <select id="projectSelect" onchange="switchProject(this.value)" style="padding:5px 8px;font-size:13px;border:1px solid #a0a0a0;border-radius:4px;background:#fff;min-width:180px;max-width:260px;">
+      <option value="">（選択…）</option>
+    </select>
+    <button class="ghost" onclick="saveProjectAs()" style="font-size:12px;padding:5px 8px;" title="今のデータをブラウザ内に名前付きで保存">💾</button>
+    <button class="ghost" onclick="deleteProject()" style="font-size:12px;padding:5px 8px;" title="選択中の物件を削除">🗑</button>
+  </span>
+  <button class="ghost" onclick="saveJson()" title="バックアップ用にJSONファイルを書き出す">📥 JSON書出</button>
+  <button class="ghost" onclick="document.getElementById('loadFile').click()" title="JSONファイルを読み込む">📂 JSON読込</button>
   <button class="ghost" onclick="if(confirm('新しい物件として候補をリセットします。よろしいですか？'))resetProject()">🆕 新規</button>
   <input type="file" id="loadFile" accept="application/json" style="display:none" onchange="loadJson(event)">
 </div>
@@ -692,8 +701,33 @@ function loadLocal(){
   HK = hs ? normalizeHK(safeParse(hs)) : JSON.parse(JSON.stringify(HARIMAKE_MASTER));
 }
 function autosave(){
-  try{ localStorage.setItem(SAVEKEY, JSON.stringify(DATA)); localStorage.setItem(TGKEY, JSON.stringify(TG)); localStorage.setItem(KRKEY, JSON.stringify(KR)); localStorage.setItem(LTKEY, JSON.stringify(LT)); localStorage.setItem(WRKEY, JSON.stringify(WR)); localStorage.setItem(HKKEY, JSON.stringify(HK)); }
-  catch(e){ console.warn('autosave失敗', e); if(!autosave._warned){ autosave._warned=true; alert('自動保存の容量上限を超えました。取り込み画像が多い場合は「💾 物件を保存」でファイル保存してください。'); } }
+  try{
+    localStorage.setItem(SAVEKEY, JSON.stringify(DATA));
+    localStorage.setItem(TGKEY, JSON.stringify(TG));
+    localStorage.setItem(KRKEY, JSON.stringify(KR));
+    localStorage.setItem(LTKEY, JSON.stringify(LT));
+    localStorage.setItem(WRKEY, JSON.stringify(WR));
+    localStorage.setItem(HKKEY, JSON.stringify(HK));
+    // 現在の物件名がセットされていれば、その物件データも同期保存
+    // （プルダウン切替で戻った時に最新の編集内容が反映されるように）
+    const currentName = (typeof getCurrentProjectName === 'function') ? getCurrentProjectName() : '';
+    if(currentName){
+      const list = loadProjectList();
+      if(list[currentName]){
+        list[currentName] = {
+          spec:     DATA,
+          tategu:   TG,
+          kurosu:   KR,
+          lighting: LT,
+          wiring:   WR,
+          harimake: HK,
+          savedAt:  new Date().toISOString()
+        };
+        saveProjectList(list);
+      }
+    }
+  }
+  catch(e){ console.warn('autosave失敗', e); if(!autosave._warned){ autosave._warned=true; alert('自動保存の容量上限を超えました。取り込み画像が多い場合は「📥 JSON書出」でファイル保存してください。'); } }
 }
 function safeParse(s){ try{ return JSON.parse(s); }catch(e){ return null; } }
 
@@ -4336,6 +4370,97 @@ function switchDoc(d){
 }
 
 /* 保存・読込（1物件＝仕様一覧表＋建具表をまとめて1ファイル） */
+/* ============================================================
+   物件プルダウン切替（ブラウザ内 localStorage で複数物件を管理）
+   - PROJECTS_KEY 配下に { 物件名: {spec,tategu,kurosu,lighting,wiring,harimake} } を保存
+   - CURRENT_PROJECT_KEY に現在編集中の物件名を保存（autosave 時にも上書き）
+   - PC間共有は不要（各人が自分のPCで完結）。共有したい時は既存の JSON書出/読込を使う。
+   ============================================================ */
+const PROJECTS_KEY = 'naigaisou_projects_v1';
+const CURRENT_PROJECT_KEY = 'naigaisou_current_project_v1';
+
+function loadProjectList(){
+  try{ return JSON.parse(localStorage.getItem(PROJECTS_KEY)||'{}') || {}; }catch(e){ return {}; }
+}
+function saveProjectList(list){
+  try{ localStorage.setItem(PROJECTS_KEY, JSON.stringify(list)); }
+  catch(e){ alert('物件データの保存に失敗しました（容量上限の可能性）。取り込み画像が多い物件は JSON書出でファイル化してください。'); }
+}
+function getCurrentProjectName(){ return localStorage.getItem(CURRENT_PROJECT_KEY) || ''; }
+function setCurrentProjectName(name){
+  if(name) localStorage.setItem(CURRENT_PROJECT_KEY, name);
+  else localStorage.removeItem(CURRENT_PROJECT_KEY);
+}
+
+/* プルダウンを最新化。現在の物件名があれば選択状態にする */
+function refreshProjectDropdown(){
+  const sel = document.getElementById('projectSelect');
+  if(!sel) return;
+  const list = loadProjectList();
+  const current = getCurrentProjectName();
+  const names = Object.keys(list).sort();
+  sel.innerHTML = '<option value="">（選択…）</option>'
+    + names.map(n=>`<option value="${esc(n)}"${n===current?' selected':''}>${esc(n)}</option>`).join('');
+}
+
+/* プルダウン変更時：選ばれた物件を読み込んで即切替 */
+function switchProject(name){
+  if(!name){ setCurrentProjectName(''); return; }
+  const list = loadProjectList();
+  const proj = list[name];
+  if(!proj){ alert('物件データが見つかりません：'+name); refreshProjectDropdown(); return; }
+  DATA = mergeWithMaster(proj.spec);
+  TG   = normalizeTG(proj.tategu);
+  KR   = normalizeKR(proj.kurosu);
+  LT   = normalizeLT(proj.lighting);
+  WR   = normalizeWR(proj.wiring);
+  HK   = normalizeHK(proj.harimake);
+  setCurrentProjectName(name);
+  renderEditor();
+  renderSheet();
+  autosave();
+  window.scrollTo(0,0);
+}
+
+/* 現在のデータに名前を付けて保存（既に同名があれば上書き確認） */
+function saveProjectAs(){
+  const suggested = getCurrentProjectName() || (DATA && DATA.project && DATA.project.name) || '';
+  const name = prompt('物件名を入力してください：', suggested);
+  if(!name || !name.trim()) return;
+  const trimmed = name.trim();
+  const list = loadProjectList();
+  if(list[trimmed] && trimmed !== getCurrentProjectName()){
+    if(!confirm(`「${trimmed}」は既に存在します。上書きしますか？`)) return;
+  }
+  list[trimmed] = {
+    spec:     DATA,
+    tategu:   TG,
+    kurosu:   KR,
+    lighting: LT,
+    wiring:   WR,
+    harimake: HK,
+    savedAt:  new Date().toISOString()
+  };
+  saveProjectList(list);
+  setCurrentProjectName(trimmed);
+  refreshProjectDropdown();
+  alert(`保存しました：${trimmed}`);
+}
+
+/* プルダウンで選択中の物件を削除 */
+function deleteProject(){
+  const sel = document.getElementById('projectSelect');
+  const name = sel ? sel.value : '';
+  if(!name){ alert('削除する物件をプルダウンで選択してください。'); return; }
+  if(!confirm(`「${name}」を削除します。よろしいですか？\n（この物件の localStorage 内データが消えます。JSON書出でバックアップ済みなら復元可能です）`)) return;
+  const list = loadProjectList();
+  delete list[name];
+  saveProjectList(list);
+  if(getCurrentProjectName() === name) setCurrentProjectName('');
+  refreshProjectDropdown();
+  alert(`削除しました：${name}`);
+}
+
 function saveJson(){
   const out={ _type:"naigaisou", spec:DATA, tategu:TG, kurosu:KR, lighting:LT, wiring:WR, harimake:HK };
   const blob = new Blob([JSON.stringify(out,null,2)],{type:'application/json'});
@@ -4358,7 +4483,10 @@ function loadJson(ev){
       HK=normalizeHK(obj.harimake);   // 旧ファイル（harimake無し）はマスタから初期化
     }
     else { DATA=mergeWithMaster(obj); } // 旧形式（仕様一覧表のみ）
-    renderEditor(); renderSheet(); autosave(); alert('読み込みました');
+    // JSON 読込は『新しい物件を持ち込んだ』動作なので、プルダウンの選択は解除
+    setCurrentProjectName('');
+    refreshProjectDropdown();
+    renderEditor(); renderSheet(); autosave(); alert('読み込みました。名前を付けて保存すれば物件プルダウンに登録されます。');
   }catch(e){ alert('読み込めませんでした：'+e); } };
   r.readAsText(f); ev.target.value='';
 }
@@ -4369,6 +4497,9 @@ function resetProject(){
   LT=JSON.parse(JSON.stringify(LIGHTING_MASTER));
   WR=JSON.parse(JSON.stringify(WIRING_MASTER));
   HK=JSON.parse(JSON.stringify(HARIMAKE_MASTER));
+  // 新規＝現在の物件から離脱。プルダウン選択も解除
+  setCurrentProjectName('');
+  refreshProjectDropdown();
   renderEditor(); renderSheet(); autosave();
 }
 
@@ -4386,6 +4517,7 @@ function loadHaibanDb(){
 loadLocal();
 setSheetMode(DOC); // 初期表示でも各図面ごとの独立モードクラスを付与
 { const _b=document.getElementById('btnPrintCheck'); if(_b) _b.style.display=(DOC==='wiring')?'':'none'; }
+refreshProjectDropdown(); // 保存済み物件をプルダウンに反映（現在物件も選択状態に）
 renderEditor();
 renderSheet();
 showTab('edit');
