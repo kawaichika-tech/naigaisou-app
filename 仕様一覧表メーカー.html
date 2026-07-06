@@ -812,6 +812,28 @@ function renderSpecEditor(){
         }
         _hintHtml = '<div style="font-size:10.5px;color:#666;margin-top:3px;line-height:1.5;background:#fafaf0;border-left:3px solid #5a8a3c;padding:4px 8px;border-radius:3px;">📌 <b>破風カラーの指示</b> を記載（例：「屋根・破風色は共通」「破風は◯◯色」等）<br>※ 屋根本体のカラー品番は、下の候補から必ず「決定」を選ぶ</div>';
       }
+      // 内部塗装色：対象部分／軒天／候補（クリア or バトンオーク）
+      //  ちかさん要件：内部塗装色を記載（クリア・バトンオーク）／WRC（クリア塗装）
+      if(s.id === 'paint_in'){
+        if(c.k === '対象'){
+          const _val = String(c.v||'').trim();
+          if(!_val){
+            _inputStyle = 'style="border:3px solid #ff0000;background:#ffdede;"';
+            _warnHtml = '<span style="color:#ff0000;font-size:11px;font-weight:bold;margin-left:6px;">⚠ 入力必須</span>';
+          }
+          _hintHtml = '<div style="font-size:10.5px;color:#666;margin-top:3px;line-height:1.55;background:#fafaf0;border-left:3px solid #b07a00;padding:5px 8px;border-radius:3px;">📌 <b>入力ルール</b><br>・塗装対象部分を記載（例：見せ梁・化粧柱・畳寄せ、カウンター・造作家具・ニッチ・笠木、階段（踏板・蹴込板・側板））<br>・塗装色は下の候補から必ず『決定』を選ぶ（<b>クリア塗装</b> or <b>バトンオーク塗装</b>）<br>・<b>WRC（ウエスタンレッドシダー）</b> は <b>クリア塗装</b> で統一（軒天）</div>';
+        }
+        if(c.k === '軒天'){
+          const _val = String(c.v||'').trim();
+          if(!_val){
+            _inputStyle = 'style="border:3px solid #ff0000;background:#ffdede;"';
+            _warnHtml = '<span style="color:#ff0000;font-size:11px;font-weight:bold;margin-left:6px;">⚠ 入力必須</span>';
+          } else if(!/クリア/.test(_val)){
+            _inputStyle = 'style="border:3px solid #f39c12;background:#fff8e1;"';
+            _warnHtml = '<span style="color:#e67e22;font-size:11px;font-weight:bold;margin-left:6px;">⚠ WRC（軒天）は「クリア塗装」で統一</span>';
+          }
+        }
+      }
       // 内部土間タイル：タイル or 左官仕上げの入力チェック
       //  ちかさん要件：
       //   - タイル：メーカー／商品名／品番
