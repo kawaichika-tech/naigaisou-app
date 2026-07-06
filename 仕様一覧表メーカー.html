@@ -2678,6 +2678,31 @@ function renderTateguEditor(){
       </div>`;
     }
 
+    // 特注建具：小壁のスイッチ・コンセントが理由の場合の記載促し
+    //  ちかさん要件：建具横に小壁があり、その壁にスイッチ・コンセントが来る場合、
+    //   備考欄に記載する（特注サイズの理由でもOK）／平面図にもそれぞれ記載
+    const _wStr = String(d.w||'');
+    const _hStr = String(d.h||'');
+    const _isCustomSize = /特注/.test(_wStr) || /特注/.test(_hStr);
+    if(_isCustomSize){
+      const _reasonRe = /スイッチ|コンセント|小壁/;
+      const _hasReason = _reasonRe.test(String(d.remark||''))
+                     || _reasonRe.test(String(d.remark1_2||''))
+                     || _reasonRe.test(String(d.remark2||''));
+      if(_hasReason){
+        h += `<div style="margin:6px 8px 0;padding:6px 10px;background:#e8f5e9;border:1px solid #3a7a17;border-radius:4px;font-size:11px;color:#3a7a17;line-height:1.55;">
+          ✓ <b>特注サイズの理由記載あり</b>（備考に『スイッチ／コンセント／小壁』を含む）
+        </div>`;
+      } else {
+        h += `<div style="margin:6px 8px 0;padding:6px 10px;background:#fff8e1;border:1px solid #f39c12;border-radius:4px;font-size:11px;color:#8a5a00;line-height:1.55;">
+          📌 <b>特注サイズ建具：理由を備考に記載</b><br>
+          ・建具横に <b>小壁</b> があり、その壁に <b>スイッチ・コンセント</b> が来る場合など、理由を明記<br>
+          ・備考①「スイッチ設置のため」等を選ぶだけでもOK<br>
+          ・<b>平面図にも該当箇所を記載</b>（建具図面と平面図の両方に）
+        </div>`;
+      }
+    }
+
     // 開き戸系：ストッパー位置の記載促し
     //  ちかさん要件：開き戸で開いたところが廊下のど真ん中だった場合など、ストッパー位置を記載する
     const _typeStr = String(d.type||'');
