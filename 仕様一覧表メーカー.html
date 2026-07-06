@@ -2636,7 +2636,31 @@ function renderTateguEditor(){
              <label class="btn-sm" style="cursor:pointer;background:#888;">📷 別の画像に差し替え<input type="file" accept="image/*" style="display:none" onchange="tgDoorPick(${i},this)"></label>
              ${isManual?`<button class="btn-sm btn-del" onclick="tgDoor(${i},'img','')">差し替えを解除</button>`:''}
            </div></div>
-       </div></div>`;
+       </div>`;
+    // 収納系の建具（室名に『収納／WIC／クローゼット／パントリー』を含む）は
+    // H23（H2300系）推奨ルール／H2300未満なら要検討警告
+    const _roomStr = String(d.room||'');
+    const _isStorage = /収納|WIC|クローゼット|パントリー/.test(_roomStr);
+    if(_isStorage){
+      const _hNum = parseInt(String(d.h||'').replace(/[^0-9]/g,''),10);
+      const _isHShort = _hNum && _hNum < 2300;
+      if(_isHShort){
+        h += `<div style="margin:6px 8px 0;padding:7px 10px;background:#ffdede;border:2px solid #ff0000;border-radius:4px;font-size:11px;color:#c0392b;line-height:1.6;">
+          ⚠ <b>収納の建具ルール要確認</b>（現在 H${_hNum}：<b>H2300未満</b>）<br>
+          ・収納奥行 <b>910（芯）未満</b> の場合、使いやすさのため <b>H23（H2300系）で提案</b><br>
+          ・棚高 <b>H2100</b> の場合は <b>H23 or 特注</b> にする<br>
+          ・その際 <b>エアコンの干渉</b> など十分注意
+        </div>`;
+      } else {
+        h += `<div style="margin:6px 8px 0;padding:6px 10px;background:#fff8e1;border:1px solid #f39c12;border-radius:4px;font-size:11px;color:#8a5a00;line-height:1.55;">
+          📌 <b>収納の建具ルール</b><br>
+          ・収納奥行 <b>910（芯）未満</b> の場合、使いやすさのため <b>H23（H2300系）で提案</b><br>
+          ・棚高 <b>H2100</b> の場合は <b>H23 or 特注</b> にする<br>
+          ・その際 <b>エアコンの干渉</b> など十分注意
+        </div>`;
+      }
+    }
+    h += `</div>`;
   });
   h+=`<div class="addrow">
        <button class="btn-sm" onclick="tgAddDoorFloor('1階')">＋ 1階の建具を追加</button>
