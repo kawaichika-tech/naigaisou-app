@@ -782,6 +782,32 @@ function renderSpecEditor(){
         }
         _hintHtml = '<div style="font-size:10.5px;color:#666;margin-top:3px;line-height:1.5;background:#fafaf0;border-left:3px solid #f5b342;padding:4px 8px;border-radius:3px;">📌 <b>入力ルール</b><br>・防火・準防火地域の場合は「ジエスタ2　<b>防火戸</b>」「エルムーブ2　<b>防火戸</b>」と記載<br>・玄関の間口・高さが標準サイズから変更ある場合は、設計士から引き継いだサイズも記載</div>';
       }
+      // 外壁（サイディング）の『貼り分け』欄に記載がある場合、貼り分け図面タブでの
+      // 作業状況（sub_walls / plans / elevations の登録数）を ✓/⚠ で表示。
+      // 新人さんが『貼り分けあり物件なら貼り分け図面タブも作成必須』と気付ける。
+      if(s.id === 'siding' && c.k === '貼り分け'){
+        const _val = String(c.v||'').trim();
+        const _hasHarimake = _val.length > 0;
+        if(_hasHarimake && typeof HK !== 'undefined'){
+          const _subCount  = ((HK||{}).sub_walls||[]).length;
+          const _planCount = ((HK||{}).plans||[]).filter(p=>p && p.img).length;
+          const _elevCount = ((HK||{}).elevations||[]).filter(e=>e && e.img).length;
+          const _ok = t=>`<span style="color:#3a7a17;font-weight:bold;">✓ ${t}</span>`;
+          const _ng = t=>`<span style="color:#ff0000;font-weight:bold;">⚠ ${t}</span>`;
+          _hintHtml = `<div style="font-size:10.5px;color:#444;margin-top:3px;line-height:1.55;background:#fff5f8;border-left:3px solid #d63d83;padding:5px 8px;border-radius:3px;">
+            📌 <b>貼り分けがある場合の必須項目</b><br>
+            ・出隅の貼り分けは <b>W出隅</b> の記載（商品名・品番・カラー）<br>
+            ・貼り分け図面タブで <b>平面図・立面図</b> の作成<br>
+            ・貼り分け部分が分かるよう <b>該当箇所に色を付ける</b><br>
+            <div style="margin-top:4px;padding-top:4px;border-top:1px dashed #d0aac0;">
+              <b>貼り分け図面タブの登録状況：</b><br>
+              ${_subCount>0 ? _ok(`貼り分けで使う外壁 ${_subCount}件`) : _ng('貼り分けで使う外壁 未登録')}　／
+              ${_planCount>0 ? _ok(`平面図 ${_planCount}枚`) : _ng('平面図 未取り込み')}　／
+              ${_elevCount>0 ? _ok(`立面図 ${_elevCount}枚`) : _ng('立面図 未取り込み')}
+            </div>
+          </div>`;
+        }
+      }
       h += `<div class="field"><label>${c.k}${_warnHtml}</label><input value="${esc(c.v)}" ${_inputStyle} oninput="setCommon(${si},${ci},this.value)"></div>${_hintHtml}`;
     });
     // 候補（クリックで決定）
