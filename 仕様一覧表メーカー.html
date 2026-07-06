@@ -2526,6 +2526,19 @@ function renderTateguEditor(){
       <span><span style="display:inline-block;width:14px;height:14px;background:#d43030;border:1px solid #666;vertical-align:middle;margin-right:4px;"></span><b>赤</b>：土間タイル・左官</span>
     </div>
   </div>`;
+  // 床板張り方向の指示ルール（新人さん向け）
+  h+=`<div style="margin:6px 0 10px;padding:8px 12px;background:#f0f5fa;border-left:4px solid #3b6fd4;border-radius:3px;font-size:12px;color:#333;line-height:1.7;">
+    📌 <b>床板 張り方向の指示ルール</b>（間取り図に <span style="font-size:16px;color:#3b6fd4;">⇔</span> で方向を書き込む）<br>
+    ・<b>基本は長手方向</b><br>
+    ・リビングと玄関ホールは <b>合わせる</b><br>
+    ・LDK及びメイン空間と分断される <b>収納内</b> の床張り方向は、大工さんが施工しやすいように <b>長手</b> で指示<br>
+    ・扉があり縁が切れる場合は、なるべく <b>部屋の長手方向</b> で指示（大工さんの手間と納まり上、逃げ代を作るため）<br>
+    <div style="margin-top:4px;padding-top:4px;border-top:1px dashed #a0b8d5;font-size:11px;color:#556;">
+      ※ 上記の指示は <span style="font-size:15px;color:#3b6fd4;">⇔</span> で書き込む<br>
+      ※ 扉があったり、部屋が違う場合は <b>一部屋ごと</b> に指示<br>
+      ※ <b>吊り戸内・吊り戸下</b> それぞれ指示する
+    </div>
+  </div>`;
   planFloors.forEach(fl=>{
     const img=(m.meta.plan_images||{})[fl]||'';
     h+=`<div class="dcard" style="margin-bottom:6px;">
