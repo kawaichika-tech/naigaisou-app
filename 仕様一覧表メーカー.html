@@ -901,7 +901,9 @@ function renderSpecEditor(){
           </div>`;
         }
       }
-      h += `<div class="field"><label>${c.k}${_warnHtml}</label><input value="${esc(c.v)}" ${_inputStyle} oninput="setCommon(${si},${ci},this.value)"></div>${_hintHtml}`;
+      // onblur で renderEditor を呼ぶことで、入力欄を離れた瞬間に警告色が反映される。
+      // （oninput で呼ぶと再描画のたびにフォーカスが飛ぶので blur タイミングで反映）
+      h += `<div class="field"><label>${c.k}${_warnHtml}</label><input value="${esc(c.v)}" ${_inputStyle} oninput="setCommon(${si},${ci},this.value)" onblur="renderEditor()"></div>${_hintHtml}`;
     });
     // 候補（クリックで決定）
     if(s.variants.length){
