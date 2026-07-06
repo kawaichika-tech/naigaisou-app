@@ -2643,10 +2643,43 @@ function renderTateguEditor(){
              ${isManual?`<button class="btn-sm btn-del" onclick="tgDoor(${i},'img','')">差し替えを解除</button>`:''}
            </div></div>
        </div>`;
-    // 収納系の建具（室名に『収納／WIC／クローゼット／パントリー』を含む）は
-    // H23（H2300系）推奨ルール／H2300未満なら要検討警告
+    // 部屋別の建具ルール判定
     const _roomStr = String(d.room||'');
     const _isStorage = /収納|WIC|クローゼット|パントリー/.test(_roomStr);
+    const _isToilet = /トイレ|WC/.test(_roomStr);
+    const _isDassi = /脱衣|洗面/.test(_roomStr);
+
+    // トイレ系：表示錠・明かり採り（ライトスコープ）が必要（両方 or どちらか未チェックなら警告）
+    // ・建具にガラスが入る場合は明かり採り不要（判定できないので常時注記）
+    if(_isToilet){
+      const _noLock = !d.lock;
+      const _noLight = !d.lightScope;
+      const _missing = [];
+      if(_noLock) _missing.push('<b>表示錠</b>');
+      if(_noLight) _missing.push('<b>明かり採り（ライトスコープ）</b>');
+      if(_missing.length){
+        h += `<div style="margin:6px 8px 0;padding:7px 10px;background:#ffdede;border:2px solid #ff0000;border-radius:4px;font-size:11px;color:#c0392b;line-height:1.6;">
+          ⚠ <b>トイレの建具は ${_missing.join(' と ')} を確認</b><br>
+          ・上の「ライトスコープ／表示錠」チェックボックスをON<br>
+          ・<b>建具にガラスが入る場合は「明かり採り」は不要</b>（その場合はチェック不要）
+        </div>`;
+      } else {
+        h += `<div style="margin:6px 8px 0;padding:6px 10px;background:#e8f5e9;border:1px solid #3a7a17;border-radius:4px;font-size:11px;color:#3a7a17;line-height:1.55;">
+          ✓ <b>トイレ建具</b>：表示錠・明かり採り ともに設定済（ガラス入り建具なら明かり採りOFFでOK）
+        </div>`;
+      }
+    }
+
+    // 脱衣室／洗面脱衣室：表示錠が必要かどうかを確認促す
+    if(_isDassi){
+      h += `<div style="margin:6px 8px 0;padding:6px 10px;background:#fff8e1;border:1px solid #f39c12;border-radius:4px;font-size:11px;color:#8a5a00;line-height:1.55;">
+        📌 <b>脱衣室／洗面脱衣室の建具</b>：<b>表示錠が必要か確認</b> してください<br>
+        <span style="color:#666;font-size:10.5px;">現状：${d.lock?'表示錠あり ✓':'<b>表示錠なし</b>'}</span>
+      </div>`;
+    }
+
+    // 収納系の建具（室名に『収納／WIC／クローゼット／パントリー』を含む）は
+    // H23（H2300系）推奨ルール／H2300未満なら要検討警告
     if(_isStorage){
       const _hNum = parseInt(String(d.h||'').replace(/[^0-9]/g,''),10);
       const _isHShort = _hNum && _hNum < 2300;
