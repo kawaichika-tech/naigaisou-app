@@ -782,6 +782,36 @@ function renderSpecEditor(){
         }
         _hintHtml = '<div style="font-size:10.5px;color:#666;margin-top:3px;line-height:1.5;background:#fafaf0;border-left:3px solid #f5b342;padding:4px 8px;border-radius:3px;">📌 <b>入力ルール</b><br>・防火・準防火地域の場合は「ジエスタ2　<b>防火戸</b>」「エルムーブ2　<b>防火戸</b>」と記載<br>・玄関の間口・高さが標準サイズから変更ある場合は、設計士から引き継いだサイズも記載</div>';
       }
+      // 屋根・破風の3項目チェック：
+      //  ① 本屋根（メーカー・商品）：空欄なら赤警告
+      //  ② 張り方向：タテヒラ以外なら黄警告（タテヒラのみ可）
+      //  ③ 備考（破風カラーの指示）：空欄なら赤警告＋入力ルール注記
+      if(s.id === 'roof' && c.k === '本屋根'){
+        const _val = String(c.v||'').trim();
+        if(!_val){
+          _inputStyle = 'style="border:3px solid #ff0000;background:#ffdede;"';
+          _warnHtml = '<span style="color:#ff0000;font-size:11px;font-weight:bold;margin-left:6px;">⚠ 入力必須</span>';
+        }
+        _hintHtml = '<div style="font-size:10.5px;color:#666;margin-top:3px;line-height:1.5;background:#fafaf0;border-left:3px solid #5a8a3c;padding:4px 8px;border-radius:3px;">📌 メーカー名＋商品名を記載（例：<b>ガルバリウム鋼板</b>）</div>';
+      }
+      if(s.id === 'roof' && c.k === '張り方向'){
+        const _val = String(c.v||'').trim();
+        if(!_val){
+          _inputStyle = 'style="border:3px solid #ff0000;background:#ffdede;"';
+          _warnHtml = '<span style="color:#ff0000;font-size:11px;font-weight:bold;margin-left:6px;">⚠ 入力必須</span>';
+        } else if(_val !== 'タテヒラ'){
+          _inputStyle = 'style="border:3px solid #f39c12;background:#fff8e1;"';
+          _warnHtml = '<span style="color:#e67e22;font-size:11px;font-weight:bold;margin-left:6px;">⚠ 屋根の張り方向は「タテヒラ」のみ可</span>';
+        }
+      }
+      if(s.id === 'roof' && c.k === '備考'){
+        const _val = String(c.v||'').trim();
+        if(!_val){
+          _inputStyle = 'style="border:3px solid #ff0000;background:#ffdede;"';
+          _warnHtml = '<span style="color:#ff0000;font-size:11px;font-weight:bold;margin-left:6px;">⚠ 破風カラーの指示を記載</span>';
+        }
+        _hintHtml = '<div style="font-size:10.5px;color:#666;margin-top:3px;line-height:1.5;background:#fafaf0;border-left:3px solid #5a8a3c;padding:4px 8px;border-radius:3px;">📌 <b>破風カラーの指示</b> を記載（例：「屋根・破風色は共通」「破風は◯◯色」等）<br>※ 屋根本体のカラー品番は、下の候補から必ず「決定」を選ぶ</div>';
+      }
       // 外壁（サイディング）の『貼り分け』欄に記載がある場合、貼り分け図面タブでの
       // 作業状況（sub_walls / plans / elevations の登録数）を ✓/⚠ で表示。
       // 新人さんが『貼り分けあり物件なら貼り分け図面タブも作成必須』と気付ける。
