@@ -812,6 +812,17 @@ function renderSpecEditor(){
         }
         _hintHtml = '<div style="font-size:10.5px;color:#666;margin-top:3px;line-height:1.5;background:#fafaf0;border-left:3px solid #5a8a3c;padding:4px 8px;border-radius:3px;">📌 <b>破風カラーの指示</b> を記載（例：「屋根・破風色は共通」「破風は◯◯色」等）<br>※ 屋根本体のカラー品番は、下の候補から必ず「決定」を選ぶ</div>';
       }
+      // 外部塗装色：基本オリーブ一色、外部格子がある物件のみ「あり」に
+      //  ちかさん要件：外部の塗装は基本的に一色（オリーブのみ）／外部格子があるときのみ
+      if(s.id === 'paint_out' && c.k === '対象'){
+        const _val = String(c.v||'').trim();
+        // 『あり』（present=true）なのに対象欄が空 → 警告
+        if(s.present && !_val){
+          _inputStyle = 'style="border:3px solid #ff0000;background:#ffdede;"';
+          _warnHtml = '<span style="color:#ff0000;font-size:11px;font-weight:bold;margin-left:6px;">⚠ 入力必須</span>';
+        }
+        _hintHtml = '<div style="font-size:10.5px;color:#666;margin-top:3px;line-height:1.55;background:#fafaf0;border-left:3px solid #5a8a3c;padding:5px 8px;border-radius:3px;">📌 <b>入力ルール</b><br>・外部塗装は基本 <b>オリーブ一色</b>（基本仕様として変更なし）<br>・<b>外部格子がある物件のみ</b>「あり」に設定（無い物件は「なし」に）<br>・対象欄には「化粧柱・木格子・外部板張」等の塗装対象を記載<br>・下の候補から必ず『決定』を選ぶ</div>';
+      }
       // 内部塗装色：対象部分／軒天／候補（クリア or バトンオーク）
       //  ちかさん要件：内部塗装色を記載（クリア・バトンオーク）／WRC（クリア塗装）
       if(s.id === 'paint_in'){
