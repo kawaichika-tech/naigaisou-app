@@ -2678,6 +2678,29 @@ function renderTateguEditor(){
       </div>`;
     }
 
+    // 開き戸系：ストッパー位置の記載促し
+    //  ちかさん要件：開き戸で開いたところが廊下のど真ん中だった場合など、ストッパー位置を記載する
+    const _typeStr = String(d.type||'');
+    const _isHiragi = /片開き|両開き|トイレドア|リビング片開き/.test(_typeStr);
+    if(_isHiragi){
+      // 備考3項目のいずれかに『ストッパー』の文字が含まれてれば OK
+      const _stopperRe = /ストッパー/;
+      const _hasStopper = _stopperRe.test(String(d.remark||''))
+                       || _stopperRe.test(String(d.remark1_2||''))
+                       || _stopperRe.test(String(d.remark2||''));
+      if(_hasStopper){
+        h += `<div style="margin:6px 8px 0;padding:6px 10px;background:#e8f5e9;border:1px solid #3a7a17;border-radius:4px;font-size:11px;color:#3a7a17;line-height:1.55;">
+          ✓ <b>開き戸：ストッパー位置の記載あり</b>
+        </div>`;
+      } else {
+        h += `<div style="margin:6px 8px 0;padding:6px 10px;background:#fff8e1;border:1px solid #f39c12;border-radius:4px;font-size:11px;color:#8a5a00;line-height:1.55;">
+          📌 <b>開き戸のストッパー位置</b>を備考欄に記載<br>
+          ・開いたところが <b>廊下のど真ん中</b> になる場合など、ストッパー位置を具体的に記載する<br>
+          <span style="color:#666;font-size:10.5px;">（備考① / 備考①-2 / 備考② のいずれかに『ストッパー』を含む文言で記載）</span>
+        </div>`;
+      }
+    }
+
     // 収納系の建具（室名に『収納／WIC／クローゼット／パントリー』を含む）は
     // H23（H2300系）推奨ルール／H2300未満なら要検討警告
     if(_isStorage){
