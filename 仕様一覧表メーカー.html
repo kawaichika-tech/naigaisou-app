@@ -2602,6 +2602,12 @@ function renderTateguEditor(){
   const _emptyRoomCnt = m.doors.filter(d=>!String(d.room||'').trim()).length;
   const _emptyBadge = _emptyRoomCnt ? `<span style="background:#ff0000;color:#fff;font-size:12px;font-weight:bold;padding:3px 10px;border-radius:9px;margin-left:8px;box-shadow:0 0 0 2px #ffdede;">⚠ 室名未入力 ${_emptyRoomCnt}件</span>` : '';
   h+=`<details class="card" open><summary><span class="area" style="background:#3b4a5c">建具</span>建具リスト（${m.doors.length}件）${_emptyBadge}</summary><div class="body">`;
+  // 建具リスト共通の入力ルール（床材切り替え時の敷居／床見切り ルール）
+  h+=`<div style="margin:6px 0 10px;padding:8px 12px;background:#fafaf0;border-left:4px solid #b0734a;border-radius:3px;font-size:12px;color:#5a3a17;line-height:1.6;">
+    📌 <b>敷居／床見切りの入力ルール</b>（床の材が変わる場所）<br>
+    ・<b>建具がある場所</b> → <b>敷居</b>を入れる（下の各建具で「敷居有無」を必ず選択）<br>
+    ・<b>建具がない場所</b> → <b>床見切り</b>を入れる（＝建具図面には登場せず、床材切り替え部分の造作）
+  </div>`;
   m.doors.forEach((d,i)=>{
     const dsrc=doorImgSrc(d), isManual=!!d.img;
     const thumb = dsrc ? `<div class="dthumb" style="background:${swStyle(dsrc,'contain')}"></div>` : '';
@@ -2622,7 +2628,7 @@ function renderTateguEditor(){
             ? `<div class="f"><label>色</label>${tgSel(colorOptionsForType(d.type, DATA.project.taste), d.color||'', `tgDoor(${i},'color',this.value)`)}</div>`
             : tf(i,'color','色','tgColor') }
          ${tf(i,'w','幅 W')} ${tf(i,'h','高 H')}
-         ${tf(i,'handle','把手デザイン','tgHandle')} ${tf(i,'threshold','敷居有無','tgThr')}
+         ${tf(i,'handle','把手デザイン','tgHandle')} ${tf(i,'threshold','敷居有無','tgThr',/*required*/true)}
          <div class="f"><label>敷居色／種類</label><input value="${esc(doorSill(d))}" oninput="tgDoor(${i},'sill',this.value)"></div>
          <div class="f"><label>ライトスコープ</label><label style="display:flex;align-items:center;gap:6px;font-size:12px;color:#333;"><input type="checkbox" ${d.lightScope?'checked':''} onchange="tgDoorBool(${i},'lightScope',this.checked)">あり</label></div>
          <div class="f"><label>表示錠</label><label style="display:flex;align-items:center;gap:6px;font-size:12px;color:#333;"><input type="checkbox" ${d.lock?'checked':''} onchange="tgDoorBool(${i},'lock',this.checked)">あり</label></div>
