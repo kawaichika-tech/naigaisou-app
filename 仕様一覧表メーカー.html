@@ -2515,6 +2515,17 @@ function renderTateguEditor(){
   const planFloors=[...new Set([...Object.keys(m.meta.plan_images||{}), ...m.doors.map(d=>d.floor||'').filter(Boolean)])];
   if(!planFloors.length) planFloors.push('1階','2階');
   h+=`<div class="hint" style="margin:8px 0 4px;">スライド等で色付けした「階ごとの間取り図」を 📷 で取り込んでください。印刷では階ごとにA3横1ページ（左：間取り図 ／ 右：建具カード）として出力されます。</div>`;
+  // 床材の色分けルール（新人さん向けの入力ルール表示）
+  h+=`<div style="margin:6px 0 10px;padding:8px 12px;background:#fafaf0;border-left:4px solid #b0734a;border-radius:3px;font-size:12px;color:#333;line-height:1.8;">
+    📌 <b>フロア図面 色分けルール</b>（床材ごとに間取り図で色を付ける）<br>
+    <div style="display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:4px;font-size:11.5px;">
+      <span><span style="display:inline-block;width:14px;height:14px;background:#ff8c00;border:1px solid #666;vertical-align:middle;margin-right:4px;"></span><b>橙</b>：無垢材</span>
+      <span><span style="display:inline-block;width:14px;height:14px;background:#3b6fd4;border:1px solid #666;vertical-align:middle;margin-right:4px;"></span><b>青</b> or <span style="display:inline-block;width:14px;height:14px;background:#8a4ac4;border:1px solid #666;vertical-align:middle;margin:0 4px;"></span><b>紫</b>：フローリング</span>
+      <span><span style="display:inline-block;width:14px;height:14px;background:#f5d020;border:1px solid #666;vertical-align:middle;margin-right:4px;"></span><b>黄</b>：CF・フロアタイル</span>
+      <span><span style="display:inline-block;width:14px;height:14px;background:#3aa03a;border:1px solid #666;vertical-align:middle;margin-right:4px;"></span><b>緑</b>：畳</span>
+      <span><span style="display:inline-block;width:14px;height:14px;background:#d43030;border:1px solid #666;vertical-align:middle;margin-right:4px;"></span><b>赤</b>：土間タイル・左官</span>
+    </div>
+  </div>`;
   planFloors.forEach(fl=>{
     const img=(m.meta.plan_images||{})[fl]||'';
     h+=`<div class="dcard" style="margin-bottom:6px;">
