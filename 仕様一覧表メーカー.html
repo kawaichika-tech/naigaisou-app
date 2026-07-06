@@ -812,6 +812,21 @@ function renderSpecEditor(){
         }
         _hintHtml = '<div style="font-size:10.5px;color:#666;margin-top:3px;line-height:1.5;background:#fafaf0;border-left:3px solid #5a8a3c;padding:4px 8px;border-radius:3px;">📌 <b>破風カラーの指示</b> を記載（例：「屋根・破風色は共通」「破風は◯◯色」等）<br>※ 屋根本体のカラー品番は、下の候補から必ず「決定」を選ぶ</div>';
       }
+      // 雨樋（軒樋・竪樋・呼樋）：軒樋・竪樋の入力チェック
+      //  ちかさん要件：外壁の色と別の色が絡む場合は雨樋の組み合わせを検討
+      if(s.id === 'gutter'){
+        if(c.k === '軒樋' || c.k === '竪樋・呼び樋'){
+          const _val = String(c.v||'').trim();
+          if(!_val){
+            _inputStyle = 'style="border:3px solid #ff0000;background:#ffdede;"';
+            _warnHtml = '<span style="color:#ff0000;font-size:11px;font-weight:bold;margin-left:6px;">⚠ 入力必須</span>';
+          }
+        }
+        // 最初の共通項目（軒樋）の下だけ、常時ヒント表示
+        if(c.k === '軒樋'){
+          _hintHtml = '<div style="font-size:10.5px;color:#666;margin-top:3px;line-height:1.5;background:#fafaf0;border-left:3px solid #b0734a;padding:4px 8px;border-radius:3px;">📌 <b>入力ルール</b><br>・軒樋・竪樋・呼び樋のメーカー品番を記載（例：KAKU　RK85／瞬水S15）<br>・カラーは下の候補から必ず「決定」を選ぶ<br>・<b>外壁の色と別の色が絡む場合は、雨樋の組み合わせを検討</b>（軒樋と竪樋・呼び樋で色が違うこともあり）</div>';
+        }
+      }
       // 外壁（サイディング）の『貼り分け』欄に記載がある場合、貼り分け図面タブでの
       // 作業状況（sub_walls / plans / elevations の登録数）を ✓/⚠ で表示。
       // 新人さんが『貼り分けあり物件なら貼り分け図面タブも作成必須』と気付ける。
