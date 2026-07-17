@@ -1918,7 +1918,12 @@ const DOOR_COLOR_PRESET={
   "CL（ナチュラルクリア）":{"ストッパー":"ライト色",  "キャッチャー":"ミディアム色","枠色":"CL（ナチュラルクリア）","ハンドル":"シルバー", "フローリング":"ウッドワン　12mm　グレー　FKK224D-JG"}
 };
 /* 種類を選ぶと品番を自動入力（品番は色に関係なく固定）。対象外の種類は手動入力のまま */
-const TYPE_HINBAN={ "リビング片開きドア":"B-XG", "リビング片引戸":"B-XG", "リビングアウトセットドア":"B-XG" };
+const TYPE_HINBAN={
+  "リビング片開きドア":"B-XG", "リビング片引戸":"B-XG", "リビングアウトセットドア":"B-XG",
+  "トイレドア":"B-XF", "片引戸トイレタイプ":"B-XF",
+  "アウトセットトイレタイプ":"B-XF", "スライディングドア（トイレ）":"B-XF",
+  "両開き戸":"B-XF"
+};
 /* 種類を選ぶと把手・ライトスコープ・表示錠を自動セット */
 const TYPE_PRESET={
   "トイレドア":                   { handle:"レバーハンドルBA型表示錠付き", lightScope:true,  lock:true  },
@@ -2414,6 +2419,8 @@ function migrateDoors(arr){
         o.lock=pre.lock;
       }
     }
+    // トイレタイプ・両開き戸建具は品番を B-XF に統一（B-XG 等のまま残ってる旧データの救済）
+    if(TYPE_HINBAN[o.type]) o.hinban=TYPE_HINBAN[o.type];
     // 旧種類名→新種類名（表記を統一）
     if(TYPE_RENAME[o.type]) o.type=TYPE_RENAME[o.type];
     if(d.lightScope===undefined) o.lightScope = /ライトスコープ/.test(d.remark||'');
