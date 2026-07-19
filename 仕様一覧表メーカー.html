@@ -2024,6 +2024,7 @@ const KUROSU_MASTER = {
     subtitle_2f:"2F 壁・天井（クロス・タイル）・床CF仕上げ",
     base_cloth_label:"基本クロス",
     base_cloth_hinban:"XR631",
+    property_type:"分譲",                          // 分譲／注文（クッションフロア判定の基準に使う）
     plan_images:{"1階":"","2階":""},
     note:"※雰囲気・デザイン・施工方法を優先する場合、仕様詳細図面通りの施工とならない場合がございます。"
   },
@@ -2091,7 +2092,7 @@ function normalizeKR(k){
   const base=JSON.parse(JSON.stringify(KUROSU_MASTER));
   if(!k || typeof k!=='object') return base;
   if(!k.meta) k.meta=base.meta;
-  ['title','subtitle_1f','subtitle_2f','base_cloth_label','base_cloth_hinban','note'].forEach(key=>{ if(k.meta[key]==null) k.meta[key]=base.meta[key]; });
+  ['title','subtitle_1f','subtitle_2f','base_cloth_label','base_cloth_hinban','property_type','note'].forEach(key=>{ if(k.meta[key]==null) k.meta[key]=base.meta[key]; });
   if(!k.meta.plan_images || typeof k.meta.plan_images!=='object'){
     k.meta.plan_images={"1階":"","2階":""};
   }
@@ -2985,6 +2986,7 @@ function preprocessForOcr(src){
 const OCR_HOST = (typeof window !== 'undefined' && window.__OCR_HOST__) ||
                  (IMG_BASE ? 'https://naigaisou-app-ocr.vercel.app' : 'http://127.0.0.1:8788');
 const OCR_API_URL = `${OCR_HOST}/api/ocr-tategu`;
+const OCR_CF_API_URL = `${OCR_HOST}/api/check-cf`;   // クロス図面：間取り図の黄色（クッションフロア）判定
 
 /* 読み取り結果（{no,type,w,h,room}の配列）を建具リストに反映（既存は更新／無ければ新規） */
 function tgApplyDoorData(list){
@@ -3204,6 +3206,13 @@ function renderKurosuEditor(){
      <div class="field"><label>図面タイトル</label><input value="${esc(m.meta.title)}" oninput="krMeta('title',this.value)"></div>
      <div class="field"><label>基本クロス（ラベル）</label><input value="${esc(m.meta.base_cloth_label)}" oninput="krMeta('base_cloth_label',this.value)" placeholder="例：基本クロス"></div>
      <div class="field"><label>基本クロス 品番</label><input value="${esc(m.meta.base_cloth_hinban)}" oninput="krMeta('base_cloth_hinban',this.value)" placeholder="例：XR-410"></div>
+     <div class="field"><label>物件種別</label>
+       <div style="display:flex;gap:12px;align-items:center;">
+         <label style="display:flex;gap:4px;align-items:center;cursor:pointer;"><input type="radio" name="krPropType" value="分譲" ${m.meta.property_type!=='注文'?'checked':''} onchange="krMeta('property_type','分譲')">分譲</label>
+         <label style="display:flex;gap:4px;align-items:center;cursor:pointer;"><input type="radio" name="krPropType" value="注文" ${m.meta.property_type==='注文'?'checked':''} onchange="krMeta('property_type','注文')">注文</label>
+         <span class="hint" style="margin:0;">分譲＝トイレ・脱衣室が床CF必須として判定します</span>
+       </div>
+     </div>
      <div class="hint" style="margin:8px 0 4px;">階ごとの間取り画像（スライド等で色付け済）を 📷 で取り込んでください。建具表と同じく階ごとに1ページ＝A3横で出力します。</div>`;
   const planFloors=[...new Set([...Object.keys(m.meta.plan_images||{}), ...m.rooms.map(r=>r.floor||'').filter(Boolean)])];
   if(!planFloors.length) planFloors.push('1階','2階');
@@ -3219,6 +3228,11 @@ function renderKurosuEditor(){
         </div>
       </div>`;
   });
+  h+=`<div style="margin-top:10px;padding-top:10px;border-top:1px dashed #ccc;">
+        <button class="btn-sm" style="background:#c48a00;" onclick="krCheckCF()">🔍 クッションフロア判定（間取り図×仕上げ表）</button>
+        <span class="hint" style="margin:0 0 0 6px;">間取り図の黄色塗り と 床CF指定 が一致するかAIで照合します（1画像あたり数円）</span>
+        <div id="krCfResult" style="margin-top:8px;">${KR_CF_REPORT ? krCfReportHtml(KR_CF_REPORT) : ''}</div>
+      </div>`;
   h+=`</div></details>`;
 
   // クロスエントリ一覧（階ごとにグループ化して表示）
@@ -3345,6 +3359,137 @@ function krPlanImgPick(floor,input){
 function krPlanImgClear(floor){
   if(KR.meta.plan_images) KR.meta.plan_images[floor]='';
   renderEditor(); renderSheet(); sync();
+}
+
+/* ============================================================
+   クッションフロア判定：間取り図の黄色塗り × 仕上げ表の床CF を照合
+   ============================================================ */
+let KR_CF_REPORT = null;   // 直近の判定結果（保存データには含めない）
+
+/* 室名の表記ゆれを吸収して正規化キーに寄せる。判定は正規化キー同士で行う。 */
+const CF_ROOM_SYNONYMS = {
+  'トイレ':   ['トイレ','といれ','WC','ＷＣ','便所','お手洗い','化粧室'],
+  '脱衣室':   ['脱衣室','脱衣所','脱衣','洗面脱衣室','洗面脱衣所','洗面脱衣','ランドリー','ランドリールーム'],
+  '洗面所':   ['洗面所','洗面室','洗面'],
+  '浴室':     ['浴室','ユニットバス','UB','ＵＢ','風呂','バス'],
+  '玄関':     ['玄関','玄関ホール'],
+  'ホール':   ['ホール','廊下'],
+  'キッチン': ['キッチン','台所'],
+  'パントリー':['パントリー','食品庫'],
+  'WIC':      ['WIC','ＷＩＣ','ウォークインクローゼット'],
+  'シューズクローク':['シューズクローク','SC','ＳＣ','土間収納'],
+};
+function krCanonRoom(name){
+  let s=String(name||'').replace(/[\s　（）()［］\[\]①②③④⑤]/g,'').trim();
+  if(!s) return '';
+  const up=s.toUpperCase();
+  for(const [canon,alts] of Object.entries(CF_ROOM_SYNONYMS)){
+    for(const a of alts){ if(up.includes(a.toUpperCase())) return canon; }
+  }
+  return s;
+}
+
+/* 判定ボタン：階ごとに間取り図をAIへ送り、黄色部屋を取得 → 仕上げ表の床CFと突き合わせ */
+async function krCheckCF(){
+  const box=document.getElementById('krCfResult');
+  const planImgs=KR.meta.plan_images||{};
+  const floors=Object.keys(planImgs).filter(fl=>planImgs[fl]);
+  if(!floors.length){
+    KR_CF_REPORT={error:'間取り図の画像が取り込まれていません。先に各階の間取り図を 📷 で取り込んでください。'};
+    if(box) box.innerHTML=krCfReportHtml(KR_CF_REPORT);
+    return;
+  }
+  if(box) box.innerHTML=`<div class="hint" style="margin:0;">AIで判定中…（間取り図 ${floors.length} 枚を解析）少々お待ちください。</div>`;
+
+  const propType=KR.meta.property_type||'分譲';
+  const floorReports=[];
+  try{
+    for(const fl of floors){
+      // AIに間取り図を送って黄色部屋を取得
+      let res;
+      try{
+        res=await fetch(OCR_CF_API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:planImgs[fl]})});
+      }catch(e){ throw Object.assign(new Error('AIサーバーに接続できません（ローカルは OCR起動.bat を実行してください）'),{noServer:true}); }
+      if(!res.ok){ let msg='サーバーエラー '+res.status; try{const j=await res.json(); if(j.error)msg=j.error;}catch(e){} throw new Error(msg); }
+      const data=await res.json();
+      const yellow=(data.yellow_rooms||[]).map(y=>({name:String(y.name||''),confidence:String(y.confidence||''),canon:krCanonRoom(y.name)})).filter(y=>y.canon);
+
+      // 仕上げ表：この階で床＝クッションフロアの部屋
+      const specCF=KR.rooms.filter(r=>(r.floor||'')===fl && r.part==='床' && r.style==='クッションフロア')
+                           .map(r=>({name:r.name||'',canon:krCanonRoom(r.name)})).filter(r=>r.canon);
+
+      const yellowSet=new Set(yellow.map(y=>y.canon));
+      const specSet=new Set(specCF.map(r=>r.canon));
+      const allCanon=[...new Set([...yellowSet,...specSet])];
+
+      const rows=allCanon.map(c=>{
+        const inPlan=yellowSet.has(c), inSpec=specSet.has(c);
+        const label=(yellow.find(y=>y.canon===c)||specCF.find(r=>r.canon===c)||{}).name||c;
+        let status,msg;
+        if(inPlan&&inSpec){ status='ok'; msg='一致'; }
+        else if(inPlan&&!inSpec){ status='warn'; msg='間取り図は黄色 → 仕上げ表に床CFの記載なし（記入漏れ？）'; }
+        else { status='warn'; msg='仕上げ表は床CF → 間取り図に黄色塗りなし（塗り忘れ？）'; }
+        const conf=(yellow.find(y=>y.canon===c)||{}).confidence||'';
+        return {canon:c,label,inPlan,inSpec,status,msg,conf};
+      });
+
+      // 分譲ルール：トイレ・脱衣室が「間取り図の黄色 かつ 仕上げ表の床CF」両方に入っているか
+      const required=[];
+      if(propType==='分譲'){
+        ['トイレ','脱衣室'].forEach(req=>{
+          const inPlan=yellowSet.has(req), inSpec=specSet.has(req);
+          let status='ok',msg='分譲標準：黄色・床CFとも指定あり';
+          if(!inPlan&&!inSpec){ status='ng'; msg='分譲標準なのに 間取り図の黄色・仕上げ表の床CF どちらも無し'; }
+          else if(!inPlan){ status='warn'; msg='分譲標準：仕上げ表は床CFだが間取り図が黄色塗りされていない'; }
+          else if(!inSpec){ status='warn'; msg='分譲標準：間取り図は黄色だが仕上げ表に床CFの記載なし'; }
+          required.push({name:req,status,msg});
+        });
+      }
+      floorReports.push({floor:fl,yellow,specCF,rows,required,note:data.note||''});
+    }
+    KR_CF_REPORT={propType,floors:floorReports,ts:new Date().toLocaleString('ja-JP')};
+  }catch(e){
+    KR_CF_REPORT={error:(e&&e.message)||'判定に失敗しました。'};
+  }
+  if(box) box.innerHTML=krCfReportHtml(KR_CF_REPORT);
+}
+
+/* 判定結果のHTML生成 */
+function krCfReportHtml(rep){
+  if(!rep) return '';
+  if(rep.error){
+    return `<div style="padding:8px 10px;border-radius:6px;background:#fdecea;color:#b3261e;font-size:12px;">⚠ ${esc(rep.error)}</div>`;
+  }
+  const dot=s=> s==='ok'?'<span style="color:#1a7f37;">✅</span>' : s==='ng'?'<span style="color:#b3261e;">🔴</span>' : '<span style="color:#c48a00;">⚠️</span>';
+  let warnCount=0, ngCount=0;
+  rep.floors.forEach(f=>{ f.rows.forEach(r=>{ if(r.status==='warn')warnCount++; }); f.required.forEach(r=>{ if(r.status==='warn')warnCount++; if(r.status==='ng')ngCount++; }); });
+  const head=`<div style="font-weight:bold;margin-bottom:6px;">判定結果（${esc(rep.propType)}）　${ngCount||warnCount?`<span style="color:#c48a00;">要確認 ${warnCount+ngCount}件</span>`:'<span style="color:#1a7f37;">問題なし</span>'}　<span class="hint" style="font-weight:normal;">${esc(rep.ts||'')}</span></div>`;
+  let body='';
+  rep.floors.forEach(f=>{
+    body+=`<div style="margin-bottom:10px;border:1px solid #e0e0e0;border-radius:6px;overflow:hidden;">
+      <div style="background:#3b4a5c;color:#fff;padding:4px 8px;font-weight:bold;font-size:12px;">${esc(f.floor)}　間取り図</div>
+      <div style="padding:6px 8px;font-size:12px;">`;
+    if(f.required.length){
+      body+=`<div style="margin-bottom:4px;"><b>分譲チェック</b><ul style="margin:2px 0 0;padding-left:18px;">`
+        + f.required.map(r=>`<li>${dot(r.status)} ${esc(r.name)}：${esc(r.msg)}</li>`).join('') + `</ul></div>`;
+    }
+    if(!f.rows.length){
+      body+=`<div class="hint" style="margin:2px 0;">黄色エリア・床CFとも検出なし。</div>`;
+    }else{
+      body+=`<table style="width:100%;border-collapse:collapse;font-size:12px;">
+        <tr style="background:#f5f5f5;"><th style="text-align:left;padding:2px 4px;">部屋</th><th style="padding:2px 4px;">間取り黄色</th><th style="padding:2px 4px;">仕上げ床CF</th><th style="text-align:left;padding:2px 4px;">判定</th></tr>`
+        + f.rows.map(r=>`<tr style="border-top:1px solid #eee;">
+            <td style="padding:2px 4px;">${esc(r.label)}${r.conf&&r.conf!=='high'?`<span class="hint"> (${esc(r.conf)})</span>`:''}</td>
+            <td style="text-align:center;padding:2px 4px;">${r.inPlan?'●':'—'}</td>
+            <td style="text-align:center;padding:2px 4px;">${r.inSpec?'●':'—'}</td>
+            <td style="padding:2px 4px;">${dot(r.status)} ${esc(r.msg)}</td></tr>`).join('')
+        + `</table>`;
+    }
+    if(f.note) body+=`<div class="hint" style="margin-top:4px;">AIメモ：${esc(f.note)}</div>`;
+    body+=`</div></div>`;
+  });
+  const foot=`<div class="hint" style="margin-top:2px;">※AIの色・文字読み取りによる判定です。最終確認は必ず目視でお願いします。</div>`;
+  return head+body+foot;
 }
 function renderKurosuSheet(){
   const p=DATA.project, m=KR;

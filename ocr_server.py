@@ -100,6 +100,43 @@ LIGHTING_PROMPT = (
 )
 
 
+# ============================================================
+# 間取り図から「黄色く塗られた部屋（＝クッションフロア）」を読み取る
+# ============================================================
+CF_CHECK_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "yellow_rooms": {
+            "type": "array",
+            "description": "黄色く塗りつぶされている（マーキングされている）部屋のリスト",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name":       {"type": "string", "description": "部屋名。図面のラベルを読む。例 トイレ / 脱衣室 / 洗面所"},
+                    "confidence": {"type": "string", "description": "黄色と判断した確度。high / medium / low のいずれか"}
+                },
+                "required": ["name", "confidence"],
+                "additionalProperties": False
+            }
+        },
+        "note": {"type": "string", "description": "判断に迷った点などの補足。なければ空文字。"}
+    },
+    "required": ["yellow_rooms", "note"],
+    "additionalProperties": False
+}
+
+CF_CHECK_PROMPT = (
+    "これは住宅の間取り図（平面図）です。図面内で『黄色く塗りつぶされている／黄色でマーキングされているエリア』を"
+    "探して、その部屋名を読み取ってください。黄色は床仕上げがクッションフロアであることを示すマーキングです。\n"
+    "- yellow_rooms: 黄色く塗られている各部屋について、name（部屋名。図面のラベル文字を読む。例：トイレ／脱衣室／洗面所）と"
+    " confidence（黄色だと判断した確度。high／medium／low）を返す。\n"
+    "- 明確に黄色いエリアだけを対象にする。ピンク・水色・グレー等の他の色や、非常に薄い着色は対象外。\n"
+    "- 黄色いエリアの部屋名ラベルが読み取れない場合は、name に位置の説明（例：玄関横の小部屋）を入れる。\n"
+    "- 黄色いエリアが1つも無ければ yellow_rooms は空配列にする。無い色を無理にこじつけないこと。\n"
+    "- note: 判断に迷った点があれば短く記載。なければ空文字。"
+)
+
+
 def _decode_image(data_url):
     m = re.match(r"data:(image/[^;]+);base64,(.+)$", data_url or "", re.S)
     if not m:
@@ -132,6 +169,11 @@ def extract_lighting(data_url):
     """照明用：価格・品番を返す（data:URI 入力）"""
     media_type, b64 = _decode_image(data_url)
     return _ask_claude(media_type, b64, LIGHTING_SCHEMA, LIGHTING_PROMPT)
+
+def check_cf(data_url):
+    """クロス図面用：間取り図から黄色く塗られた部屋（＝クッションフロア）を読み取る"""
+    media_type, b64 = _decode_image(data_url)
+    return _ask_claude(media_type, b64, CF_CHECK_SCHEMA, CF_CHECK_PROMPT)
 
 def _read_local_image(rel_path):
     """サーバーと同じフォルダの相対パスからファイル読込 → (media_type, base64) を返す。
@@ -180,14 +222,16 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         # 動作確認（ヘルスチェック）
-        self._json(200, {"ok": True, "model": MODEL, "endpoints": ["/api/ocr-tategu", "/api/ocr-lighting"]})
+        self._json(200, {"ok": True, "model": MODEL, "endpoints": ["/api/ocr-tategu", "/api/ocr-lighting", "/api/check-cf"]})
 
     def do_POST(self):
         try:
             length = int(self.headers.get("Content-Length", "0"))
             body = json.loads(self.rfile.read(length) or b"{}")
             path = (self.path or "").rstrip("/")
-            if path.endswith("/api/ocr-lighting"):
+            if path.endswith("/api/check-cf"):
+                result = check_cf(body.get("image", ""))
+            elif path.endswith("/api/ocr-lighting"):
                 # imageFile（サーバー側読込）優先 → image（data:URI）にフォールバック
                 if body.get("imageFile"):
                     result = extract_lighting_file(body["imageFile"])
