@@ -157,7 +157,7 @@ if IS_CLOUD:
         html_content = f.read()
     html_content = _inject_img_base(html_content, GITHUB_RAW_BASE)
 
-    st.info("☁ Streamlit Cloud モードで動作中（OCR機能は無効）。ローカルでは `streamlit run streamlit_app.py` で全機能が使えます。")
+    st.info("☁ Streamlit Cloud モードで動作中。AI機能（画像OCR・クッションフロア判定など）はオンライン処理でそのまま使えます。")
     components.html(html_content, height=2400, scrolling=True)
 
 else:
