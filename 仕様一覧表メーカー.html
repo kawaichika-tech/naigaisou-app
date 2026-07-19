@@ -3389,7 +3389,14 @@ function krCanonRoom(name){
   return s;
 }
 
-/* 判定ボタン：階ごとに間取り図をAIへ送り、黄色部屋を取得 → 仕上げ表の床CFと突き合わせ */
+/* 色マーキング → 仕上げ表の部位×スタイル の対応。間取り図の各色と仕上げ表を突き合わせる。 */
+const KR_CF_CATS=[
+  {key:'yellow_rooms', mark:'黄色',   dot:'🟡', part:'床',   style:'クッションフロア', label:'床CF（クッションフロア）', short:'床CF'},
+  {key:'pink_rooms',   mark:'ピンク', dot:'🩷', part:'壁',   style:'アクセント',       label:'壁アクセントクロス',       short:'壁アクセント'},
+  {key:'purple_rooms', mark:'紫',     dot:'💜', part:'天井', style:'アクセント',       label:'天井アクセントクロス',     short:'天井アクセント'},
+];
+
+/* 判定ボタン：階ごとに間取り図をAIへ送り、色マーキング（黄/ピンク/紫）を取得 → 仕上げ表と突き合わせ */
 async function krCheckCF(){
   const box=document.getElementById('krCfResult');
   const planImgs=KR.meta.plan_images||{};
@@ -3405,39 +3412,40 @@ async function krCheckCF(){
   const floorReports=[];
   try{
     for(const fl of floors){
-      // AIに間取り図を送って黄色部屋を取得
+      // AIに間取り図を送って 黄/ピンク/紫 の部屋を取得
       let res;
       try{
         res=await fetch(OCR_CF_API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:planImgs[fl]})});
       }catch(e){ throw Object.assign(new Error('AIサーバーに接続できません（ローカルは OCR起動.bat を実行してください）'),{noServer:true}); }
       if(!res.ok){ let msg='サーバーエラー '+res.status; try{const j=await res.json(); if(j.error)msg=j.error;}catch(e){} throw new Error(msg); }
       const data=await res.json();
-      const yellow=(data.yellow_rooms||[]).map(y=>({name:String(y.name||''),confidence:String(y.confidence||''),canon:krCanonRoom(y.name)})).filter(y=>y.canon);
 
-      // 仕上げ表：この階で床＝クッションフロアの部屋
-      const specCF=KR.rooms.filter(r=>(r.floor||'')===fl && r.part==='床' && r.style==='クッションフロア')
+      // 色ごとに 間取り図(plan) × 仕上げ表(spec) を照合
+      const cats=KR_CF_CATS.map(cat=>{
+        const plan=(data[cat.key]||[]).map(y=>({name:String(y.name||''),confidence:String(y.confidence||''),canon:krCanonRoom(y.name)})).filter(y=>y.canon);
+        const spec=KR.rooms.filter(r=>(r.floor||'')===fl && r.part===cat.part && r.style===cat.style)
                            .map(r=>({name:r.name||'',canon:krCanonRoom(r.name)})).filter(r=>r.canon);
-
-      const yellowSet=new Set(yellow.map(y=>y.canon));
-      const specSet=new Set(specCF.map(r=>r.canon));
-      const allCanon=[...new Set([...yellowSet,...specSet])];
-
-      const rows=allCanon.map(c=>{
-        const inPlan=yellowSet.has(c), inSpec=specSet.has(c);
-        const label=(yellow.find(y=>y.canon===c)||specCF.find(r=>r.canon===c)||{}).name||c;
-        let status,msg;
-        if(inPlan&&inSpec){ status='ok'; msg='一致'; }
-        else if(inPlan&&!inSpec){ status='warn'; msg='間取り図は黄色 → 仕上げ表に床CFの記載なし（記入漏れ？）'; }
-        else { status='warn'; msg='仕上げ表は床CF → 間取り図に黄色塗りなし（塗り忘れ？）'; }
-        const conf=(yellow.find(y=>y.canon===c)||{}).confidence||'';
-        return {canon:c,label,inPlan,inSpec,status,msg,conf};
+        const planSet=new Set(plan.map(y=>y.canon));
+        const specSet=new Set(spec.map(r=>r.canon));
+        const rows=[...new Set([...planSet,...specSet])].map(c=>{
+          const inPlan=planSet.has(c), inSpec=specSet.has(c);
+          const label=(plan.find(y=>y.canon===c)||spec.find(r=>r.canon===c)||{}).name||c;
+          let status,msg;
+          if(inPlan&&inSpec){ status='ok'; msg='一致'; }
+          else if(inPlan&&!inSpec){ status='warn'; msg=`間取り図は${cat.mark} → 仕上げ表に${cat.short}の記載なし（記入漏れ？）`; }
+          else { status='warn'; msg=`仕上げ表は${cat.short} → 間取り図に${cat.mark}塗りなし（塗り忘れ？）`; }
+          const conf=(plan.find(y=>y.canon===c)||{}).confidence||'';
+          return {label,inPlan,inSpec,status,msg,conf};
+        });
+        return {key:cat.key, label:cat.label, mark:cat.mark, dot:cat.dot, short:cat.short, rows, planSet, specSet};
       });
 
       // 分譲ルール：トイレ・脱衣室が「間取り図の黄色 かつ 仕上げ表の床CF」両方に入っているか
       const required=[];
       if(propType==='分譲'){
+        const cf=cats.find(c=>c.key==='yellow_rooms');
         ['トイレ','脱衣室'].forEach(req=>{
-          const inPlan=yellowSet.has(req), inSpec=specSet.has(req);
+          const inPlan=cf.planSet.has(req), inSpec=cf.specSet.has(req);
           let status='ok',msg='分譲標準：黄色・床CFとも指定あり';
           if(!inPlan&&!inSpec){ status='ng'; msg='分譲標準なのに 間取り図の黄色・仕上げ表の床CF どちらも無し'; }
           else if(!inPlan){ status='warn'; msg='分譲標準：仕上げ表は床CFだが間取り図が黄色塗りされていない'; }
@@ -3445,7 +3453,7 @@ async function krCheckCF(){
           required.push({name:req,status,msg});
         });
       }
-      floorReports.push({floor:fl,yellow,specCF,rows,required,note:data.note||''});
+      floorReports.push({floor:fl,cats,required,note:data.note||''});
     }
     KR_CF_REPORT={propType,floors:floorReports,ts:new Date().toLocaleString('ja-JP')};
   }catch(e){
@@ -3462,28 +3470,38 @@ function krCfReportHtml(rep){
   }
   const dot=s=> s==='ok'?'<span style="color:#1a7f37;">✅</span>' : s==='ng'?'<span style="color:#b3261e;">🔴</span>' : '<span style="color:#c48a00;">⚠️</span>';
   let warnCount=0, ngCount=0;
-  rep.floors.forEach(f=>{ f.rows.forEach(r=>{ if(r.status==='warn')warnCount++; }); f.required.forEach(r=>{ if(r.status==='warn')warnCount++; if(r.status==='ng')ngCount++; }); });
-  const head=`<div style="font-weight:bold;margin-bottom:6px;">判定結果（${esc(rep.propType)}）　${ngCount||warnCount?`<span style="color:#c48a00;">要確認 ${warnCount+ngCount}件</span>`:'<span style="color:#1a7f37;">問題なし</span>'}　<span class="hint" style="font-weight:normal;">${esc(rep.ts||'')}</span></div>`;
+  rep.floors.forEach(f=>{
+    f.cats.forEach(c=>c.rows.forEach(r=>{ if(r.status==='warn')warnCount++; }));
+    f.required.forEach(r=>{ if(r.status==='warn')warnCount++; if(r.status==='ng')ngCount++; });
+  });
+  const head=`<div style="font-weight:bold;margin-bottom:6px;">判定結果（${esc(rep.propType)}）　${ngCount||warnCount?`<span style="color:#c48a00;">要確認 ${warnCount+ngCount}件</span>`:'<span style="color:#1a7f37;">問題なし</span>'}　<span class="hint" style="font-weight:normal;">${esc(rep.ts||'')}</span></div>`
+    + `<div class="hint" style="margin:0 0 6px;">🟡黄色＝床CF　🩷ピンク＝壁アクセント　💜紫＝天井アクセント</div>`;
   let body='';
   rep.floors.forEach(f=>{
     body+=`<div style="margin-bottom:10px;border:1px solid #e0e0e0;border-radius:6px;overflow:hidden;">
       <div style="background:#3b4a5c;color:#fff;padding:4px 8px;font-weight:bold;font-size:12px;">${esc(f.floor)}　間取り図</div>
       <div style="padding:6px 8px;font-size:12px;">`;
     if(f.required.length){
-      body+=`<div style="margin-bottom:4px;"><b>分譲チェック</b><ul style="margin:2px 0 0;padding-left:18px;">`
+      body+=`<div style="margin-bottom:6px;"><b>分譲チェック（床CF）</b><ul style="margin:2px 0 0;padding-left:18px;">`
         + f.required.map(r=>`<li>${dot(r.status)} ${esc(r.name)}：${esc(r.msg)}</li>`).join('') + `</ul></div>`;
     }
-    if(!f.rows.length){
-      body+=`<div class="hint" style="margin:2px 0;">黄色エリア・床CFとも検出なし。</div>`;
-    }else{
-      body+=`<table style="width:100%;border-collapse:collapse;font-size:12px;">
-        <tr style="background:#f5f5f5;"><th style="text-align:left;padding:2px 4px;">部屋</th><th style="padding:2px 4px;">間取り黄色</th><th style="padding:2px 4px;">仕上げ床CF</th><th style="text-align:left;padding:2px 4px;">判定</th></tr>`
-        + f.rows.map(r=>`<tr style="border-top:1px solid #eee;">
+    let anyRows=false;
+    f.cats.forEach(c=>{
+      if(!c.rows.length) return;
+      anyRows=true;
+      body+=`<div style="margin-bottom:6px;">
+        <div style="font-weight:bold;margin-bottom:2px;">${c.dot} ${esc(c.label)}</div>
+        <table style="width:100%;border-collapse:collapse;font-size:12px;">
+        <tr style="background:#f5f5f5;"><th style="text-align:left;padding:2px 4px;">部屋</th><th style="padding:2px 4px;">間取り(${esc(c.mark)})</th><th style="padding:2px 4px;">仕上げ(${esc(c.short)})</th><th style="text-align:left;padding:2px 4px;">判定</th></tr>`
+        + c.rows.map(r=>`<tr style="border-top:1px solid #eee;">
             <td style="padding:2px 4px;">${esc(r.label)}${r.conf&&r.conf!=='high'?`<span class="hint"> (${esc(r.conf)})</span>`:''}</td>
             <td style="text-align:center;padding:2px 4px;">${r.inPlan?'●':'—'}</td>
             <td style="text-align:center;padding:2px 4px;">${r.inSpec?'●':'—'}</td>
             <td style="padding:2px 4px;">${dot(r.status)} ${esc(r.msg)}</td></tr>`).join('')
-        + `</table>`;
+        + `</table></div>`;
+    });
+    if(!anyRows && !f.required.length){
+      body+=`<div class="hint" style="margin:2px 0;">色マーキング・仕上げ記載とも検出なし。</div>`;
     }
     if(f.note) body+=`<div class="hint" style="margin-top:4px;">AIメモ：${esc(f.note)}</div>`;
     body+=`</div></div>`;

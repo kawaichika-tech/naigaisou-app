@@ -103,37 +103,44 @@ LIGHTING_PROMPT = (
 # ============================================================
 # 間取り図から「黄色く塗られた部屋（＝クッションフロア）」を読み取る
 # ============================================================
+_CF_ROOM_ITEM = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "name":       {"type": "string", "description": "部屋名。図面のラベルを読む。例 トイレ / 脱衣室 / 洗面所 / LDK"},
+            "confidence": {"type": "string", "description": "その色だと判断した確度。high / medium / low のいずれか"}
+        },
+        "required": ["name", "confidence"],
+        "additionalProperties": False
+    }
+}
+
 CF_CHECK_SCHEMA = {
     "type": "object",
     "properties": {
-        "yellow_rooms": {
-            "type": "array",
-            "description": "黄色く塗りつぶされている（マーキングされている）部屋のリスト",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "name":       {"type": "string", "description": "部屋名。図面のラベルを読む。例 トイレ / 脱衣室 / 洗面所"},
-                    "confidence": {"type": "string", "description": "黄色と判断した確度。high / medium / low のいずれか"}
-                },
-                "required": ["name", "confidence"],
-                "additionalProperties": False
-            }
-        },
+        "yellow_rooms": dict(_CF_ROOM_ITEM, description="黄色く塗られた部屋（＝床のクッションフロア）"),
+        "pink_rooms":   dict(_CF_ROOM_ITEM, description="ピンク（桃色）で塗られた部屋（＝壁のアクセントクロス）"),
+        "purple_rooms": dict(_CF_ROOM_ITEM, description="紫（パープル）で塗られた部屋（＝天井のアクセントクロス）"),
         "note": {"type": "string", "description": "判断に迷った点などの補足。なければ空文字。"}
     },
-    "required": ["yellow_rooms", "note"],
+    "required": ["yellow_rooms", "pink_rooms", "purple_rooms", "note"],
     "additionalProperties": False
 }
 
 CF_CHECK_PROMPT = (
-    "これは住宅の間取り図（平面図）です。図面内で『黄色く塗りつぶされている／黄色でマーキングされているエリア』を"
-    "探して、その部屋名を読み取ってください。黄色は床仕上げがクッションフロアであることを示すマーキングです。\n"
-    "- yellow_rooms: 黄色く塗られている各部屋について、name（部屋名。図面のラベル文字を読む。例：トイレ／脱衣室／洗面所）と"
-    " confidence（黄色だと判断した確度。high／medium／low）を返す。\n"
-    "- 明確に黄色いエリアだけを対象にする。ピンク・水色・グレー等の他の色や、非常に薄い着色は対象外。\n"
-    "- 黄色いエリアの部屋名ラベルが読み取れない場合は、name に位置の説明（例：玄関横の小部屋）を入れる。\n"
-    "- 黄色いエリアが1つも無ければ yellow_rooms は空配列にする。無い色を無理にこじつけないこと。\n"
-    "- note: 判断に迷った点があれば短く記載。なければ空文字。"
+    "これは住宅の間取り図（平面図）です。図面には内装仕上げを示す色マーキングがあります。"
+    "次の3色で塗りつぶされた／範囲マーキングされたエリアを探し、それぞれ部屋名を読み取ってください：\n"
+    "- 黄色 ＝ 床のクッションフロア → yellow_rooms\n"
+    "- ピンク（桃色・赤みがかった色）＝ 壁のアクセントクロス → pink_rooms\n"
+    "- 紫（パープル・青紫）＝ 天井のアクセントクロス → purple_rooms\n"
+    "各配列の要素は name（部屋名。図面のラベル文字を読む。例：トイレ／脱衣室／LDK）と"
+    " confidence（その色と判断した確度。high／medium／low）。\n"
+    "重要：黄色・ピンク・紫を取り違えないこと。ピンクは赤みの桃色、紫は青みのパープルで別物。\n"
+    "面（範囲）の塗りだけを対象にし、矢印・引き出し線・文字などの細い線や着色は対象外。\n"
+    "非常に薄い着色やその他の色（水色・グレー等）も対象外。該当色が無ければその配列は空にする。無い色を無理にこじつけないこと。\n"
+    "部屋名ラベルが読み取れないエリアは name に位置の説明（例：玄関横の小部屋）を入れる。\n"
+    "note: 判断に迷った点があれば短く記載。なければ空文字。"
 )
 
 
